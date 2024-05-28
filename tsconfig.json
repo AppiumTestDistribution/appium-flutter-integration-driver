@@ -8,5 +8,5 @@
     "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"],
     "checkJs": true
   },
-  "include": ["src"]
+  "include": ["src", "typings/*.d.ts"]
 }

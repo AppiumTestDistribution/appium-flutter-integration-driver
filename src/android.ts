@@ -21,13 +21,7 @@ export const startAndroidSession = async (
   const androiddriver = await setupNewAndroidDriver(...args);
 
   // the session starts without any apps
-  console.log('**** Caps', caps);
   caps.flutterPort = caps.flutterPort || 8600;
-  if (caps.app === undefined && caps.appPackage === undefined) {
-    log.info('Android session started', androiddriver);
-    await portForward(caps.flutterPort, caps.udid);
-    return [androiddriver, caps.flutterPort];
-  }
   log.info('Android session started', androiddriver);
   await portForward(caps.flutterPort, caps.udid);
   return [androiddriver, caps.flutterPort];
@@ -35,7 +29,6 @@ export const startAndroidSession = async (
 
 const portForward = async (port: number, udid: string) => {
   let adb = new ADB();
-  // Need to fix this for parallel devices
-  //await adb.setDeviceId(udid);
+  if (udid) adb.setDeviceId(udid);
   await adb.forwardPort(port, 8888);
 };

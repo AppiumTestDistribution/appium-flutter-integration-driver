@@ -40,7 +40,7 @@
     "watch": "tsc --watch",
     "appium-home": "rm -rf /tmp/some-temp-dir && export APPIUM_HOME=/tmp/some-temp-dir",
     "test": "mocha --require ts-node/register ./test/*.spec.js --timeout 260000 ",
-    "run-server": "appium server -ka 800 -pa /wd/hub --use-driver=flutter-integration",
+    "run-server": "appium server -ka 800 -pa /wd/hub",
     "install-driver": "npm run build && appium driver install --source=local $(pwd)",
     "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
     "wdio": "wdio run ./wdio.conf.ts"
@@ -71,12 +71,14 @@
     "@appium/support": "^4.2.5",
     "appium-adb": "^12.3.2",
     "appium-android-driver": "^9.6.2",
+    "appium-flutter-finder": "^0.2.0",
     "appium-ios-device": "^2.7.16",
     "appium-xcuitest-driver": "^7.16.2",
     "async-retry": "^1.3.3",
+    "axios": "^1.7.2",
     "chai": "^5.1.1",
     "get-port": "^7.1.0",
     "lodash": "^4.17.21",
-    "axios": "^1.7.2"
+    "webdriver": "^8.38.0"
   }
 }
