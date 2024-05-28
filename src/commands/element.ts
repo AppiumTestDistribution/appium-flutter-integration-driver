@@ -10,7 +10,6 @@ export async function findElOrEls(
 ): Promise<any> {
   log.info('Finding element or elements', strategy, selector, mult, context);
   const driver = await getProxyDriver(strategy, this.proxy, this.proxydriver);
-  console.log('Driver', driver);
   if (mult) {
     return await driver.command('/elements', 'POST', {
       strategy,
