@@ -14,11 +14,13 @@ export async function findElOrEls(
     return await driver.command('/elements', 'POST', {
       strategy,
       selector,
+      context,
     });
   } else {
     const element = await driver.command('/element', 'POST', {
       strategy,
       selector,
+      context,
     });
     elements.set(element.ELEMENT, driver);
     return element;

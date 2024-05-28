@@ -1,23 +1,17 @@
 describe('My Login application', () => {
   it('Create Session with Flutter Integration Driver', async () => {
     await browser.pause(2000);
-    const element = await browser.flutterFinderByKey('key', 'increment');
-    await browser.elementClick(element.ELEMENT);
-    let counterValueElement = await browser.flutterFinderByKey(
-      'key',
-      'counterValue',
-    );
-    let counterValue = await browser.getElementText(
-      counterValueElement.ELEMENT,
-    );
-    expect(counterValue).toEqual('1');
-    const isElementVisible = await browser.flutterFinderByKey(
-      'key',
-      'increment',
-    );
-    await browser.isElementDisplayed(isElementVisible.ELEMENT);
+    const element = await (
+      await browser.flutterFinderByKey$('body')
+    ).flutterFinderByKey$('increment');
+    await element.click();
+    let counterValueElement = await browser.flutterFinderByKey$('counterValue');
+    expect(await counterValueElement.getText()).toEqual('1');
 
     //This will route to UIA2 driver
-    await $('~counterValue').getText();
+    console.log(await $('~counterValue').getText());
+
+    let incrementElements = await browser.flutterFinderByKey$$('increment');
+    expect(incrementElements.length).toEqual(2);
   });
 });
