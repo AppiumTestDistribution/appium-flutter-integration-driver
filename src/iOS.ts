@@ -3,6 +3,7 @@ import { AppiumFlutterDriver } from './driver';
 import XCUITestDriver from 'appium-xcuitest-driver';
 import type { InitialOpts } from '@appium/types';
 import { log } from './logger';
+import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
 
 const setupNewIOSDriver = async (...args: any[]): Promise<XCUITestDriver> => {
   const iosdriver = new XCUITestDriver({} as InitialOpts);
@@ -11,7 +12,14 @@ const setupNewIOSDriver = async (...args: any[]): Promise<XCUITestDriver> => {
 };
 
 async function portForward(flutterPort: any, udid: any) {
-
+    // Need to do this for real device
+  if (this.proxydriver instanceof XCUITestDriver && this.proxydriver.isRealDevice()) {
+    log.info(`Forwarding port ${flutterPort} to device ${udid}`);
+    await DEVICE_CONNECTIONS_FACTORY.requestConnection(udid, flutterPort, {
+      usePortForwarding: true,
+      devicePort: flutterPort,
+    });
+  }
 }
 
 export const startIOSSession = async (

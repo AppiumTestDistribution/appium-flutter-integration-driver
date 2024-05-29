@@ -69,13 +69,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       caps,
       ...JSON.parse(JSON.stringify(args)),
     );
-    if (this.proxydriver instanceof XCUITestDriver && this.proxydriver.isRealDevice()) {
-      // @ts-ignore
-      this.flutterPort = caps.wdaLocalPort | 8400;
-    } else if(this.proxydriver instanceof XCUITestDriver && !this.proxydriver.isRealDevice()) {
+     if(this.proxydriver instanceof XCUITestDriver && !this.proxydriver.isRealDevice()) {
       // @ts-ignore
       this.flutterPort = DEFAULT_FLUTTER_SERVER_PORT;
-
     }
     this.proxy = new JWProxy({
       server: '127.0.0.1',

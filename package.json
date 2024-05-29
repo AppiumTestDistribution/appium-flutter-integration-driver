@@ -81,6 +81,9 @@
     "chai": "^5.1.1",
     "get-port": "^7.1.0",
     "lodash": "^4.17.21",
-    "webdriver": "^8.38.0"
+    "portscanner": "^2.2.0",
+    "webdriver": "^8.38.0",
+    "asyncbox": "^3.0.0",
+    "bluebird": "^3.7.2"
   }
 }
