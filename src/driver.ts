@@ -20,7 +20,6 @@ import {
   elementEnabled,
 } from './commands/element';
 
-
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
@@ -64,15 +63,24 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       ]),
     );
     this.internalCaps = caps;
-    let sessionCreated = await createSession.bind(this)(
+    let sessionCreated = await createSession.call(
+      this,
       sessionId,
       caps,
       ...JSON.parse(JSON.stringify(args)),
     );
-     if(this.proxydriver instanceof XCUITestDriver && !this.proxydriver.isRealDevice()) {
+
+    if (
+      this.proxydriver instanceof XCUITestDriver &&
+      !this.proxydriver.isRealDevice()
+    ) {
       // @ts-ignore
       this.flutterPort = DEFAULT_FLUTTER_SERVER_PORT;
     }
+
+    // HACK for eliminatin socket hang up by waiting 1 sec
+    await new Promise((r) => setTimeout(r, 1000));
+
     this.proxy = new JWProxy({
       server: '127.0.0.1',
       port: this.flutterPort,
