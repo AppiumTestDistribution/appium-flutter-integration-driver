@@ -7,8 +7,8 @@ import type {
   W3CDriverCaps,
   DriverCaps,
 } from '@appium/types';
-type FluttertDriverConstraints = typeof desiredCapConstraints;
-import XCUITestDriver from 'appium-xcuitest-driver';
+type FlutterDriverConstraints = typeof desiredCapConstraints;
+import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { createSession } from './session';
 import {
@@ -19,13 +19,16 @@ import {
   getAttribute,
   elementEnabled,
 } from './commands/element';
-import { getProxyDriver } from './utils';
 
-export class AppiumFlutterDriver extends BaseDriver<FluttertDriverConstraints> {
+
+const DEFAULT_FLUTTER_SERVER_PORT = 8888;
+
+export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
+  // @ts-ignore
   public proxydriver: XCUITestDriver | AndroidUiautomator2Driver;
-  public flutterPort: number | null;
-  public internalCaps: DriverCaps<FluttertDriverConstraints>;
-  public proxy: JWProxy;
+  public flutterPort: number | null | undefined;
+  private internalCaps: DriverCaps<FlutterDriverConstraints> | undefined;
+  public proxy: JWProxy | undefined;
   click = click;
   findElOrEls = findElOrEls;
   getText = getText;
@@ -50,8 +53,8 @@ export class AppiumFlutterDriver extends BaseDriver<FluttertDriverConstraints> {
   }
 
   public async createSession(
-    ...args
-  ): Promise<DefaultCreateSessionResult<FluttertDriverConstraints>> {
+    ...args: any[]
+  ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
     const [sessionId, caps] = await super.createSession(
       ...(JSON.parse(JSON.stringify(args)) as [
         W3CDriverCaps,
@@ -66,6 +69,14 @@ export class AppiumFlutterDriver extends BaseDriver<FluttertDriverConstraints> {
       caps,
       ...JSON.parse(JSON.stringify(args)),
     );
+    if (this.proxydriver instanceof XCUITestDriver && this.proxydriver.isRealDevice()) {
+      // @ts-ignore
+      this.flutterPort = caps.wdaLocalPort | 8400;
+    } else if(this.proxydriver instanceof XCUITestDriver && !this.proxydriver.isRealDevice()) {
+      // @ts-ignore
+      this.flutterPort = DEFAULT_FLUTTER_SERVER_PORT;
+
+    }
     this.proxy = new JWProxy({
       server: '127.0.0.1',
       port: this.flutterPort,
@@ -79,10 +90,11 @@ export class AppiumFlutterDriver extends BaseDriver<FluttertDriverConstraints> {
   }
 
   async deleteSession() {
-    // do your own cleanup here
-    // don't forget to call super!
-    await this.proxydriver.adb.removePortForward(this.flutterPort);
+    if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+      // @ts-ignore
+      await this.proxydriver.adb.removePortForward(this.flutterPort);
+    }
     await this.proxydriver.deleteSession();
-    super.deleteSession();
+    await super.deleteSession();
   }
 }

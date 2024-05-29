@@ -95,7 +95,7 @@ export async function registerCommands() {
       console.log(utils.getElement);
       try {
         if (multi) {
-          return response.map((element) =>
+          return response.map((element: any) =>
             utils.getElement.call(this, null, element),
           );
         } else {

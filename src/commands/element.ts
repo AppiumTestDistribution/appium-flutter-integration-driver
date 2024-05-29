@@ -1,6 +1,8 @@
 import { log } from '../logger';
 import _ from 'lodash';
 import { getProxyDriver } from '../utils';
+import { JWProxy } from '@appium/base-driver';
+import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 const elements = new Map();
 export async function findElOrEls(
   strategy: string,
@@ -10,18 +12,24 @@ export async function findElOrEls(
 ): Promise<any> {
   log.info('Finding element or elements', strategy, selector, mult, context);
   const driver = await getProxyDriver(strategy, this.proxy, this.proxydriver);
-  if (mult) {
-    return await driver.command('/elements', 'POST', {
-      strategy,
-      selector,
-      context,
-    });
+  let elementBody;
+  if(!(driver instanceof JWProxy) && !(this.proxydriver instanceof AndroidUiautomator2Driver)) {
+    elementBody = {
+      using: strategy,
+      value: selector,
+      context //this needs be validated
+    }
   } else {
-    const element = await driver.command('/element', 'POST', {
+    elementBody = {
       strategy,
       selector,
       context,
-    });
+    }
+  }
+  if (mult) {
+    return await driver.command('/elements', 'POST', elementBody);
+  } else {
+    const element = await driver.command('/element', 'POST', elementBody);
     elements.set(element.ELEMENT, driver);
     return element;
   }
@@ -34,12 +42,12 @@ export async function click(element: string) {
   });
 }
 
-export async function getText(elementId) {
+export async function getText(elementId: string) {
   const driver = elements.get(elementId);
   return String(await driver.command(`/element/${elementId}/text`, 'GET', {}));
 }
 
-export async function elementEnabled(elementId) {
+export async function elementEnabled(elementId: string) {
   return toBool(await this.getAttribute('enabled', elementId));
 }
 
@@ -56,6 +64,6 @@ export async function elementDisplayed(elementId: string) {
   return await this.getAttribute('displayed', elementId);
 }
 
-function toBool(s) {
+function toBool(s: string | boolean) {
   return _.isString(s) ? s.toLowerCase() === 'true' : !!s;
 }

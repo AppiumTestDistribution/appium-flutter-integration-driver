@@ -1,9 +1,10 @@
 describe('My Login application', () => {
   it('Create Session with Flutter Integration Driver', async () => {
     await browser.pause(2000);
-    const element = await (
-      await browser.flutterFinderByKey$('body')
-    ).flutterFinderByKey$('increment');
+    // const element = await (
+    //   await browser.flutterFinderByKey$('body')
+    // ).flutterFinderByKey$('increment');
+    const element = await browser.flutterFinderByKey$('increment');
     await element.click();
     let counterValueElement = await browser.flutterFinderByKey$('counterValue');
     expect(await counterValueElement.getText()).toEqual('1');

@@ -2,20 +2,20 @@ import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
 import { PLATFORM } from './platform';
 import { startAndroidSession } from './android';
+import { startIOSSession } from './iOS';
 export const createSession: any = async function (
   this: AppiumFlutterDriver,
   sessionId: string,
-  caps,
-  ...args
+  caps: any,
+  ...args: any[]
 ) {
   try {
-    // setup proxies - if platformName is not empty, make it less case sensitive
     switch (_.toLower(caps.platformName)) {
       case PLATFORM.IOS:
-        // [this.proxydriver, this.socket] = await startIOSSession(this, caps, ...args);
-        // this.proxydriver.relaxedSecurityEnabled = this.relaxedSecurityEnabled;
-        // this.proxydriver.denyInsecure = this.denyInsecure;
-        // this.proxydriver.allowInsecure = this.allowInsecure;
+        [this.proxydriver, this.flutterPort] = await startIOSSession(this, caps, ...args);
+        this.proxydriver.relaxedSecurityEnabled = this.relaxedSecurityEnabled;
+        this.proxydriver.denyInsecure = this.denyInsecure;
+        this.proxydriver.allowInsecure = this.allowInsecure;
 
         break;
       case PLATFORM.ANDROID:

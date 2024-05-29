@@ -61,17 +61,7 @@ export const config: Options.Testrunner = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
-  capabilities: [
-    {
-      // capabilities for local Appium web tests on an Android Emulator
-      platformName: 'Android',
-      'appium:automationName': 'FlutterIntegration',
-      'appium:orientation': 'PORTRAIT',
-      'appium:app':
-        '/Users/saikrishna/Downloads/git/flutter-learnings/counter_app/build/app/outputs/apk/debug/app-debug.apk',
-      'appium:newCommandTimeout': 240,
-    },
-  ],
+  capabilities: [],
 
   //
   // ===================
