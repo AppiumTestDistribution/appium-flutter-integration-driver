@@ -1,0 +1,26 @@
+{
+  "name": "wdio-flutter-by-service",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "rimraf build && tsc -b"
+  },
+  "exports": {
+    ".": "./build/index.js",
+    "./package.json": "./package.json"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wdio/logger": "^8.38.0",
+    "@wdio/utils": "^8.38.0",
+    "lodash": "^4.17.21",
+    "webdriverio": "^8.38.0"
+  },
+  "devDependencies": {
+    "@wdio/types": "^8.37.0",
+    "rimraf": "^5.0.7"
+  }
+}
