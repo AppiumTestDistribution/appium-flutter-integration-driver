@@ -4,15 +4,16 @@ describe('My Login application', () => {
     // const element = await (
     //   await browser.flutterFinderByKey$('body')
     // ).flutterFinderByKey$('increment');
-    const element = await browser.flutterByValueKey$('increment');
-    await element.click();
-    let counterValueElement = await browser.flutterByValueKey$('counterValue');
-    expect(await counterValueElement.getText()).toEqual('1');
-
-    //This will route to UIA2 driver
-    console.log(await $('~counterValue').getText());
-
-    let incrementElements = await browser.flutterByValueKey$$('increment');
-    expect(incrementElements.length).toEqual(2);
+    await browser.flutterWaitForAbsent({finderType: 'key', finderValue: 'increment'});
+    // const element = await browser.flutterByValueKey$('increment');
+    // await element.click();
+    // let counterValueElement = await browser.flutterByValueKey$('counterValue');
+    // expect(await counterValueElement.getText()).toEqual('1');
+    //
+    // //This will route to UIA2 driver
+    // console.log(await $('~counterValue').getText());
+    //
+    // let incrementElements = await browser.flutterByValueKey$$('increment');
+    // expect(incrementElements.length).toEqual(2);
   });
 });

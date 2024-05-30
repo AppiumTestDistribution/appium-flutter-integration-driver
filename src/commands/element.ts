@@ -13,18 +13,21 @@ export async function findElOrEls(
   log.info('Finding element or elements', strategy, selector, mult, context);
   const driver = await getProxyDriver(strategy, this.proxy, this.proxydriver);
   let elementBody;
-  if(!(driver instanceof JWProxy) && !(this.proxydriver instanceof AndroidUiautomator2Driver)) {
+  if (
+    !(driver instanceof JWProxy) &&
+    !(this.proxydriver instanceof AndroidUiautomator2Driver)
+  ) {
     elementBody = {
       using: strategy,
       value: selector,
-      context //this needs be validated
-    }
+      context, //this needs be validated
+    };
   } else {
     elementBody = {
       strategy,
       selector,
       context,
-    }
+    };
   }
   if (mult) {
     return await driver.command('/elements', 'POST', elementBody);

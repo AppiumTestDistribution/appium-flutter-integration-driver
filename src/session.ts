@@ -12,7 +12,11 @@ export const createSession: any = async function (
   try {
     switch (_.toLower(caps.platformName)) {
       case PLATFORM.IOS:
-        [this.proxydriver, this.flutterPort] = await startIOSSession(this, caps, ...args);
+        [this.proxydriver, this.flutterPort] = await startIOSSession(
+          this,
+          caps,
+          ...args,
+        );
         this.proxydriver.relaxedSecurityEnabled = this.relaxedSecurityEnabled;
         this.proxydriver.denyInsecure = this.denyInsecure;
         this.proxydriver.allowInsecure = this.allowInsecure;

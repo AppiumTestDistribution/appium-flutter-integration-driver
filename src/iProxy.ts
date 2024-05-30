@@ -21,7 +21,9 @@ class iProxy {
     this.deviceport = parseInt(deviceport, 10);
     this.udid = udid;
     this.localServer = null;
-    this.log = logger.getLogger(`iProxy@${udid.substring(0, 8)}:${this.localport}`);
+    this.log = logger.getLogger(
+      `iProxy@${udid.substring(0, 8)}:${this.localport}`,
+    );
   }
 
   async start() {
@@ -128,7 +130,9 @@ class DeviceConnectionsFactory {
   }
 
   _releaseProxiedConnections(connectionKeys: any) {
-    const keys = connectionKeys.filter((k: any) => _.has(this._connectionsMapping[k], 'iproxy'));
+    const keys = connectionKeys.filter((k: any) =>
+      _.has(this._connectionsMapping[k], 'iproxy'),
+    );
     for (const key of keys) {
       log.info(`Releasing the listener for '${key}'`);
       try {
@@ -153,7 +157,7 @@ class DeviceConnectionsFactory {
       strict && udid && port
         ? key === this._toKey(udid, port)
         : (udid && key.startsWith(this._udidAsToken(udid))) ||
-        (port && key.endsWith(this._portAsToken(port))),
+          (port && key.endsWith(this._portAsToken(port))),
     );
   }
 
@@ -173,21 +177,27 @@ class DeviceConnectionsFactory {
 
     log.info(
       `Requesting connection for device ${udid} on local port ${port}` +
-      (devicePort ? `, device port ${devicePort}` : ''),
+        (devicePort ? `, device port ${devicePort}` : ''),
     );
     log.debug(`Cached connections count: ${_.size(this._connectionsMapping)}`);
     const connectionsOnPort = this.listConnections(null, port);
     if (!_.isEmpty(connectionsOnPort)) {
-      log.info(`Found cached connections on port #${port}: ${JSON.stringify(connectionsOnPort)}`);
+      log.info(
+        `Found cached connections on port #${port}: ${JSON.stringify(connectionsOnPort)}`,
+      );
     }
 
     if (usePortForwarding) {
       let isPortBusy = (await checkPortStatus(port, LOCALHOST)) === 'open';
       if (isPortBusy) {
-        log.warn(`Port #${port} is busy. Did you quit the previous driver session(s) properly?`);
+        log.warn(
+          `Port #${port} is busy. Did you quit the previous driver session(s) properly?`,
+        );
         if (!_.isEmpty(connectionsOnPort)) {
           log.info('Trying to release the port');
-          for (const key of this._releaseProxiedConnections(connectionsOnPort)) {
+          for (const key of this._releaseProxiedConnections(
+            connectionsOnPort,
+          )) {
             delete this._connectionsMapping[key];
           }
           const timer = new timing.Timer().start();
@@ -198,7 +208,7 @@ class DeviceConnectionsFactory {
                   if ((await checkPortStatus(port, LOCALHOST)) !== 'open') {
                     log.info(
                       `Port #${port} has been successfully released after ` +
-                      `${timer.getDuration().asMilliSeconds.toFixed(0)}ms`,
+                        `${timer.getDuration().asMilliSeconds.toFixed(0)}ms`,
                     );
                     isPortBusy = false;
                     return true;
@@ -216,7 +226,7 @@ class DeviceConnectionsFactory {
           } catch (ign) {
             log.warn(
               `Did not know how to release port #${port} in ` +
-              `${timer.getDuration().asMilliSeconds.toFixed(0)}ms`,
+                `${timer.getDuration().asMilliSeconds.toFixed(0)}ms`,
             );
           }
         }
@@ -225,7 +235,7 @@ class DeviceConnectionsFactory {
       if (isPortBusy) {
         throw new Error(
           `The port #${port} is occupied by an other process. ` +
-          'You can either quit that process or select another free port.',
+            'You can either quit that process or select another free port.',
         );
       }
     }
@@ -253,11 +263,13 @@ class DeviceConnectionsFactory {
     if (!udid && !port) {
       log.warn(
         'Neither device UDID nor local port is set. ' +
-        'Did not know how to release the connection',
+          'Did not know how to release the connection',
       );
       return;
     }
-    log.info(`Releasing connections for ${udid || 'any'} device on ${port || 'any'} port number`);
+    log.info(
+      `Releasing connections for ${udid || 'any'} device on ${port || 'any'} port number`,
+    );
 
     const keys = this.listConnections(udid, port, true);
     if (_.isEmpty(keys)) {

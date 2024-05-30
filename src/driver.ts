@@ -51,6 +51,28 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     ];
   }
 
+  static executeMethodMap = {
+    'flutter: waitForAbsent': {
+      command: 'waitForElementToBeGone',
+      params: {
+        required: ['finderType', 'finderValue'],
+        optional: ['timeout'],
+      },
+    },
+  };
+
+  async waitForElementToBeGone(
+    finderType: string,
+    finderValue: string,
+    timeout: number,
+  ) {
+    console.log('waitForElementToBeGone', finderType, finderValue, timeout);
+  }
+
+  async execute(script: any, args: any) {
+    return await this.executeMethod(script, args);
+  }
+
   public async createSession(
     ...args: any[]
   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
