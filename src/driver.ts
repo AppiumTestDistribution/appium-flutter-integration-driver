@@ -21,6 +21,7 @@ import {
   setValue,
   clear,
 } from './commands/element';
+import { getProxyDriver } from './utils';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
 
@@ -52,7 +53,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       'name',
       'key',
       'class name',
-      'semantics label'
+      'semantics label',
+      'text',
     ];
   }
 
@@ -64,7 +66,23 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         optional: ['timeout'],
       },
     },
+    'flutter: doubleClick': {
+      command: 'doubleClick',
+      params: {
+        required: ['finder'],
+        optional: [],
+      },
+    },
   };
+  async doubleClick(value: any) {
+    const elementId = JSON.parse(JSON.stringify(value)).elementId;
+    return this.proxy?.command(
+      `/session/:sessionId/element/${elementId}/double_click`,
+      'POST',
+      {},
+    );
+    //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
+  }
 
   async waitForElementToBeGone(
     finderType: string,
@@ -125,7 +143,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       // @ts-ignore
       await this.proxydriver.adb.removePortForward(this.flutterPort);
     }
-    await this.proxydriver.deleteSession();
+    await this.proxydriver?.deleteSession();
     await super.deleteSession();
   }
 }

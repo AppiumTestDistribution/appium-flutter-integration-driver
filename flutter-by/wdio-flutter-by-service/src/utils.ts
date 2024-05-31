@@ -66,6 +66,9 @@ const flutterElementFinder = function (
     });
 
     const response: any = await findElement.call(browser as any, ...args);
+    if (response.error) {
+      throw new Error(response.message);
+    }
     const getElement = await constructElementObject();
     if (isMultipleFind) {
       return response.map((element: any) =>

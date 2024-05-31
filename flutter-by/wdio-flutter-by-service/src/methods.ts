@@ -13,3 +13,10 @@ export async function flutterWaitForAbsent(
 ) {
   return await browser.executeScript('flutter: waitForAbsent', [...args]);
 }
+
+export async function flutterDoubleClick(
+  this: WebdriverIO.Browser,
+  finder: any,
+) {
+  return await browser.executeScript('flutter: doubleClick', [finder]);
+}
