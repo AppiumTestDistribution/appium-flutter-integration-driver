@@ -6,7 +6,7 @@ export async function getProxyDriver(
   proxy: any,
   proxyDriver: any,
 ) {
-  if (['key', ''].includes(strategy)) {
+  if (['key', 'semantics label'].includes(strategy)) {
     return proxy;
   } else if (proxyDriver instanceof AndroidUiautomator2Driver) {
     return proxyDriver.uiautomator2.jwproxy;

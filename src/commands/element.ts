@@ -63,6 +63,20 @@ export async function getAttribute(attribute: string, elementId: string) {
   );
 }
 
+export async function setValue(text: string, elementId: string) {
+  const driver = elements.get(elementId);
+  return await driver.command(`/element/${elementId}/value`, 'POST', {
+    text,
+  });
+}
+
+export async function clear(elementId: string) {
+  const driver = elements.get(elementId);
+  return await driver.command(`/element/${elementId}/clear`, 'POST', {
+    elementId,
+  });
+}
+
 export async function elementDisplayed(elementId: string) {
   return await this.getAttribute('displayed', elementId);
 }

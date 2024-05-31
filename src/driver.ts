@@ -18,6 +18,8 @@ import {
   elementDisplayed,
   getAttribute,
   elementEnabled,
+  setValue,
+  clear,
 } from './commands/element';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
@@ -34,6 +36,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   getAttribute = getAttribute;
   elementDisplayed = elementDisplayed;
   elementEnabled = elementEnabled;
+  setValue = setValue;
+  clear = clear;
   constructor(args: any, shouldValidateCaps: boolean) {
     super(args, shouldValidateCaps);
     this.desiredCapConstraints = desiredCapConstraints;
@@ -48,6 +52,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       'name',
       'key',
       'class name',
+      'semantics label'
     ];
   }
 

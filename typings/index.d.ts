@@ -4,6 +4,7 @@ declare global {
       flutterByValueKey$(value: string): Promise<any>;
       flutterByValueKey$$(value: string): Promise<any>;
       flutterWaitForAbsent(value: waitForAbsent): Promise<any>;
+      flutterBySemanticsLabel$(label: string): Promise<WebdriverIO.Browser>;
     }
   }
 }

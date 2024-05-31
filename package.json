@@ -70,6 +70,7 @@
   "dependencies": {
     "@appium/base-driver": "^9.6.0",
     "@appium/support": "^4.2.5",
+    "@wdio/globals": "^8.38.0",
     "@wdio/utils": "^8.38.0",
     "appium-adb": "^12.3.2",
     "appium-android-driver": "^9.6.2",
