@@ -2,16 +2,22 @@ import { browser } from '@wdio/globals';
 
 export async function flutterWaitForVisible(
   this: WebdriverIO.Browser,
-  ...args: any
+  options: {
+    element: WebdriverIO.Element;
+    locator: Flutter.Locator;
+  },
 ) {
-  return await browser.executeScript('flutter: waitFor', [...args]);
+  return await browser.executeScript('flutter: waitForVisible', [options]);
 }
 
 export async function flutterWaitForAbsent(
   this: WebdriverIO.Browser,
-  ...args: any
+  options: {
+    element: WebdriverIO.Element;
+    locator: Flutter.Locator;
+  },
 ) {
-  return await browser.executeScript('flutter: waitForAbsent', [...args]);
+  return await browser.executeScript('flutter: waitForAbsent', [options]);
 }
 
 export async function flutterDoubleClick(

@@ -61,13 +61,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   }
 
   static executeMethodMap = {
-    'flutter: waitForAbsent': {
-      command: 'waitForElementToBeGone',
-      params: {
-        required: ['finderType', 'finderValue'],
-        optional: ['timeout'],
-      },
-    },
     'flutter: doubleClick': {
       command: 'doubleClick',
       params: {
@@ -80,6 +73,20 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       params: {
         required: [],
         optional: ['origin', 'offset'],
+      },
+    },
+    'flutter: waitForVisible': {
+      command: 'waitForElementToBeVisible',
+      params: {
+        required: [],
+        optional: ['element', 'locator', 'timeout'],
+      },
+    },
+    'flutter: waitForAbsent': {
+      command: 'waitForElementToBeGone',
+      params: {
+        required: [],
+        optional: ['element', 'locator', 'timeout'],
       },
     },
   };
@@ -111,12 +118,28 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
   }
 
-  async waitForElementToBeGone(
-    finderType: string,
-    finderValue: string,
-    timeout: number,
-  ) {
-    console.log('waitForElementToBeGone', finderType, finderValue, timeout);
+  async waitForElementToBeGone(element: any, locator: any, timeout: number) {
+    return this.proxy?.command(
+      `/session/:sessionId/element/wait/absent`,
+      'POST',
+      {
+        element,
+        locator,
+        timeout,
+      },
+    );
+  }
+
+  async waitForElementToBeVisible(element: any, locator: any, timeout: number) {
+    return this.proxy?.command(
+      `/session/:sessionId/element/wait/visible`,
+      'POST',
+      {
+        element,
+        locator,
+        timeout,
+      },
+    );
   }
 
   async execute(script: any, args: any) {

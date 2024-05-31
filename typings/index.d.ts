@@ -3,20 +3,22 @@ declare global {
     interface Browser {
       flutterByValueKey$(value: string): WebdriverIO.Element;
       flutterByValueKey$$(value: string): WebdriverIO.Element[];
-      flutterWaitForAbsent(value: waitForAbsent): WebdriverIO.Element;
+      flutterWaitForAbsent(options: {
+        element: WebdriverIO.Element;
+        locator: Flutter.Locator;
+      }): void;
       flutterBySemanticsLabel$(label: string): WebdriverIO.Element;
       flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[];
       flutterByText$(text: string): WebdriverIO.Element;
       flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
       flutterGestureDoubleClick(
-        origin: WebdriverIO.Element | Point,
-        offset?: Point,
+        origin: WebdriverIO.Element | Flutter.Point,
+        offset?: Flutter.Point,
       ): WebdriverIO.Element;
     }
     interface Element {
       flutterByValueKey$(value: string): WebdriverIO.Element;
       flutterByValueKey$$(value: string): WebdriverIO.Element[];
-      flutterWaitForAbsent(value: waitForAbsent): WebdriverIO.Element;
       flutterBySemanticsLabel$(label: string): WebdriverIO.Element;
       flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[];
       flutterByText$(text: string): WebdriverIO.Element;
@@ -24,12 +26,6 @@ declare global {
   }
 
   namespace Flutter {
-    type waitForAbsent = {
-      finderType: string;
-      finderValue: string;
-      timeout?: number;
-    };
-
     type Locator = {
       strategy: string;
       selector: string;
