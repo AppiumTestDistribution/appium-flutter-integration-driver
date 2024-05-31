@@ -19,8 +19,15 @@ describe('My Login application', () => {
       .flutterBySemanticsLabel$('double_tap_button')
       .flutterByText$('Double Tap');
     expect(await element.getText()).toEqual('Double Tap');
-    await browser.flutterDoubleClick({ finder: element });
-    const popUpText = await browser.flutterByText$('Double Tap Successful');
+    await browser.flutterDoubleClick(element);
+    let popUpText = await browser.flutterByText$('Double Tap Successful');
+    expect(await popUpText.getText()).toEqual('Double Tap Successful');
+    await browser.flutterByText$('Ok').click();
+    await browser.flutterGestureDoubleClick(element, {
+      x: 10,
+      y: 0,
+    });
+    popUpText = await browser.flutterByText$('Double Tap Successful');
     expect(await popUpText.getText()).toEqual('Double Tap Successful');
   });
 

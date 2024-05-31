@@ -21,7 +21,9 @@ import {
   setValue,
   clear,
 } from './commands/element';
+
 import { getProxyDriver } from './utils';
+import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
 
@@ -69,17 +71,42 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     'flutter: doubleClick': {
       command: 'doubleClick',
       params: {
-        required: ['finder'],
-        optional: [],
+        required: [],
+        optional: ['origin'],
+      },
+    },
+    'flutter: gestureDoubleClick': {
+      command: 'gestureDoubleClick',
+      params: {
+        required: [],
+        optional: ['origin', 'offset'],
       },
     },
   };
-  async doubleClick(value: any) {
-    const elementId = JSON.parse(JSON.stringify(value)).elementId;
+
+  async doubleClick(origin: any) {
+    let elementId = origin
+      ? origin['ELEMENT'] || origin[W3C_WEB_ELEMENT_IDENTIFIER]
+      : '';
+    if (!elementId) {
+      throw new Error('Valid element is required to perform double click');
+    }
     return this.proxy?.command(
       `/session/:sessionId/element/${elementId}/double_click`,
       'POST',
       {},
+    );
+    //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
+  }
+
+  async gestureDoubleClick(origin: any, offset: any) {
+    return this.proxy?.command(
+      `/session/:sessionId/appium/gestures/double_click`,
+      'POST',
+      {
+        origin,
+        offset,
+      },
     );
     //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
   }

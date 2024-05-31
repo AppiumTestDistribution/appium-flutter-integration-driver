@@ -16,7 +16,19 @@ export async function flutterWaitForAbsent(
 
 export async function flutterDoubleClick(
   this: WebdriverIO.Browser,
-  finder: any,
+  element: any,
 ) {
-  return await browser.executeScript('flutter: doubleClick', [finder]);
+  await browser.executeScript('flutter: doubleClick', [{ origin: element }]);
+  return element;
+}
+
+export async function flutterGestureDoubleClick(
+  this: WebdriverIO.Browser,
+  origin: WebdriverIO.Element,
+  offset: Flutter.Point,
+) {
+  await browser.executeScript('flutter: gestureDoubleClick', [
+    { origin, offset },
+  ]);
+  return this;
 }
