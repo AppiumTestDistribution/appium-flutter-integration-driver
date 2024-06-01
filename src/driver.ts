@@ -20,6 +20,7 @@ import {
   elementEnabled,
   setValue,
   clear,
+  ELEMENT_CACHE,
 } from './commands/element';
 
 import { getProxyDriver } from './utils';
@@ -89,6 +90,21 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         optional: ['element', 'locator', 'timeout'],
       },
     },
+    'flutter: scrollTillVisible': {
+      command: 'scrollTillVisible',
+      params: {
+        required: [],
+        optional: [
+          'finder',
+          'scrollView',
+          'delta',
+          'maxScrolls',
+          'settleBetweenScrollsTimeout',
+          'dragDuration',
+          'scrollDirection',
+        ],
+      },
+    },
   };
 
   async doubleClick(origin: any) {
@@ -142,6 +158,36 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     );
   }
 
+  async scrollTillVisible(
+    finder: any,
+    scrollView: any,
+    delta: any,
+    maxScrolls: any,
+    settleBetweenScrollsTimeout: any,
+    dragDuration: any,
+    scrollDirection: string,
+  ) {
+    const element: any = await this.proxy?.command(
+      `/session/:sessionId/appium/gestures/scroll_till_visible`,
+      'POST',
+      {
+        finder,
+        scrollView,
+        delta,
+        maxScrolls,
+        settleBetweenScrollsTimeout,
+        dragDuration,
+        scrollDirection,
+      },
+    );
+    if (element.ELEMENT || element[W3C_WEB_ELEMENT_IDENTIFIER]) {
+      ELEMENT_CACHE.set(
+        element.ELEMENT || element[W3C_WEB_ELEMENT_IDENTIFIER],
+        this.proxy,
+      );
+    }
+    return element;
+  }
   async execute(script: any, args: any) {
     return await this.executeMethod(script, args);
   }

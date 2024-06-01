@@ -3,7 +3,8 @@ import _ from 'lodash';
 import { getProxyDriver } from '../utils';
 import { JWProxy } from '@appium/base-driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-const elements = new Map();
+import { W3C_ELEMENT_KEY } from '@appium/base-driver/build/lib/constants';
+export const ELEMENT_CACHE = new Map();
 export async function findElOrEls(
   strategy: string,
   selector: string,
@@ -30,23 +31,27 @@ export async function findElOrEls(
     };
   }
   if (mult) {
-    return await driver.command('/elements', 'POST', elementBody);
+    const response = await driver.command('/elements', 'POST', elementBody);
+    response.forEach((element: any) => {
+      ELEMENT_CACHE.set(element.ELEMENT || element[W3C_ELEMENT_KEY], driver);
+    });
+    return response;
   } else {
     const element = await driver.command('/element', 'POST', elementBody);
-    elements.set(element.ELEMENT, driver);
+    ELEMENT_CACHE.set(element.ELEMENT || element[W3C_ELEMENT_KEY], driver);
     return element;
   }
 }
 
 export async function click(element: string) {
-  const driver = elements.get(element);
+  const driver = ELEMENT_CACHE.get(element);
   return await driver.command(`/element/${element}/click`, 'POST', {
     element,
   });
 }
 
 export async function getText(elementId: string) {
-  const driver = elements.get(elementId);
+  const driver = ELEMENT_CACHE.get(elementId);
   return String(await driver.command(`/element/${elementId}/text`, 'GET', {}));
 }
 
@@ -55,7 +60,7 @@ export async function elementEnabled(elementId: string) {
 }
 
 export async function getAttribute(attribute: string, elementId: string) {
-  const driver = elements.get(elementId);
+  const driver = ELEMENT_CACHE.get(elementId);
   return await driver.command(
     `/element/${elementId}/attribute/${attribute}`,
     'GET',
@@ -64,14 +69,14 @@ export async function getAttribute(attribute: string, elementId: string) {
 }
 
 export async function setValue(text: string, elementId: string) {
-  const driver = elements.get(elementId);
+  const driver = ELEMENT_CACHE.get(elementId);
   return await driver.command(`/element/${elementId}/value`, 'POST', {
     text,
   });
 }
 
 export async function clear(elementId: string) {
-  const driver = elements.get(elementId);
+  const driver = ELEMENT_CACHE.get(elementId);
   return await driver.command(`/element/${elementId}/clear`, 'POST', {
     elementId,
   });

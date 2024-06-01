@@ -11,6 +11,13 @@ async function performLogin(userName = 'admin', password = '1234') {
   await browser.flutterBySemanticsLabel$('login_button').click();
 }
 
+async function openScreen(screenTitle) {
+  const screenListElement = await browser.flutterScrollTillVisible(
+    await browser.flutterByText(screenTitle),
+  );
+  await screenListElement.click();
+}
+
 describe('My Login application', () => {
   afterEach(async () => {
     await browser.reloadSession();
@@ -18,7 +25,7 @@ describe('My Login application', () => {
 
   it('Create Session with Flutter Integration Driver', async () => {
     await performLogin();
-    await browser.flutterByText$('Double Tap').click();
+    await openScreen('Double Tap');
     const element = await browser
       .flutterBySemanticsLabel$('double_tap_button')
       .flutterByText$('Double Tap');
@@ -37,11 +44,42 @@ describe('My Login application', () => {
 
   it('Wait Test', async () => {
     await performLogin();
-    await browser.flutterByText$('Double Tap').click();
-    const element = await browser
-      .flutterBySemanticsLabel$('double_tap_button')
-      .flutterByText$('Double Tap');
-    await browser.flutterWaitForAbsent({ element: element, timeout: 10 });
+    await openScreen('Lazy Loading');
+    const message = await browser.flutterBySemanticsLabel$('message_field');
+    expect(await message.getText()).toEqual('Hello world');
+    await browser.flutterBySemanticsLabel$('toggle_button').click();
+    await browser.flutterWaitForAbsent({ element: message, timeout: 10 });
+    expect(
+      await (
+        await browser.flutterBySemanticsLabel$$('message_field')
+      ).length,
+    ).toEqual(0);
+    await browser.flutterBySemanticsLabel$('toggle_button').click();
+    await browser.flutterWaitForVisible({ element: message, timeout: 10 });
+    expect(await message.getText()).toEqual('Hello world');
+  });
+
+  it('Scroll Test', async () => {
+    await performLogin();
+    await openScreen('Vertical Swiping');
+    const javaElement = await browser.flutterScrollTillVisible(
+      await browser.flutterByText('Java'),
+    );
+    expect(await javaElement.getAttribute('displayed')).toBe(true);
+
+    const protractorElement = await browser.flutterScrollTillVisible(
+      await browser.flutterByText('Protractor'),
+    );
+    expect(await javaElement.getAttribute('displayed')).toBe(false);
+    expect(await protractorElement.getAttribute('displayed')).toBe(true);
+
+    await browser.flutterScrollTillVisible(
+      await browser.flutterByText('Java'),
+      null,
+      'up',
+    );
+    expect(await protractorElement.getAttribute('displayed')).toBe(false);
+    expect(await javaElement.getAttribute('displayed')).toBe(true);
   });
 
   it.skip('Invalid Driver', async () => {

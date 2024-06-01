@@ -1,4 +1,5 @@
 import { browser } from '@wdio/globals';
+import { w3cElementToWdioElement } from './utils.js';
 
 export async function flutterWaitForVisible(
   this: WebdriverIO.Browser,
@@ -37,4 +38,28 @@ export async function flutterGestureDoubleClick(
     { origin, offset },
   ]);
   return this;
+}
+
+export async function flutterScrollTillVisible(
+  this: WebdriverIO.Browser,
+  finder: WebdriverIO.Element,
+  scrollView?: WebdriverIO.Element,
+  scrollDirection?: 'up' | 'right' | 'down' | 'left',
+  delta?: number,
+  maxScrolls?: number,
+  settleBetweenScrollsTimeout?: number,
+  dragDuration?: number,
+): Promise<WebdriverIO.Element | null> {
+  const response = await browser.executeScript('flutter: scrollTillVisible', [
+    {
+      finder,
+      scrollView,
+      scrollDirection,
+      delta,
+      maxScrolls,
+      settleBetweenScrollsTimeout,
+      dragDuration,
+    },
+  ]);
+  return await w3cElementToWdioElement(this, response);
 }

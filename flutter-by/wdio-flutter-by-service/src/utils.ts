@@ -66,19 +66,24 @@ const flutterElementFinder = function (
     });
 
     const response: any = await findElement.call(browser as any, ...args);
-    if (response.error) {
+    if (response && response.error) {
       throw new Error(response.message);
     }
-    const getElement = await constructElementObject();
+
     if (isMultipleFind) {
-      return response.map((element: any) =>
-        getElement.call(this, null, element),
+      return await Promise.all(
+        response.map((element: any) => w3cElementToWdioElement(this, element)),
       );
     } else {
-      return getElement.call(this, null, response);
+      return await w3cElementToWdioElement(this, response);
     }
   };
 };
+
+export async function w3cElementToWdioElement(context: any, response: any) {
+  const getElement = await constructElementObject();
+  return getElement.call(context, null, response);
+}
 
 export function registerLocators(locatorConfig: Array<LocatorConfig>) {
   for (let config of locatorConfig) {
@@ -93,6 +98,19 @@ export function registerLocators(locatorConfig: Array<LocatorConfig>) {
       attachToBrowser: true,
       attachToElement: true,
     });
+    registerCustomMethod(
+      `${methodName}`,
+      (value: string) => {
+        return {
+          strategy: config.stategy,
+          selector: value,
+        };
+      },
+      {
+        attachToBrowser: true,
+        attachToElement: false,
+      },
+    );
   }
 }
 
