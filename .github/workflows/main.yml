@@ -18,7 +18,8 @@ jobs:
       - name: Check out my other private repo
         uses: actions/checkout@master
         with:
-          repository: AppiumTestDistribution/appium-flutter-integration-driver
+          path: 'server'
+          repository: AppiumTestDistribution/appium-flutter-server
       - uses: actions/checkout@v2
       - name: Set up JDK 17
         uses: actions/setup-java@v3
