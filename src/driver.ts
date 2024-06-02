@@ -66,13 +66,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       command: 'doubleClick',
       params: {
         required: [],
-        optional: ['origin'],
-      },
-    },
-    'flutter: gestureDoubleClick': {
-      command: 'gestureDoubleClick',
-      params: {
-        required: [],
         optional: ['origin', 'offset'],
       },
     },
@@ -107,22 +100,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     },
   };
 
-  async doubleClick(origin: any) {
-    let elementId = origin
-      ? origin['ELEMENT'] || origin[W3C_WEB_ELEMENT_IDENTIFIER]
-      : '';
-    if (!elementId) {
-      throw new Error('Valid element is required to perform double click');
-    }
-    return this.proxy?.command(
-      `/session/:sessionId/element/${elementId}/double_click`,
-      'POST',
-      {},
-    );
-    //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
-  }
-
-  async gestureDoubleClick(origin: any, offset: any) {
+  async doubleClick(origin: any, offset: any) {
     return this.proxy?.command(
       `/session/:sessionId/appium/gestures/double_click`,
       'POST',

@@ -10,7 +10,7 @@ export const config: WebdriverIO.Config = {
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
       'appium:app':
-        '/Users/saikrishna/Downloads/git/flutter-learnings/counter_app/build/app/outputs/apk/debug/app-debug.apk',
+        '/Users/sselvarj/Documents/git/personal/appium_flutter_server/demo-app/build/app/outputs/apk/debug/app-debug.apk',
       'appium:newCommandTimeout': 240,
     },
   ],

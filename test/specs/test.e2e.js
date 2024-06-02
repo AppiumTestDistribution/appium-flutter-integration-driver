@@ -12,9 +12,9 @@ async function performLogin(userName = 'admin', password = '1234') {
 }
 
 async function openScreen(screenTitle) {
-  const screenListElement = await browser.flutterScrollTillVisible(
-    await browser.flutterByText(screenTitle),
-  );
+  const screenListElement = await browser.flutterScrollTillVisible({
+    finder: await browser.flutterByText(screenTitle),
+  });
   await screenListElement.click();
 }
 
@@ -30,13 +30,18 @@ describe('My Login application', () => {
       .flutterBySemanticsLabel$('double_tap_button')
       .flutterByText$('Double Tap');
     expect(await element.getText()).toEqual('Double Tap');
-    await browser.flutterDoubleClick(element);
+    await browser.flutterDoubleClick({
+      element: element,
+    });
     let popUpText = await browser.flutterByText$('Double Tap Successful');
     expect(await popUpText.getText()).toEqual('Double Tap Successful');
     await browser.flutterByText$('Ok').click();
-    await browser.flutterGestureDoubleClick(element, {
-      x: 10,
-      y: 0,
+    await browser.flutterDoubleClick({
+      element,
+      offset: {
+        x: 10,
+        y: 0,
+      },
     });
     popUpText = await browser.flutterByText$('Double Tap Successful');
     expect(await popUpText.getText()).toEqual('Double Tap Successful');
@@ -62,22 +67,21 @@ describe('My Login application', () => {
   it('Scroll Test', async () => {
     await performLogin();
     await openScreen('Vertical Swiping');
-    const javaElement = await browser.flutterScrollTillVisible(
-      await browser.flutterByText('Java'),
-    );
+    const javaElement = await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText('Java'),
+    });
     expect(await javaElement.getAttribute('displayed')).toBe(true);
 
-    const protractorElement = await browser.flutterScrollTillVisible(
-      await browser.flutterByText('Protractor'),
-    );
+    const protractorElement = await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText('Protractor'),
+    });
     expect(await javaElement.getAttribute('displayed')).toBe(false);
     expect(await protractorElement.getAttribute('displayed')).toBe(true);
 
-    await browser.flutterScrollTillVisible(
-      await browser.flutterByText('Java'),
-      null,
-      'up',
-    );
+    await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText('Java'),
+      scrollDirection: 'up',
+    });
     expect(await protractorElement.getAttribute('displayed')).toBe(false);
     expect(await javaElement.getAttribute('displayed')).toBe(true);
   });

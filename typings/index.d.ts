@@ -1,3 +1,6 @@
+import { FlutterIntergrationDriverService } from './service.js';
+export default FlutterIntergrationDriverService;
+
 declare global {
   namespace WebdriverIO {
     interface Browser {
@@ -12,23 +15,20 @@ declare global {
       flutterByText$$(text: string): WebdriverIO.Element[];
 
       flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
-      flutterGestureDoubleClick(
-        origin: WebdriverIO.Element | Flutter.Point,
-        offset?: Flutter.Point,
-      ): WebdriverIO.Element;
       flutterWaitForAbsent(options: {
         element: WebdriverIO.Element;
         locator: Flutter.Locator;
       }): void;
 
-      flutterScrollTillVisible(
-        finder: Flutter.Locator,
-        scrollView?: Flutter.Locator,
-        delta?: number,
-        maxScrolls?: number,
-        settleBetweenScrollsTimeout?: number,
-        dragDuration?: number,
-      ): Promise<WebdriverIO.Element | null>;
+      flutterScrollTillVisible(options: {
+        finder: WebdriverIO.Element;
+        scrollView?: WebdriverIO.Element;
+        scrollDirection?: 'up' | 'right' | 'down' | 'left';
+        delta?: number;
+        maxScrolls?: number;
+        settleBetweenScrollsTimeout?: number;
+        dragDuration?: number;
+      }): Promise<WebdriverIO.Element | null>;
     }
     interface Element {
       flutterByValueKey(value: string): Flutter.Locator;
@@ -55,3 +55,5 @@ declare global {
     };
   }
 }
+
+export { FlutterIntergrationDriverService };

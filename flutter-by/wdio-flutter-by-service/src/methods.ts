@@ -23,43 +23,31 @@ export async function flutterWaitForAbsent(
 
 export async function flutterDoubleClick(
   this: WebdriverIO.Browser,
-  element: any,
+  options: {
+    element?: WebdriverIO.Element;
+    offset?: Flutter.Point;
+  },
 ) {
-  await browser.executeScript('flutter: doubleClick', [{ origin: element }]);
-  return element;
-}
-
-export async function flutterGestureDoubleClick(
-  this: WebdriverIO.Browser,
-  origin: WebdriverIO.Element,
-  offset: Flutter.Point,
-) {
-  await browser.executeScript('flutter: gestureDoubleClick', [
-    { origin, offset },
+  const { element, offset } = options;
+  return await browser.executeScript('flutter: doubleClick', [
+    { origin: element, offet: offset },
   ]);
-  return this;
 }
 
 export async function flutterScrollTillVisible(
   this: WebdriverIO.Browser,
-  finder: WebdriverIO.Element,
-  scrollView?: WebdriverIO.Element,
-  scrollDirection?: 'up' | 'right' | 'down' | 'left',
-  delta?: number,
-  maxScrolls?: number,
-  settleBetweenScrollsTimeout?: number,
-  dragDuration?: number,
+  options: {
+    finder: WebdriverIO.Element;
+    scrollView?: WebdriverIO.Element;
+    scrollDirection?: 'up' | 'right' | 'down' | 'left';
+    delta?: number;
+    maxScrolls?: number;
+    settleBetweenScrollsTimeout?: number;
+    dragDuration?: number;
+  },
 ): Promise<WebdriverIO.Element | null> {
   const response = await browser.executeScript('flutter: scrollTillVisible', [
-    {
-      finder,
-      scrollView,
-      scrollDirection,
-      delta,
-      maxScrolls,
-      settleBetweenScrollsTimeout,
-      dragDuration,
-    },
+    options,
   ]);
   return await w3cElementToWdioElement(this, response);
 }
