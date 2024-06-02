@@ -48,6 +48,7 @@ jobs:
           name: Android build
           path: ${{ github.workspace }}/server/demo-app/build/app/outputs/apk/debug/app-debug.apk
   Run_Tests:
+   needs: Build_Server
    runs-on: ubuntu-latest
    strategy:
      matrix:
@@ -80,4 +81,9 @@ jobs:
          adb devices
          node --version
          ls
+         cd flutter-by 
+         npm install
+         npm run build 
+         cd ..
+         npm install
 
