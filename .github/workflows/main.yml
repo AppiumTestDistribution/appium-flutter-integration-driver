@@ -33,20 +33,20 @@ jobs:
           channel: 'stable'
       - run: |
           ls
-          # cd demo-app
-          # dart pub global activate rps --version 0.8.0
-          # flutter build apk --debug
-          # cd android && ./gradlew app:assembleDebug -Ptarget=`pwd`/../integration_test/appium.dart
-      # - name: "List files"
-      #   continue-on-error: true
-      #   run: |
-      #     ls -l ${{ github.workspace }}/demo-app/build/app/outputs/apk/debug/
+          cd server/demo-app
+          dart pub global activate rps --version 0.8.0
+          flutter build apk --debug
+          cd android && ./gradlew app:assembleDebug -Ptarget=`pwd`/../integration_test/appium.dart
+      - name: "List files"
+        continue-on-error: true
+        run: |
+          ls -l ${{ github.workspace }}/server/demo-app/build/app/outputs/apk/debug/
 
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: Android build
-      #     path: ${{ github.workspace }}/demo-app/build/app/outputs/apk/debug/app-debug.apk
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android build
+          path: ${{ github.workspace }}/server/demo-app/build/app/outputs/apk/debug/app-debug.apk
       # - name: Enable KVM group perms
       #   run: |
       #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
