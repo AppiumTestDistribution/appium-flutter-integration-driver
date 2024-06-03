@@ -7,7 +7,7 @@
   ],
   "version": "1.0.0-beta.1",
   "author": "",
-  "license": "Apache-2.0",
+  "license": "MIT License",
   "repository": {
     "type": "git",
     "url": "https://github.com/appium/appium-fs-driver.git"

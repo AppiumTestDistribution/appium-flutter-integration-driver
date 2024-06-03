@@ -12,7 +12,8 @@
   "type": "module",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "types": "./build/index.d.ts",
+  "license": "MIT License",
   "dependencies": {
     "@wdio/logger": "^8.38.0",
     "@wdio/utils": "^8.38.0",
