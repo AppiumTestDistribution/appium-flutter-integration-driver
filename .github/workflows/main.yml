@@ -88,10 +88,12 @@ jobs:
        script: |
          adb devices
          node --version
+         npm install -g wait-on
          npm install -g appium
          appium driver install uiautomator2
          npm install
          appium driver list
-         npm run wdio-android
+         appium server -pa=/wd/hub &
+         wait-on http://127.0.0.1:4723 && npm run wdio-android
          
 
