@@ -85,11 +85,6 @@ jobs:
        script: |
          adb devices
          node --version
-         ls
-         cd flutter-by/wdio-flutter-by-service 
-         npm install
-         npm run build
-         cd ..
          npm install
          npm run wdio-android
          
