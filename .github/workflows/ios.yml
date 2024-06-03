@@ -41,7 +41,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ios.app
+          name: ios
           path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/Runner.app
 
   Run_iOS_Tests:
@@ -59,7 +59,7 @@ jobs:
           distribution: 'adopt'
       - uses: dawidd6/action-download-artifact@v3
         with:
-          name: ios.app
+          name: ios
       - name: Display structure of downloaded files
         run: ls -R
       - name: Run WDIO iOS Test
