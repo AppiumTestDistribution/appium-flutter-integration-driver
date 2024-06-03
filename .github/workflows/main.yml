@@ -61,7 +61,7 @@ jobs:
      with:
       java-version: '17'
       distribution: 'adopt'
-   - uses: actions/download-artifact@v2
+   - uses: dawidd6/action-download-artifact@v3
      with:
        name: Android-build
    - name: Display structure of downloaded files
