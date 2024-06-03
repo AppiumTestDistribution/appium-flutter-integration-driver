@@ -152,8 +152,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - uses: dawidd6/action-download-artifact@v3
-        with:
-          name: iOS-build.app
       - name: Display structure of downloaded files
         run: ls -R
       - uses: subosito/flutter-action@v2
