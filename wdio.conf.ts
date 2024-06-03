@@ -1,5 +1,8 @@
 // @ts-ignore
 import type { Options } from '@wdio/types';
+import { join } from 'node:path';
+const appiumServerPath = join(process.cwd(), 'node_modules', '.bin', 'appium');
+console.log(appiumServerPath);
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -109,7 +112,7 @@ export const config: Options.Testrunner = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [['flutter-by', {}], ['appium', {
+  services: [['flutter-by', {}], [appiumServerPath, {
     args: {
       basePath: '/wd/hub',
       port: 4723,
