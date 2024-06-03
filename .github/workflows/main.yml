@@ -91,4 +91,6 @@ jobs:
          npm run build 
          cd ..
          npm install
+         npm run wdio-android
+         
 

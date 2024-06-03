@@ -9,8 +9,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'Android',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
-      'appium:app':
-        '/Users/sselvarj/Documents/git/personal/appium_flutter_server/demo-app/build/app/outputs/apk/debug/app-debug.apk',
+      'appium:app': join(process.cwd(), 'app-debug.apk'),
       'appium:newCommandTimeout': 240,
     },
   ],
