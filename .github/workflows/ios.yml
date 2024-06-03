@@ -25,8 +25,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2.0.10
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: 3.22.1
@@ -43,7 +41,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: iOS-build.app
+          name: ios.app
           path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/Runner.app
 
   Run_iOS_Tests:
