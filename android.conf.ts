@@ -11,6 +11,7 @@ export const config: WebdriverIO.Config = {
       'appium:orientation': 'PORTRAIT',
       'appium:app': join(process.cwd(), 'app-debug.apk'),
       'appium:newCommandTimeout': 240,
+      'appium:skipLogcatCapture': true,
     },
   ],
 };
