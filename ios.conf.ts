@@ -9,7 +9,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'iOS',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
-      'appium:app': join(process.cwd(), 'Runner.app'),
+      'appium:app': join(process.cwd(), 'iOS-build.app'),
       'appium:newCommandTimeout': 240,
     },
   ],
