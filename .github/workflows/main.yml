@@ -94,8 +94,8 @@ jobs:
          npm install
          npm run build
          appium driver list
-#        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
          npm run wdio-android
+
   Build_IOS_App_With_Server:
     runs-on: macos-latest
     strategy:
