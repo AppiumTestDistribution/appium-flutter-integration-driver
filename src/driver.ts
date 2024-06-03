@@ -25,6 +25,7 @@ import {
 
 import { getProxyDriver } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
+import { portForward } from './iOS';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
 
@@ -196,6 +197,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       // @ts-ignore
       this.flutterPort = DEFAULT_FLUTTER_SERVER_PORT;
     }
+    await portForward.call(this);
 
     // HACK for eliminatin socket hang up by waiting 1 sec
     await new Promise((r) => setTimeout(r, 1000));

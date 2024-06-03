@@ -1,4 +1,5 @@
 import { config as baseConfig } from './wdio.conf.ts';
+import { join } from 'node:path';
 
 export const config: WebdriverIO.Config = {
   ...baseConfig,
@@ -8,8 +9,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'iOS',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
-      'appium:app':
-        '/Users/saikrishna/Downloads/git/flutter-learnings/counter_app/build/ios/iphonesimulator/Runner.app',
+      'appium:app': join(process.cwd(), 'Runner.app'),
       'appium:newCommandTimeout': 240,
     },
   ],
