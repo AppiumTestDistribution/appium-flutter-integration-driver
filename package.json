@@ -63,7 +63,8 @@
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "webdriverio": "^8.38.0"
+    "webdriverio": "^8.38.0",
+    "wdio-flutter-by-service": "1.0.0"
   },
   "peerDependencies": {
     "appium": "^2.5.4"
@@ -85,8 +86,6 @@
     "chai": "^5.1.1",
     "get-port": "^7.1.0",
     "lodash": "^4.17.21",
-    "portscanner": "^2.2.0",
-    "wdio-flutter-by-service": "1.0.0",
-    "webdriver": "^8.38.0"
+    "portscanner": "^2.2.0"
   }
 }
