@@ -58,6 +58,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - uses: dawidd6/action-download-artifact@v3
+        with:
+          name: ios.app
       - name: Display structure of downloaded files
         run: ls -R
       - name: Run WDIO iOS Test
