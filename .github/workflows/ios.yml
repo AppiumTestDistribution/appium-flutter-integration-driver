@@ -49,10 +49,6 @@ jobs:
   Run_iOS_Tests:
     needs: Build_IOS_App_With_Server
     runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [ 29 ]
-        target: [ google_apis ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v4
@@ -64,8 +60,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - uses: dawidd6/action-download-artifact@v3
-        with:
-          name: iOS-build.app
       - name: Display structure of downloaded files
         run: ls -R
       - name: Run WDIO iOS Test
