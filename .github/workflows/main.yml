@@ -133,6 +133,7 @@ jobs:
         with:
           name: iOS-build.app
           path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/Runner.app
+      - uses: actions/checkout@v2
       - name: Run WDIO iOS Test
         run: |
           npm install -g appium
