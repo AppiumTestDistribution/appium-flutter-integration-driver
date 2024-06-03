@@ -63,7 +63,7 @@ jobs:
       distribution: 'adopt'
    - uses: dawidd6/action-download-artifact@v3
      with:
-       name: Android build
+       name: Android-build
    - name: Display structure of downloaded files
      run: ls -R
    - uses: subosito/flutter-action@v2
