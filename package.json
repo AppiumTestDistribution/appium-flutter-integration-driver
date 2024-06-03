@@ -5,9 +5,9 @@
     "appium",
     "flutter"
   ],
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "author": "",
-  "license": "Apache-2.0",
+  "license": "MIT License",
   "repository": {
     "type": "git",
     "url": "https://github.com/appium/appium-fs-driver.git"
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@testing-library/webdriverio": "^3.2.1",
     "@types/mocha": "^10.0.6",
+    "@wdio/appium-service": "^8.38.0",
     "@wdio/cli": "^8.38.0",
     "@wdio/local-runner": "^8.38.0",
     "@wdio/mocha-framework": "^8.38.0",
@@ -62,7 +63,8 @@
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "webdriverio": "^8.38.0"
+    "webdriverio": "^8.38.0",
+    "wdio-flutter-by-service": "1.0.0"
   },
   "peerDependencies": {
     "appium": "^2.5.4"
@@ -84,8 +86,6 @@
     "chai": "^5.1.1",
     "get-port": "^7.1.0",
     "lodash": "^4.17.21",
-    "portscanner": "^2.2.0",
-    "wdio-flutter-by-service": "file:flutter-by/wdio-flutter-by-service",
-    "webdriver": "^8.38.0"
+    "portscanner": "^2.2.0"
   }
 }

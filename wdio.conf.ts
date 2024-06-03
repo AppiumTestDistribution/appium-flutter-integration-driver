@@ -1,5 +1,8 @@
 // @ts-ignore
 import type { Options } from '@wdio/types';
+import { join } from 'node:path';
+const appiumServerPath = join(process.cwd(), 'node_modules', 'appium', 'index.js');
+console.log(appiumServerPath);
 export const config: Options.Testrunner = {
   //
   // ====================

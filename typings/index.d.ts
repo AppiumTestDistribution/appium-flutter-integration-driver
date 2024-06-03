@@ -1,5 +1,4 @@
-import { FlutterIntergrationDriverService } from './service.js';
-export default FlutterIntergrationDriverService;
+import { FlutterIntergrationDriverService } from './service';
 
 declare global {
   namespace WebdriverIO {
