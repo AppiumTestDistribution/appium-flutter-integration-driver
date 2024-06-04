@@ -167,6 +167,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     return element;
   }
   async execute(script: any, args: any) {
+    if (script.startsWith('mobile:')) {
+      // @ts-ignore
+      return await this.proxydriver.execute(script, args);
+    }
     return await this.executeMethod(script, args);
   }
 
