@@ -6,7 +6,12 @@
     "build": "rimraf build && tsc -b"
   },
   "exports": {
-    ".": "./build/index.js",
+    ".": [
+      {
+        "types": "./build/index.d.ts",
+        "import": "./build/index.js"
+      }
+    ],
     "./package.json": "./package.json"
   },
   "type": "module",
