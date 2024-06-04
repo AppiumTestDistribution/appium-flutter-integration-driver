@@ -44,11 +44,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ios
+          name: ios-build
           path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/ios.zip
-      - uses: dawidd6/action-download-artifact@v3
-        with:
-          name: ios.zip
 
   Run_iOS_Tests:
     needs: Build_IOS_App_With_Server
@@ -65,7 +62,9 @@ jobs:
           distribution: 'adopt'
       - uses: dawidd6/action-download-artifact@v3
         with:
-          name: ios.zip
+          name: ios-build
+          search_artifacts: true
+          name_is_regexp: true
       - name: Display structure of downloaded files
         run: ls -R
       - name: Run WDIO iOS Test
