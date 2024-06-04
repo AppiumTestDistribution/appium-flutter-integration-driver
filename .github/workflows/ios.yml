@@ -37,12 +37,15 @@ jobs:
         continue-on-error: true
         run: |
           ls -l ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/
-
+      - name: "Zip files"
+        run: |
+          cd ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/
+          zip -r ios.zip Runner.app
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ios
-          path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/Runner.app
+          path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/ios.zip
 
   Run_iOS_Tests:
     needs: Build_IOS_App_With_Server
