@@ -46,6 +46,9 @@ jobs:
         with:
           name: ios
           path: ${{ github.workspace }}/server/demo-app/build/ios/iphonesimulator/ios.zip
+      - uses: dawidd6/action-download-artifact@v3
+        with:
+          name: ios
 
   Run_iOS_Tests:
     needs: Build_IOS_App_With_Server
