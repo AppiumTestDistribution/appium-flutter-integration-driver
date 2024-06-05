@@ -16,3 +16,16 @@ export async function getProxyDriver(
     return 'NA';
   }
 }
+
+
+export function isFlutterDriverCommand(command: string) {
+  return [
+          "createSession", "deleteSession", "getSession",
+          "getSessions", "findElement", "findElements",
+          "findElementFromElement", "findElementsFromElement", "click",
+          "getText", "setValue", "keys", "getName", "clear",
+          "elementSelected", "elementEnabled",
+          "getAttribute", "elementDisplayed", "execute"
+      ]
+      .indexOf(command) >= 0;
+}

@@ -23,7 +23,7 @@ import {
   ELEMENT_CACHE,
 } from './commands/element';
 
-import { getProxyDriver } from './utils';
+import {  isFlutterDriverCommand } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
@@ -174,6 +174,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     return await this.executeMethod(script, args);
   }
 
+  async executeCommand(command: any, ...args: any) {
+    if(isFlutterDriverCommand(command)) {
+      return await super.executeCommand(command, ...args);
+    }
+    return await this.proxydriver.executeCommand(command as string, ...args);
+  }
+
   public async createSession(
     ...args: any[]
   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
@@ -213,7 +220,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   }
 
   canProxy() {
-    return true;
+    return false;
   }
 
   async deleteSession() {

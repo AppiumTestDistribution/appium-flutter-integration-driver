@@ -132,3 +132,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .history
+.npmrc

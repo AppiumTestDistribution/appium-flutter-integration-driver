@@ -1,6 +1,7 @@
 import { browser, expect } from '@wdio/globals';
 
 async function performLogin(userName = 'admin', password = '1234') {
+  await browser.takeScreenshot();
   await browser.flutterBySemanticsLabel$('username_text_field').clearValue();
   await browser
     .flutterBySemanticsLabel$('username_text_field')
