@@ -5,20 +5,23 @@ declare global {
   namespace WebdriverIO {
     interface Browser {
       flutterByValueKey(value: string): Flutter.Locator;
-      flutterByValueKey$(value: string): WebdriverIO.Element;
-      flutterByValueKey$$(value: string): WebdriverIO.Element[];
+      flutterByValueKey$(value: string): Promise<WebdriverIO.Element>;
+      flutterByValueKey$$(value: string): Promise<WebdriverIO.Element[]>;
       flutterBySemanticsLabel(label: string): Flutter.Locator;
-      flutterBySemanticsLabel$(label: string): WebdriverIO.Element;
-      flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[];
+      flutterBySemanticsLabel$(label: string): Promise<WebdriverIO.Element>;
+      flutterBySemanticsLabel$$(label: string): Promise<WebdriverIO.Element[]>;
       flutterByText(text: string): Flutter.Locator;
-      flutterByText$(text: string): WebdriverIO.Element;
-      flutterByText$$(text: string): WebdriverIO.Element[];
-
+      flutterByText$(text: string): Promise<WebdriverIO.Element>;
+      flutterByText$$(text: string): Promise<WebdriverIO.Element[]>;
+      flutterWaitForVisible(options: {
+        element: WebdriverIO.Element;
+        locator: Flutter.Locator;
+      }): Promise<void>;
       flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
       flutterWaitForAbsent(options: {
         element: WebdriverIO.Element;
         locator: Flutter.Locator;
-      }): void;
+      }): Promise<void>;
 
       flutterScrollTillVisible(options: {
         finder: WebdriverIO.Element;
