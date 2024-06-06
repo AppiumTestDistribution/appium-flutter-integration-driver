@@ -15,13 +15,11 @@ declare global {
       flutterByText$$(text: string): Promise<WebdriverIO.Element[]>;
       flutterWaitForVisible(options: {
         element: WebdriverIO.Element;
-        locator: Flutter.Locator;
         timeout?: number;
       }): Promise<void>;
       flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
       flutterWaitForAbsent(options: {
         element: WebdriverIO.Element;
-        locator: Flutter.Locator;
         timeout?: number;
       }): Promise<void>;
 
