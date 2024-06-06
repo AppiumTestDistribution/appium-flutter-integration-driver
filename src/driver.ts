@@ -212,7 +212,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
     // HACK for eliminatin socket hang up by waiting 1 sec
     await new Promise((r) => setTimeout(r, 1000));
-
+    // @ts-ignore
+    console.log('PageSource', await this.proxydriver.getPageSource());
+    // @ts-ignore
     this.proxy = new JWProxy({
       server: '127.0.0.1',
       port: this.flutterPort,
