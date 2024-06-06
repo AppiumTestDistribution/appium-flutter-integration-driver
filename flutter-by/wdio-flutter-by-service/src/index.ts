@@ -16,11 +16,13 @@ declare global {
       flutterWaitForVisible(options: {
         element: WebdriverIO.Element;
         locator: Flutter.Locator;
+        timeout?: number;
       }): Promise<void>;
       flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
       flutterWaitForAbsent(options: {
         element: WebdriverIO.Element;
         locator: Flutter.Locator;
+        timeout?: number;
       }): Promise<void>;
 
       flutterScrollTillVisible(options: {
