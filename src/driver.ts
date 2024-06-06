@@ -217,16 +217,25 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       server: '127.0.0.1',
       port: this.flutterPort,
     });
-    await waitForCondition(async () => {
-      try {
-        // @ts-ignore
-        await this.proxy.command('/status', 'GET');
-        return true;
-      } catch(err: any) {
-        log.info('FlutterServer not reachable, Trying..', err);
-        return false;
-      }
-    })
+    try {
+      await waitForCondition(async () => {
+        try {
+          // @ts-ignore
+          await this.proxy.command('/status', 'GET');
+          return true;
+        } catch(err: any) {
+          log.info('FlutterServer not reachable, Trying..', err);
+          return false;
+        }
+      }, {
+        waitMs: 15000,
+        intervalMs: 1000,
+      })
+    } catch(err: any) {
+      log.error('FlutterServer not reachable', err);
+      throw new Error(err);
+    }
+
 
     await this.proxy.command('/session', 'POST', { capabilities: caps });
     return sessionCreated;
