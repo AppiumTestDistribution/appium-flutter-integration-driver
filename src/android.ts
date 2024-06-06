@@ -31,4 +31,6 @@ const portForward = async (port: number, udid: string) => {
   let adb = new ADB();
   if (udid) adb.setDeviceId(udid);
   await adb.forwardPort(port, 8888);
+  const adbForwardList = await adb.getForwardList();
+  log.info(`Port forwarding: ${JSON.stringify(adbForwardList)}`);
 };
