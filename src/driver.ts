@@ -26,6 +26,7 @@ import {
 import {  isFlutterDriverCommand } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 import { waitForCondition } from 'asyncbox';
+import { log } from './logger';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
 
@@ -217,10 +218,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       port: this.flutterPort,
     });
     await waitForCondition(async () => {
-      // @ts-ignore
-      let health = await this.proxy.command('/status', 'GET');
-      console.log('Inside wait for condition', health, health === 'Flutter driver is ready to accept new connections');
-      return health === 'Flutter driver is ready to accept new connections';
+      try {
+        // @ts-ignore
+        await this.proxy.command('/status', 'GET');
+        return true;
+      } catch(err: any) {
+        log.info('FlutterServer not reachable, Trying..', err);
+        return false;
+      }
     })
 
     await this.proxy.command('/session', 'POST', { capabilities: caps });
