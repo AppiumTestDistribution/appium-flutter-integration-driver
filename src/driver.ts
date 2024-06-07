@@ -23,9 +23,9 @@ import {
   ELEMENT_CACHE,
 } from './commands/element';
 
-import {  isFlutterDriverCommand } from './utils';
+import { isFlutterDriverCommand } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
-import { waitForCondition } from 'asyncbox';
+import { sleep, waitForCondition } from 'asyncbox';
 import { log } from './logger';
 
 const DEFAULT_FLUTTER_SERVER_PORT = 8888;
@@ -177,7 +177,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   }
 
   async executeCommand(command: any, ...args: any) {
-    if(isFlutterDriverCommand(command)) {
+    if (isFlutterDriverCommand(command)) {
       return await super.executeCommand(command, ...args);
     }
     return await this.proxydriver.executeCommand(command as string, ...args);
@@ -202,16 +202,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       ...JSON.parse(JSON.stringify(args)),
     );
 
-    if (
-      this.proxydriver instanceof XCUITestDriver &&
-      !this.proxydriver.isRealDevice()
-    ) {
-      // @ts-ignore
-      this.flutterPort = DEFAULT_FLUTTER_SERVER_PORT;
-    }
-
     // HACK for eliminatin socket hang up by waiting 1 sec
-    await new Promise((r) => setTimeout(r, 1000));
+    await sleep(1000);
     // @ts-ignore
     console.log('PageSource', await this.proxydriver.getPageSource());
     // @ts-ignore

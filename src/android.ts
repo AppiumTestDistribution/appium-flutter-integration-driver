@@ -3,6 +3,9 @@ import { log } from './logger';
 import type { InitialOpts } from '@appium/types';
 import { AppiumFlutterDriver } from './driver';
 import ADB from 'appium-adb';
+import { sleep } from 'asyncbox';
+import { fetchFlutterServerPort, getFreePort } from './utils';
+
 const setupNewAndroidDriver = async (
   ...args: any[]
 ): Promise<AndroidUiautomator2Driver> => {
@@ -19,18 +22,31 @@ export const startAndroidSession = async (
 ): Promise<[AndroidUiautomator2Driver, null]> => {
   log.info(`Starting an Android proxy session`);
   const androiddriver = await setupNewAndroidDriver(...args);
-
-  // the session starts without any apps
-  caps.flutterPort = caps.flutterPort || 8600;
-  log.info('Android session started', androiddriver);
-  await portForward(caps.flutterPort, caps.udid);
-  return [androiddriver, caps.flutterPort];
+  log.info('Looking for the port in where Flutter server is listening too...');
+  await sleep(2000);
+  const flutterServerPort = fetchFlutterServerPort(
+    (androiddriver.adb.logcat?.logs as [{ message: string }]) || [],
+  );
+  caps.flutterServerPort = await portForward(
+    caps.udid,
+    flutterServerPort,
+    caps.flutterServerPort,
+  );
+  return [androiddriver, caps.flutterServerPort];
 };
 
-const portForward = async (port: number, udid: string) => {
+const portForward = async (
+  udid: string,
+  devicePort: number,
+  systemPort?: number,
+) => {
+  if (!systemPort) {
+    systemPort = await getFreePort();
+  }
   let adb = new ADB();
   if (udid) adb.setDeviceId(udid);
-  await adb.forwardPort(port, 8888);
+  await adb.forwardPort(systemPort!, devicePort);
   const adbForwardList = await adb.getForwardList();
   log.info(`Port forwarding: ${JSON.stringify(adbForwardList)}`);
+  return systemPort;
 };

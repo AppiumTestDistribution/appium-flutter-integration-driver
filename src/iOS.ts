@@ -4,6 +4,8 @@ import XCUITestDriver from 'appium-xcuitest-driver';
 import type { InitialOpts } from '@appium/types';
 import { log } from './logger';
 import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
+import { sleep } from 'asyncbox';
+import { fetchFlutterServerPort, getFreePort } from './utils';
 
 const setupNewIOSDriver = async (...args: any[]): Promise<XCUITestDriver> => {
   const iosdriver = new XCUITestDriver({} as InitialOpts);
@@ -11,19 +13,23 @@ const setupNewIOSDriver = async (...args: any[]): Promise<XCUITestDriver> => {
   return iosdriver;
 };
 
-async function portForward(iOSDriver: any, flutterPort: any, udid: any) {
-  // Need to do this for real device
-  if (
-    iOSDriver instanceof XCUITestDriver &&
-    iOSDriver.isRealDevice()
-  ) {
-    log.info(`Forwarding port ${flutterPort} to device ${udid}`);
-    await DEVICE_CONNECTIONS_FACTORY.requestConnection(udid, flutterPort, {
-      usePortForwarding: true,
-      devicePort: '8888',
-    });
+const portForward = async (
+  udid: string,
+  systemPort: number,
+  devicePort: any,
+) => {
+  if (!systemPort) {
+    systemPort = await getFreePort();
   }
-}
+  log.info(
+    `Forwarding port ${systemPort} to device port ${devicePort} ${udid}`,
+  );
+  await DEVICE_CONNECTIONS_FACTORY.requestConnection(udid, systemPort, {
+    usePortForwarding: true,
+    devicePort: devicePort,
+  });
+  return systemPort;
+};
 
 export const startIOSSession = async (
   flutterDriver: AppiumFlutterDriver,
@@ -32,10 +38,19 @@ export const startIOSSession = async (
 ): Promise<[XCUITestDriver, number]> => {
   log.info(`Starting an IOS proxy session`);
   const iOSDriver = await setupNewIOSDriver(...args);
-
-  // the session starts without any apps
-  caps.flutterPort = caps.flutterPort || 8600;
+  log.info('Looking for port Flutter server is listening too...');
+  await sleep(2000);
+  const flutterServerPort = fetchFlutterServerPort(iOSDriver.logs.syslog.logs);
+  if (iOSDriver.isRealDevice()) {
+    caps.flutterServerPort = await portForward(
+      iOSDriver.udid,
+      caps.flutterServerPort,
+      flutterServerPort,
+    );
+  } else {
+    //incase of emulator use the same port where the flutter server is running
+    caps.flutterServerPort = flutterServerPort;
+  }
   log.info('iOS session started', iOSDriver);
-  await portForward(iOSDriver, caps.flutterPort, caps.udid);
-  return [iOSDriver, caps.flutterPort];
+  return [iOSDriver, caps.flutterServerPort];
 };
