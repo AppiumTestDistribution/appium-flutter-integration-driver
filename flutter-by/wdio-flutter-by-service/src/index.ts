@@ -1,18 +1,19 @@
 import { FlutterIntergrationDriverService } from './service.js';
+import { ChainablePromiseElement } from 'webdriverio';
 export default FlutterIntergrationDriverService;
 
 declare global {
   namespace WebdriverIO {
     interface Browser {
       flutterByValueKey(value: string): Flutter.Locator;
-      flutterByValueKey$(value: string): Promise<WebdriverIO.Element>;
-      flutterByValueKey$$(value: string): Promise<WebdriverIO.Element[]>;
+      flutterByValueKey$(value: string): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterByValueKey$$(value: string): ChainablePromiseElement<WebdriverIO.Element[]>;
       flutterBySemanticsLabel(label: string): Flutter.Locator;
-      flutterBySemanticsLabel$(label: string): Promise<WebdriverIO.Element>;
-      flutterBySemanticsLabel$$(label: string): Promise<WebdriverIO.Element[]>;
+      flutterBySemanticsLabel$(label: string): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterBySemanticsLabel$$(label: string): ChainablePromiseElement<WebdriverIO.Element[]>;
       flutterByText(text: string): Flutter.Locator;
-      flutterByText$(text: string): Promise<WebdriverIO.Element>;
-      flutterByText$$(text: string): Promise<WebdriverIO.Element[]>;
+      flutterByText$(text: string): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterByText$$(text: string): ChainablePromiseElement<WebdriverIO.Element[]>;
       flutterWaitForVisible(options: {
         element: WebdriverIO.Element;
         timeout?: number;
@@ -31,7 +32,7 @@ declare global {
         maxScrolls?: number;
         settleBetweenScrollsTimeout?: number;
         dragDuration?: number;
-      }): Promise<WebdriverIO.Element | null>;
+      }): ChainablePromiseElement<WebdriverIO.Element | null>;
     }
     interface Element {
       flutterByValueKey(value: string): Flutter.Locator;
