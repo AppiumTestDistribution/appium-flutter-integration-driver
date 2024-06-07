@@ -20,7 +20,7 @@ async function portForward(iOSDriver: any, flutterPort: any, udid: any) {
     log.info(`Forwarding port ${flutterPort} to device ${udid}`);
     await DEVICE_CONNECTIONS_FACTORY.requestConnection(udid, flutterPort, {
       usePortForwarding: true,
-      devicePort: flutterPort,
+      devicePort: '8888',
     });
   }
 }
