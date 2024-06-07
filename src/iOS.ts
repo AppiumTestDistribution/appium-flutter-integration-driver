@@ -11,11 +11,11 @@ const setupNewIOSDriver = async (...args: any[]): Promise<XCUITestDriver> => {
   return iosdriver;
 };
 
-async function portForward(flutterPort: any, udid: any) {
+async function portForward(iOSDriver: any, flutterPort: any, udid: any) {
   // Need to do this for real device
   if (
-    this.proxydriver instanceof XCUITestDriver &&
-    this.proxydriver.isRealDevice()
+    iOSDriver instanceof XCUITestDriver &&
+    iOSDriver.isRealDevice()
   ) {
     log.info(`Forwarding port ${flutterPort} to device ${udid}`);
     await DEVICE_CONNECTIONS_FACTORY.requestConnection(udid, flutterPort, {
@@ -36,6 +36,6 @@ export const startIOSSession = async (
   // the session starts without any apps
   caps.flutterPort = caps.flutterPort || 8600;
   log.info('iOS session started', iOSDriver);
-  await portForward(caps.flutterPort, caps.udid);
+  await portForward(iOSDriver, caps.flutterPort, caps.udid);
   return [iOSDriver, caps.flutterPort];
 };
