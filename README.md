@@ -2,7 +2,7 @@
 
 Appium Flutter Integration Driver is a test automation tool for Flutter apps on multiple platforms/OSes. It is part of the Appium mobile test automation tool maintained by the community. Feel free to create PRs to fix issues or improve this driver.
 
-## Native Flutter Driver vs Appium Flutter Integration Driver
+## Native Flutter Integration Driver vs Appium Flutter Integration Driver
 
 | Use Cases                                                                                                                   | Native Flutter Driver | Appium Flutter Integration Driver |
 |-----------------------------------------------------------------------------------------------------------------------------|-----------------------|-----------------------------------|
