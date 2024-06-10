@@ -30,9 +30,23 @@ export async function flutterDoubleClick(
 ) {
   const { element, offset } = options;
   return await browser.executeScript('flutter: doubleClick', [
-    { origin: element, offet: offset },
+    { origin: element, offset: offset },
   ]);
 }
+
+export async function flutterLongPress(
+  this: WebdriverIO.Browser,
+  options: {
+    element: WebdriverIO.Element;
+    offset?: Flutter.Point;
+  },
+) {
+  const { element, offset } = options;
+  return await browser.executeScript('flutter: longPress', [
+    { origin: element, offset: offset },
+  ]);
+}
+
 
 export async function flutterScrollTillVisible(
   this: WebdriverIO.Browser,

@@ -18,7 +18,8 @@ declare global {
         element: WebdriverIO.Element;
         timeout?: number;
       }): Promise<void>;
-      flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element;
+      flutterDoubleClick(options: { element: WebdriverIO.Element; offset?: { x: number, y: number } }): WebdriverIO.Element;
+      flutterLongPress(options: { element: WebdriverIO.Element; offset?: { x: number, y: number } }): WebdriverIO.Element;
       flutterWaitForAbsent(options: {
         element: WebdriverIO.Element;
         timeout?: number;
