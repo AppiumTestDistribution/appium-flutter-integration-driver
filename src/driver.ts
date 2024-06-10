@@ -100,6 +100,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         ],
       },
     },
+    'flutter: longPress': {
+      command: 'longPress',
+      params: {
+        required: [],
+        optional: ['origin', 'offset'],
+      },
+    },
   };
 
   async doubleClick(origin: any, offset: any) {
@@ -134,6 +141,17 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         element,
         locator,
         timeout,
+      },
+    );
+  }
+
+  async longPress(origin: any, offset: any) {
+    return this.proxy?.command(
+      `/session/:sessionId/appium/gestures/long_press`,
+      'POST',
+      {
+        origin,
+        offset
       },
     );
   }

@@ -87,6 +87,15 @@ describe('My Login application', () => {
     expect(await javaElement.getAttribute('displayed')).toBe(true);
   });
 
+  it('Long Press', async() => {
+    await performLogin();
+    await openScreen('Long Press');
+    const longPressElement = await browser.flutterBySemanticsLabel$('long_press_button');
+    await browser.flutterLongPress({ element: longPressElement });
+    const popUpText = await browser.flutterByText$('It was a long press').isDisplayed();
+    expect(popUpText).toBe(true);
+  })
+
   it.skip('Invalid Driver', async () => {
     await browser.flutterBySemanticsLabel$('username_text_field').clearValue();
     await browser

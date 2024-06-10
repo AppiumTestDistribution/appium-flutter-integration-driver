@@ -5,7 +5,7 @@
     "appium",
     "flutter"
   ],
-  "version": "1.0.0-beta.10",
+  "version": "1.0.0-beta.11",
   "author": "",
   "license": "MIT License",
   "repository": {
@@ -64,7 +64,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "webdriverio": "^8.38.0",
-    "wdio-flutter-by-service": "^1.0.5"
+    "wdio-flutter-by-service": "^1.0.6"
   },
   "peerDependencies": {
     "appium": "^2.5.4"
