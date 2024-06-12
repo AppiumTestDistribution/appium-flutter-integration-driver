@@ -13,6 +13,8 @@ declare global {
       flutterBySemanticsLabel$$(label: string): ChainablePromiseElement<WebdriverIO.Element[]>;
       flutterByText(text: string): Flutter.Locator;
       flutterByText$(text: string): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterByType$(text: string): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterByType$$(text: string): ChainablePromiseElement<WebdriverIO.Element>;
       flutterByText$$(text: string): ChainablePromiseElement<WebdriverIO.Element[]>;
       flutterWaitForVisible(options: {
         element: WebdriverIO.Element;

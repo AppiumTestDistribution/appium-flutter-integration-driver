@@ -25,8 +25,8 @@ export class FlutterIntergrationDriverService {
       stategy: 'text containting',
     },
     {
-      name: 'flutterByWidget',
-      stategy: 'widget name',
+      name: 'flutterByType',
+      stategy: 'type',
     },
   ];
   /**

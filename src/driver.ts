@@ -60,6 +60,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       'class name',
       'semantics label',
       'text',
+      'type'
     ];
   }
 

@@ -13,7 +13,7 @@ export async function getProxyDriver(
   proxy: any,
   proxyDriver: any,
 ) {
-  if (['key', 'semantics label', 'text'].includes(strategy)) {
+  if (['key', 'semantics label', 'text', 'type'].includes(strategy)) {
     return proxy;
   } else if (proxyDriver instanceof AndroidUiautomator2Driver) {
     return proxyDriver.uiautomator2.jwproxy;
