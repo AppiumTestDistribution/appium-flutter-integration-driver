@@ -245,12 +245,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         ? null
         : await getFreePort();
 
-    const udid =
-      this.proxydriver instanceof AndroidUiautomator2Driver
-        ? this.proxydriver.opts.udid!
-        : (this.proxydriver as XCUITestDriver).opts.udid!;
+    const udid = this.proxydriver.opts.udid!;
 
-    //Extract the bundle Id
     const flutterPort = await fetchFlutterServerPort({
       udid,
       packageName,
