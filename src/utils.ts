@@ -108,8 +108,8 @@ export async function fetchFlutterServerPort({
   const isSimulator = !systemPort;
   while (startPort <= endPort) {
     /**
-     * For ios simulators, we dont need a dedicayed system port and no port forwarding is required
-     * We need to same port range used by flutter server to check if the server is running
+     * For ios simulators, we dont need a dedicated system port and no port forwarding is required
+     * We need to use the same port range used by flutter server to check if the server is running
      */
     if (isSimulator) {
       systemPort = startPort;
