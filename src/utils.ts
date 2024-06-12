@@ -2,11 +2,11 @@ import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import { log } from './logger';
 import { findAPortNotInUse } from 'portscanner';
+import { waitForCondition } from 'asyncbox';
+import { JWProxy } from '@appium/base-driver';
 
-const FLUTTER_SERVER_START_MESSAGE = new RegExp(
-  /Appium flutter server is listening on port (\d+)/,
-);
-const DEVICE_PORT_RANGE = [9000, 9299];
+const DEVICE_PORT_RANGE = [9000, 9020];
+const SYSTEM_PORT_RANGE = [8000, 8100];
 
 export async function getProxyDriver(
   strategy: string,
@@ -50,31 +50,85 @@ export function isFlutterDriverCommand(command: string) {
   );
 }
 
-export function fetchFlutterServerPort(
-  deviceLogs: [{ message: string }],
-): number {
-  let port: number | undefined;
-  for (const line of deviceLogs.map((e) => e.message).reverse()) {
-    const match = line.match(FLUTTER_SERVER_START_MESSAGE);
-    if (match) {
-      log.info(`Found the server started log from device: ${line}`);
-      port = Number(match[1]);
-      break;
-    }
-  }
-  if (!port) {
-    throw new Error(
-      `Flutter server started message '${FLUTTER_SERVER_START_MESSAGE}' was not found in the device log. ` +
-        `Please make sure the application under test is configured properly according to ` +
-        `https://github.com/AppiumTestDistribution/appium-flutter-server and that it does not crash on startup.
-        Also make sure "appium:skipLogcatCapture" is not set to true in the desired capabilities. `,
-    );
-  }
-  log.info(`Extracted the port from the device logs: ${port}`);
-  return port;
+export async function getFreePort() {
+  const [start, end] = SYSTEM_PORT_RANGE;
+  return await findAPortNotInUse(start, end);
 }
 
-export async function getFreePort() {
-  const [start, end] = DEVICE_PORT_RANGE;
-  return await findAPortNotInUse(start, end);
+async function waitForFlutterServer(port: number, packageName: string) {
+  const proxy = new JWProxy({
+    server: '127.0.0.1',
+    port: port,
+  });
+  await waitForCondition(
+    async () => {
+      try {
+        const response: any = await proxy.command('/status', 'GET');
+        if (!response) {
+          log.info(`FlutterServer not reachable on port ${port}, Retrying..`);
+          return false;
+        }
+        if (response.appInfo?.packageName === packageName) {
+          return true;
+        } else {
+          throw new Error(
+            `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`,
+          );
+        }
+      } catch (err: any) {
+        log.info(`FlutterServer not reachable on port ${port}, Retrying..`);
+        return false;
+      }
+    },
+    {
+      waitMs: 5000,
+      intervalMs: 1500,
+    },
+  );
+}
+
+export async function fetchFlutterServerPort({
+  udid,
+  systemPort,
+  portForwardCallback,
+  portReleaseCallback,
+  packageName,
+}: {
+  udid: string;
+  systemPort?: number;
+  portForwardCallback?: (
+    udid: string,
+    systemPort: number,
+    devicePort: number,
+  ) => any;
+  portReleaseCallback?: (udid: string, systemPort: number) => any;
+  packageName: string;
+}) {
+  let [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
+  const isSimulator = !systemPort;
+  while (startPort <= endPort) {
+    /**
+     * For ios simulators, we dont need a dedicayed system port and no port forwarding is required
+     * We need to same port range used by flutter server to check if the server is running
+     */
+    if (isSimulator) {
+      systemPort = startPort;
+    }
+    if (portForwardCallback) {
+      await portForwardCallback(udid, systemPort!, startPort);
+    }
+    try {
+      log.info(`Check if flutter server is running on port ${startPort}`);
+      await waitForFlutterServer(systemPort!, packageName);
+      log.info(`Flutter server is successfully running on port ${startPort}`);
+      return systemPort;
+    } catch (e) {
+      if (portReleaseCallback) {
+        await portReleaseCallback(udid, systemPort!);
+      }
+      startPort++;
+      continue;
+    }
+  }
+  return null;
 }
