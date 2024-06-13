@@ -8,6 +8,7 @@ const appiumServerPath = join(
   'index.js',
 );
 console.log(appiumServerPath);
+console.log(join(process.cwd(), 'appium-log.txt'));
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -25,7 +26,6 @@ export const config: Options.Testrunner = {
       transpileOnly: true,
     },
   },
-
   //
   // ==================
   // Specify Test Files
@@ -125,7 +125,7 @@ export const config: Options.Testrunner = {
         args: {
           basePath: '/wd/hub',
           port: 4723,
-          logPath: join(process.cwd(), 'appium-logs'),
+          log: join(process.cwd(), 'appium-logs', 'logs.txt'),
         },
       },
     ],
