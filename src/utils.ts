@@ -128,8 +128,8 @@ export async function fetchFlutterServerPort({
       if (portReleaseCallback) {
         await portReleaseCallback(udid, systemPort!);
       }
-      devicePort++;
     }
+    devicePort++;
   }
   return null;
 }

@@ -252,14 +252,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
     const udid = this.proxydriver.opts.udid!;
 
-    const flutterPort = await fetchFlutterServerPort({
+    this.flutterPort = await fetchFlutterServerPort({
       udid,
       packageName,
       ...portcallbacks,
       systemPort,
     });
 
-    if (!flutterPort) {
+    if (!this.flutterPort) {
       throw new Error(
         `Flutter server is not started. ` +
           `Please make sure the application under test is configured properly according to ` +
@@ -270,7 +270,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     // @ts-ignore
     this.proxy = new JWProxy({
       server: '127.0.0.1',
-      port: flutterPort,
+      port: this.flutterPort,
     });
 
     await this.proxy.command('/session', 'POST', { capabilities: caps });
@@ -282,7 +282,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   }
 
   async deleteSession() {
-    if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+    if (
+      this.proxydriver instanceof AndroidUiautomator2Driver &&
+      this.flutterPort
+    ) {
       // @ts-ignore
       await this.proxydriver.adb.removePortForward(this.flutterPort);
     }
