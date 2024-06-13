@@ -6,7 +6,7 @@ import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
-const SYSTEM_PORT_RANGE = [11000, 11100];
+const SYSTEM_PORT_RANGE = [10000, 11000];
 
 export async function getProxyDriver(
   strategy: string,

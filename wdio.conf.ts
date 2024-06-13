@@ -125,7 +125,7 @@ export const config: Options.Testrunner = {
         args: {
           basePath: '/wd/hub',
           port: 4723,
-          logPath: './appium-logs',
+          logPath: join(process.cwd(), 'appium-logs'),
         },
       },
     ],
