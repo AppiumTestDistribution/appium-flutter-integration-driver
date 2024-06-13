@@ -98,6 +98,7 @@ jobs:
             adb logcat -t 1000 | grep "flutter"
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: appium-logs
