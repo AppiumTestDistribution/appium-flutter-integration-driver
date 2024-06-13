@@ -6,7 +6,7 @@ import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
-const SYSTEM_PORT_RANGE = [8000, 8100];
+const SYSTEM_PORT_RANGE = [11000, 11100];
 
 export async function getProxyDriver(
   strategy: string,
@@ -65,10 +65,9 @@ async function waitForFlutterServer(port: number, packageName: string) {
       try {
         const response: any = await proxy.command('/status', 'GET');
         if (!response) {
-          log.info(`FlutterServer not reachable on port ${port}, Retrying..`);
           return false;
         }
-        if (response.appInfo?.packageName === packageName) {
+        if (response?.appInfo?.packageName === packageName) {
           return true;
         } else {
           throw new Error(
@@ -82,7 +81,7 @@ async function waitForFlutterServer(port: number, packageName: string) {
     },
     {
       waitMs: 5000,
-      intervalMs: 1500,
+      intervalMs: 500,
     },
   );
 }
@@ -103,31 +102,33 @@ export async function fetchFlutterServerPort({
   ) => any;
   portReleaseCallback?: (udid: string, systemPort: number) => any;
   packageName: string;
-}) {
-  let [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
+}): Promise<number | null> {
+  const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
   const isSimulator = !systemPort;
-  while (startPort <= endPort) {
+  let devicePort = startPort;
+  let forwardedPort = systemPort;
+
+  while (devicePort <= endPort) {
     /**
      * For ios simulators, we dont need a dedicated system port and no port forwarding is required
      * We need to use the same port range used by flutter server to check if the server is running
      */
     if (isSimulator) {
-      systemPort = startPort;
+      forwardedPort = devicePort;
     }
     if (portForwardCallback) {
-      await portForwardCallback(udid, systemPort!, startPort);
+      await portForwardCallback(udid, systemPort!, devicePort);
     }
     try {
-      log.info(`Check if flutter server is running on port ${startPort}`);
-      await waitForFlutterServer(systemPort!, packageName);
-      log.info(`Flutter server is successfully running on port ${startPort}`);
-      return systemPort;
+      log.info(`Checking if flutter server is running on port ${devicePort}`);
+      await waitForFlutterServer(forwardedPort!, packageName);
+      log.info(`Flutter server is successfully running on port ${devicePort}`);
+      return forwardedPort!;
     } catch (e) {
       if (portReleaseCallback) {
         await portReleaseCallback(udid, systemPort!);
       }
-      startPort++;
-      continue;
+      devicePort++;
     }
   }
   return null;

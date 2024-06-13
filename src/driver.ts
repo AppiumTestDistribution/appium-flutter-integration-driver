@@ -225,20 +225,25 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     );
 
     await sleep(1000);
-    const { appPackage, bundleId } = this.proxydriver.opts as any;
-    const packageName = appPackage || bundleId;
-    const callbacks =
+
+    const packageName =
       this.proxydriver instanceof AndroidUiautomator2Driver
-        ? {
-            portForwardCallback: androidPortForward,
-            portReleaseCallback: androidRemovePortForward,
-          }
-        : this.proxydriver.isRealDevice()
-          ? {
-              portForwardCallback: iosPortForward,
-              portReleaseCallback: iosRemovePortForward,
-            }
-          : {};
+        ? this.proxydriver.opts.appPackage!
+        : this.proxydriver.opts.bundleId!;
+
+    let portcallbacks = {};
+    if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+      portcallbacks = {
+        portForwardCallback: androidPortForward,
+        portReleaseCallback: androidRemovePortForward,
+      };
+    } else if (this.proxydriver.isRealDevice()) {
+      portcallbacks = {
+        portForwardCallback: iosPortForward,
+        portReleaseCallback: iosRemovePortForward,
+      };
+    }
+
     const systemPort =
       this.proxydriver instanceof XCUITestDriver &&
       !this.proxydriver.isRealDevice()
@@ -250,11 +255,11 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     const flutterPort = await fetchFlutterServerPort({
       udid,
       packageName,
-      ...callbacks,
+      ...portcallbacks,
       systemPort,
     });
 
-    if (flutterPort == null) {
+    if (!flutterPort) {
       throw new Error(
         `Flutter server is not started. ` +
           `Please make sure the application under test is configured properly according to ` +
