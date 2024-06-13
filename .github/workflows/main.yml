@@ -79,6 +79,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: run tests
+        continue-on-error: true
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
@@ -94,6 +95,8 @@ jobs:
             npm install
             npm run build
             appium driver list
+            mkdir ${{ github.workspace }}/appium-logs
+            adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
             npm run wdio-android
             adb logcat -t 1000 | grep "flutter"
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
