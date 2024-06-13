@@ -223,9 +223,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       caps,
       ...JSON.parse(JSON.stringify(args)),
     );
-
-    await sleep(1000);
-
     const packageName =
       this.proxydriver instanceof AndroidUiautomator2Driver
         ? this.proxydriver.opts.appPackage!
