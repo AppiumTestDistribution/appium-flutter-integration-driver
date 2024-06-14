@@ -7,7 +7,9 @@ import ADB from 'appium-adb';
 const setupNewAndroidDriver = async (
   ...args: any[]
 ): Promise<AndroidUiautomator2Driver> => {
-  const androiddriver = new AndroidUiautomator2Driver({} as InitialOpts);
+  const androiddriver = new AndroidUiautomator2Driver(
+    {} as InitialOpts & { logFormat: String },
+  );
   //@ts-ignore Args are ok
   await androiddriver.createSession(...args);
   return androiddriver;
