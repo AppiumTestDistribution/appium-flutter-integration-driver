@@ -54,11 +54,9 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
    void main() {
      initializeTest(
        callback: (WidgetTester tester) async {
-         injector.configurePreRequisites(
-           completion: () async {
-             await tester.pumpWidget(const app.MyApp());
-           },
-         );
+          // Perform any prerequisite steps or intialise any dependencies required by the app
+          // and make sure to pump the app widget using below statement.
+          await tester.pumpWidget(const app.MyApp());
        },
      );
    }
