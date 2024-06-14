@@ -87,6 +87,16 @@ describe('My Login application', () => {
     expect(await javaElement.getAttribute('displayed')).toBe(true);
   });
 
+  it('Scroll within a specific area', async () => {
+    await performLogin();
+    await openScreen('Multiple Scrollview');
+    await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText('2'),
+      scrollDirection: 'down',
+      scrollView: await browser.flutterBySemanticsLabel('multiple_scroll_view_vertical_scroll'),
+    });
+  })
+
   it('Long Press', async () => {
     await performLogin();
     await openScreen('Long Press');
