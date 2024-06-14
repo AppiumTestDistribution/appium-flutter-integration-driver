@@ -1,8 +1,4 @@
 export const desiredCapConstraints = {
-  app: {
-    isString: true,
-    presence: true,
-  },
   avd: {
     isString: true,
   },
@@ -19,6 +15,12 @@ export const desiredCapConstraints = {
     isString: true,
   },
   launchTimeout: {
+    isNumber: true,
+  },
+  flutterServerLaunchTimeout: {
+    isNumber: true,
+  },
+  flutterServerRetryInterval: {
     isNumber: true,
   },
 } as const;

@@ -12,6 +12,8 @@ export const config: WebdriverIO.Config = {
       'appium:app':
         process.env.APP_PATH || join(process.cwd(), 'app-debug.apk'),
       'appium:newCommandTimeout': 240,
+      'appium:flutterServerLaunchTimeout': 3000,
+      'appium:flutterServerRetryInterval': 100,
     },
   ],
 };
