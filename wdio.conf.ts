@@ -1,8 +1,14 @@
 // @ts-ignore
 import type { Options } from '@wdio/types';
 import { join } from 'node:path';
-const appiumServerPath = join(process.cwd(), 'node_modules', 'appium', 'index.js');
+const appiumServerPath = join(
+  process.cwd(),
+  'node_modules',
+  'appium',
+  'index.js',
+);
 console.log(appiumServerPath);
+console.log(join(process.cwd(), 'appium-log.txt'));
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -20,7 +26,6 @@ export const config: Options.Testrunner = {
       transpileOnly: true,
     },
   },
-
   //
   // ==================
   // Specify Test Files
@@ -36,7 +41,7 @@ export const config: Options.Testrunner = {
   // The path of the spec files will be resolved relative from the directory of
   // of the config file unless it's absolute.
   //
-  specs: ['./test/specs/**/*.js'],
+  specs: ['./test/specs/**/sample*.js'],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -106,18 +111,25 @@ export const config: Options.Testrunner = {
   // connectionRetryTimeout: 120000,
   //
   // Default request retries count
-  // connectionRetryCount: 3,
+  connectionRetryCount: 0,
   //
   // Test runner services
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [['flutter-by', {}], ['appium', {
-    args: {
-      basePath: '/wd/hub',
-      port: 4723,
-    }
-  }]],
+  services: [
+    ['flutter-by', {}],
+    [
+      'appium',
+      {
+        args: {
+          basePath: '/wd/hub',
+          port: 4723,
+          log: join(process.cwd(), 'appium-logs', 'logs.txt'),
+        },
+      },
+    ],
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

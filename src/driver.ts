@@ -23,12 +23,15 @@ import {
   ELEMENT_CACHE,
 } from './commands/element';
 
-import { isFlutterDriverCommand } from './utils';
+import {
+  fetchFlutterServerPort,
+  getFreePort,
+  isFlutterDriverCommand,
+} from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
-import { sleep, waitForCondition } from 'asyncbox';
-import { log } from './logger';
-
-const DEFAULT_FLUTTER_SERVER_PORT = 8888;
+import { androidPortForward, androidRemovePortForward } from './android';
+import { iosPortForward, iosRemovePortForward } from './iOS';
+import { sleep } from 'asyncbox';
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   // @ts-ignore
@@ -60,7 +63,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       'class name',
       'semantics label',
       'text',
-      'type'
+      'type',
     ];
   }
 
@@ -152,7 +155,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       'POST',
       {
         origin,
-        offset
+        offset,
       },
     );
   }
@@ -220,35 +223,52 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       caps,
       ...JSON.parse(JSON.stringify(args)),
     );
+    const packageName =
+      this.proxydriver instanceof AndroidUiautomator2Driver
+        ? this.proxydriver.opts.appPackage!
+        : this.proxydriver.opts.bundleId!;
 
-    // HACK for eliminatin socket hang up by waiting 1 sec
-    await sleep(1000);
-    // @ts-ignore
-    console.log('PageSource', await this.proxydriver.getPageSource());
+    let portcallbacks = {};
+    if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+      portcallbacks = {
+        portForwardCallback: androidPortForward,
+        portReleaseCallback: androidRemovePortForward,
+      };
+    } else if (this.proxydriver.isRealDevice()) {
+      portcallbacks = {
+        portForwardCallback: iosPortForward,
+        portReleaseCallback: iosRemovePortForward,
+      };
+    }
+
+    const systemPort =
+      this.proxydriver instanceof XCUITestDriver &&
+      !this.proxydriver.isRealDevice()
+        ? null
+        : await getFreePort();
+
+    const udid = this.proxydriver.opts.udid!;
+
+    this.flutterPort = await fetchFlutterServerPort({
+      udid,
+      packageName,
+      ...portcallbacks,
+      systemPort,
+    });
+
+    if (!this.flutterPort) {
+      throw new Error(
+        `Flutter server is not started. ` +
+          `Please make sure the application under test is configured properly according to ` +
+          `https://github.com/AppiumTestDistribution/appium-flutter-server and that it does not crash on startup.`,
+      );
+    }
+
     // @ts-ignore
     this.proxy = new JWProxy({
       server: '127.0.0.1',
       port: this.flutterPort,
     });
-    try {
-      await waitForCondition(async () => {
-        try {
-          // @ts-ignore
-          await this.proxy.command('/status', 'GET');
-          return true;
-        } catch(err: any) {
-          log.info('FlutterServer not reachable, Trying..', err);
-          return false;
-        }
-      }, {
-        waitMs: 15000,
-        intervalMs: 1000,
-      })
-    } catch(err: any) {
-      log.error('FlutterServer not reachable', err);
-      throw new Error(err);
-    }
-
 
     await this.proxy.command('/session', 'POST', { capabilities: caps });
     return sessionCreated;
@@ -259,7 +279,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   }
 
   async deleteSession() {
-    if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+    if (
+      this.proxydriver instanceof AndroidUiautomator2Driver &&
+      this.flutterPort
+    ) {
       // @ts-ignore
       await this.proxydriver.adb.removePortForward(this.flutterPort);
     }

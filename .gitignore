@@ -133,3 +133,4 @@ dist
 .pnp.*
 .history
 .npmrc
+appium-logs

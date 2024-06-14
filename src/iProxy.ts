@@ -125,7 +125,7 @@ class DeviceConnectionsFactory {
     return `${SPLITTER}${util.hasValue(port) ? port : ''}`;
   }
 
-  _toKey(udid = null, port = null) {
+  _toKey(udid: string, port: number) {
     return `${util.hasValue(udid) ? udid : ''}${SPLITTER}${util.hasValue(port) ? port : ''}`;
   }
 
@@ -144,7 +144,7 @@ class DeviceConnectionsFactory {
     return keys;
   }
 
-  listConnections(udid = null, port = null, strict = false) {
+  listConnections(udid: string | null, port: number, strict = false) {
     if (!udid && !port) {
       return [];
     }
@@ -259,7 +259,7 @@ class DeviceConnectionsFactory {
     log.info(`Successfully requested the connection for ${currentKey}`);
   }
 
-  releaseConnection(udid = null, port = null) {
+  releaseConnection(udid: string, port: number) {
     if (!udid && !port) {
       log.warn(
         'Neither device UDID nor local port is set. ' +
