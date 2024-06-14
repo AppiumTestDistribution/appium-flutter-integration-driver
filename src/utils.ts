@@ -4,10 +4,12 @@ import { log } from './logger';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
+import { desiredCapConstraints } from './desiredCaps';
+import { DriverCaps } from '@appium/types';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
-
+type FlutterDriverConstraints = typeof desiredCapConstraints;
 export async function getProxyDriver(
   strategy: string,
   proxy: any,
@@ -55,7 +57,7 @@ export async function getFreePort() {
   return await findAPortNotInUse(start, end);
 }
 
-async function waitForFlutterServer(port: number, packageName: string) {
+async function waitForFlutterServer(port: number, packageName: string, flutterCaps: DriverCaps<FlutterDriverConstraints>) {
   const proxy = new JWProxy({
     server: '127.0.0.1',
     port: port,
@@ -80,8 +82,8 @@ async function waitForFlutterServer(port: number, packageName: string) {
       }
     },
     {
-      waitMs: 5000,
-      intervalMs: 500,
+      waitMs: flutterCaps.flutterServerLaunchTimeout,
+      intervalMs: 150,
     },
   );
 }
@@ -92,6 +94,7 @@ export async function fetchFlutterServerPort({
   portForwardCallback,
   portReleaseCallback,
   packageName,
+  flutterCaps
 }: {
   udid: string;
   systemPort?: number;
@@ -102,6 +105,7 @@ export async function fetchFlutterServerPort({
   ) => any;
   portReleaseCallback?: (udid: string, systemPort: number) => any;
   packageName: string;
+  flutterCaps: DriverCaps<FlutterDriverConstraints>;
 }): Promise<number | null> {
   const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
   const isSimulator = !systemPort;
@@ -121,7 +125,7 @@ export async function fetchFlutterServerPort({
     }
     try {
       log.info(`Checking if flutter server is running on port ${devicePort}`);
-      await waitForFlutterServer(forwardedPort!, packageName);
+      await waitForFlutterServer(forwardedPort!, packageName, flutterCaps);
       log.info(`Flutter server is successfully running on port ${devicePort}`);
       return forwardedPort!;
     } catch (e) {

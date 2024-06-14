@@ -249,11 +249,15 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
     const udid = this.proxydriver.opts.udid!;
 
+    const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
+      flutterServerLaunchTimeout: this.internalCaps.flutterServerLaunchTimeout || 5000
+    } as DriverCaps<FlutterDriverConstraints>;
     this.flutterPort = await fetchFlutterServerPort({
       udid,
       packageName,
       ...portcallbacks,
       systemPort,
+      flutterCaps
     });
 
     if (!this.flutterPort) {
