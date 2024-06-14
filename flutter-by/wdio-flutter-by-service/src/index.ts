@@ -23,6 +23,7 @@ declare global {
       flutterByText$(
         text: string,
       ): ChainablePromiseElement<WebdriverIO.Element>;
+      flutterByType(text: string): Flutter.Locator;
       flutterByType$(
         text: string,
       ): ChainablePromiseElement<WebdriverIO.Element>;
