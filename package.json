@@ -47,6 +47,7 @@
     "wdio-ios": "wdio run ./ios.conf.ts"
   },
   "devDependencies": {
+    "@appium/types": "^0.20.3",
     "@testing-library/webdriverio": "^3.2.1",
     "@types/mocha": "^10.0.6",
     "@wdio/appium-service": "^8.38.0",
@@ -63,8 +64,8 @@
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "webdriverio": "^8.38.0",
-    "wdio-flutter-by-service": "^1.0.6"
+    "wdio-flutter-by-service": "^1.0.6",
+    "webdriverio": "^8.38.0"
   },
   "peerDependencies": {
     "appium": "^2.5.4"
