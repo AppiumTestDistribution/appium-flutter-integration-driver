@@ -83,7 +83,7 @@ async function waitForFlutterServer(port: number, packageName: string, flutterCa
     },
     {
       waitMs: flutterCaps.flutterServerLaunchTimeout,
-      intervalMs: flutterCaps.flutterServerRetryInterval,
+      intervalMs: 150,
     },
   );
 }

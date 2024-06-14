@@ -95,10 +95,9 @@ For more details, refer to the documentation for each driver:
 
 ## Capabilities for Appium Flutter Integration Driver
 
-| Capability                | Description                                                                | Required |
-| ------------------------- |----------------------------------------------------------------------------| -------- |
-| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5 seconds | No       |
-| appium:flutterServerRetryInterval | Time in ms to wait between tries to the server. Default is 500 ms          | No       |
+| Capability                | Description                                                             | Required |
+| ------------------------- |-------------------------------------------------------------------------| -------- |
+| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 
 
 ## Locating Elements

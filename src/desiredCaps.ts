@@ -19,8 +19,5 @@ export const desiredCapConstraints = {
   },
   flutterServerLaunchTimeout: {
     isNumber: true,
-  },
-  flutterServerRetryInterval: {
-    isNumber: true,
-  },
+  }
 } as const;
