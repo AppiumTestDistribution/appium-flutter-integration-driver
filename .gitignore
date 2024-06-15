@@ -134,3 +134,5 @@ dist
 .history
 .npmrc
 appium-logs
+
+flutter-by/java/.gradle
