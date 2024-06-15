@@ -25,8 +25,8 @@ public class FlutterBy {
         return new ByKey(key);
     }
 
-    public static By semanticLabel(String label) {
-        return new BySemanticLabel(label);
+    public static By semanticsLabel(String label) {
+        return new BySemanticsLabel(label);
     }
 
 
@@ -53,7 +53,7 @@ public class FlutterBy {
         private final String type;
 
         public ByType(String type) {
-            super("text", Require.argument("type", type).nonNull("Cannot find elements when the type is null."));
+            super("type", Require.argument("type", type).nonNull("Cannot find elements when the type is null."));
 
             if (type.isEmpty()) {
                 throw new InvalidSelectorException("type must not be blank");
@@ -87,11 +87,11 @@ public class FlutterBy {
         }
     }
 
-    private static class BySemanticLabel extends BaseW3CLocator {
+    private static class BySemanticsLabel extends BaseW3CLocator {
         private final String label;
 
-        public BySemanticLabel(String label) {
-            super("label", Require.argument("label", label).nonNull("Cannot find elements when the label is null."));
+        public BySemanticsLabel(String label) {
+            super("semantics label", Require.argument("label", label).nonNull("Cannot find elements when the label is null."));
 
             if (label.isEmpty()) {
                 throw new InvalidSelectorException("label must not be blank");
