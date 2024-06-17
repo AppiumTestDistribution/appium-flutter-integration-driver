@@ -33,7 +33,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: ^0.0.4
+     appium_flutter_server: ^0.0.7
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -75,6 +75,26 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
    ```
 
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
+
+Check if your Flutter app is running on the device or emulator.
+
+For Android 
+```
+1. Run adb command `adb logcat | grep flutter` to check if the Flutter app is running.
+2. Open the application in the device or emulator manually.
+3. Verify the logs in the console. 
+```
+```
+06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
+06-17 17:02:13.584 32697 32735 I flutter : 00:00 +0: appium flutter server
+06-17 17:02:14.814 32697 32735 I flutter : shelfRun HTTP service running on port 9000
+06-17 17:02:14.814 32697 32735 I flutter : [APPIUM FLUTTER]  Appium flutter server is listening on port 9000
+06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
+06-17 17:02:14.869 32697 32735 I flutter : [APPIUM FLUTTER]  response {message: Flutter driver is ready to accept new connections, appInfo: {appName: appium_testing_app, buildNumber: 1, packageName: com.example.appium_testing_app, version: 1.0.0, buildSignature: F2C7CEC8F907AB830B7802C2178515D1FD4BEBA154E981FB61FFC8EC9A8F8195}}
+```
+
+For iOS
+
 
 ## Install the Flutter Integration Driver
 

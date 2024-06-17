@@ -19,5 +19,8 @@ export const desiredCapConstraints = {
   },
   flutterServerLaunchTimeout: {
     isNumber: true,
+  },
+  flutterSystemPort: {
+    isNumber: true,
   }
 } as const;

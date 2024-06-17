@@ -240,18 +240,17 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         portReleaseCallback: iosRemovePortForward,
       };
     }
-
+    const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
+      flutterServerLaunchTimeout: this.internalCaps.flutterServerLaunchTimeout || 5000,
+      flutterSystemPort: this.internalCaps.flutterSystemPort || await getFreePort(),
+    } as DriverCaps<FlutterDriverConstraints>;
     const systemPort =
       this.proxydriver instanceof XCUITestDriver &&
       !this.proxydriver.isRealDevice()
         ? null
-        : await getFreePort();
+        : flutterCaps.flutterSystemPort!;
 
     const udid = this.proxydriver.opts.udid!;
-
-    const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
-      flutterServerLaunchTimeout: this.internalCaps.flutterServerLaunchTimeout || 5000
-    } as DriverCaps<FlutterDriverConstraints>;
     this.flutterPort = await fetchFlutterServerPort({
       udid,
       packageName,
@@ -263,8 +262,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     if (!this.flutterPort) {
       throw new Error(
         `Flutter server is not started. ` +
-          `Please make sure the application under test is configured properly according to ` +
-          `https://github.com/AppiumTestDistribution/appium-flutter-server and that it does not crash on startup.`,
+          `Please make sure the application under test is configured properly.Please refer ` +
+          `https://github.com/AppiumTestDistribution/appium-flutter-integration-driver?tab=readme-ov-file#how-to-use-appium-flutter-integration-driver.`,
       );
     }
 
