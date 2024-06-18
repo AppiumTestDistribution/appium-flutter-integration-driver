@@ -94,7 +94,20 @@ For Android
 ```
 
 For iOS
+Simulator:
 
+```xcrun simctl spawn booted log stream | grep flutter```
+
+Real Device: Check xcode device logs.
+
+2. Open the application in the device or emulator manually.
+```
+06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
+06-17 17:02:13.584 32697 32735 I flutter : 00:00 +0: appium flutter server
+06-17 17:02:14.814 32697 32735 I flutter : shelfRun HTTP service running on port 9000
+06-17 17:02:14.814 32697 32735 I flutter : [APPIUM FLUTTER]  Appium flutter server is listening on port 9000
+06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
+06-17
 
 ## Install the Flutter Integration Driver
 
