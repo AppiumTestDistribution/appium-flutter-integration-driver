@@ -97,7 +97,7 @@ export async function fetchFlutterServerPort({
   flutterCaps
 }: {
   udid: string;
-  systemPort?: number;
+  systemPort?: number | null;
   portForwardCallback?: (
     udid: string,
     systemPort: number,
