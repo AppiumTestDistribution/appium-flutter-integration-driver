@@ -99,6 +99,24 @@ describe('My Login application', () => {
     expect(popUpText).toBe(true);
   });
 
+  it.only('Properties Test', async () => {
+    await performLogin();
+    await openScreen('UI Elements');
+    // const prop = await browser.flutterByValueKey$('radio_button_yes_radio');
+    // await prop.click();
+    // console.log(await prop.getAttribute('selected'));
+    // const prop1 = await browser.flutterBySemanticsLabel$('radio_button_no_radio');
+    // await prop1.click();
+    // console.log(await prop1.getAttribute('selected'));
+
+    const prop2 = await browser.flutterByValueKey$('enabled_checkbox');
+
+    console.log(await prop2.getAttribute('enabled'));
+    await browser.flutterByValueKey$('enabled_text_field').addValue('Hello');
+    const prop3 = await browser.flutterByValueKey$('enabled_text_field');
+    await prop3.getAttribute('enabled')
+  });
+
   it.skip('Invalid Driver', async () => {
     await browser.flutterBySemanticsLabel$('username_text_field').clearValue();
     await browser
