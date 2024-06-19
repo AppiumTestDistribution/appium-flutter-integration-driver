@@ -33,7 +33,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: ^0.0.7
+     appium_flutter_server: 0.0.9
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -78,11 +78,11 @@ Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
 
 Check if your Flutter app is running on the device or emulator.
 
-For Android 
+For Android
 ```
 1. Run adb command `adb logcat | grep flutter` to check if the Flutter app is running.
 2. Open the application in the device or emulator manually.
-3. Verify the logs in the console. 
+3. Verify the logs in the console.
 ```
 ```
 06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
