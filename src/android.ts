@@ -19,8 +19,7 @@ export const startAndroidSession = async (
   ...args: any[]
 ): Promise<AndroidUiautomator2Driver> => {
   log.info(`Starting an Android proxy session`);
-  const androiddriver = await setupNewAndroidDriver(...args);
-  return androiddriver;
+  return await setupNewAndroidDriver(...args);
 };
 
 export async function androidPortForward(
