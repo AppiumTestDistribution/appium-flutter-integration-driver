@@ -33,7 +33,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.9
+     appium_flutter_server: 0.0.10
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
