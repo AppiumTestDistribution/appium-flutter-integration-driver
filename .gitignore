@@ -2,6 +2,8 @@
 logs
 *.log
 .idea
+src/.DS_Store
+.DS_Store
 appium-server
 build
 npm-debug.log*

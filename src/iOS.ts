@@ -17,9 +17,7 @@ export const startIOSSession = async (
   ...args: any[]
 ): Promise<XCUITestDriver> => {
   log.info(`Starting an IOS proxy session`);
-  const iOSDriver = await setupNewIOSDriver(...args);
-  log.info('iOS session started', iOSDriver);
-  return iOSDriver;
+  return await setupNewIOSDriver(...args);
 };
 
 export async function iosPortForward(

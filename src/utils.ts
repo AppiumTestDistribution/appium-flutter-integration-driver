@@ -70,6 +70,7 @@ async function waitForFlutterServer(port: number, packageName: string, flutterCa
           return false;
         }
         if (response?.appInfo?.packageName === packageName) {
+          log.info(`Flutter server version the application is build with ${response.serverVersion}`);
           return true;
         } else {
           throw new Error(
