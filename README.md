@@ -149,7 +149,7 @@ For example: If you want to know all the attributes that are attached to an elem
     await allProps.getAttribute('all')
 ```
 
-What is the way to check if the button, checkbox, toggle button state?
+What is the way to check if the button, checkbox, toggle button state?  
 
 ```javascript
     const prop3 = await browser.flutterByValueKey$('enabled_text_field');
