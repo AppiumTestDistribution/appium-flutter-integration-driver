@@ -23,20 +23,16 @@ export const startAndroidSession = async (
 };
 
 export async function androidPortForward(
-  udid: string,
+  adb: ADB,
   systemPort: number,
   devicePort: number,
 ) {
-  let adb = new ADB();
-  if (udid) adb.setDeviceId(udid);
   await adb.forwardPort(systemPort!, devicePort);
 }
 
 export async function androidRemovePortForward(
-  udid: string,
+  adb: ADB,
   systemPort: number,
 ) {
-  let adb = new ADB();
-  if (udid) adb.setDeviceId(udid);
   await adb.removePortForward(systemPort);
 }

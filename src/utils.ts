@@ -6,6 +6,7 @@ import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
 import { desiredCapConstraints } from './desiredCaps';
 import { DriverCaps } from '@appium/types';
+import type { PortForwardCallback, PortReleaseCallback } from './types';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
@@ -99,12 +100,8 @@ export async function fetchFlutterServerPort({
 }: {
   udid: string;
   systemPort?: number | null;
-  portForwardCallback?: (
-    udid: string,
-    systemPort: number,
-    devicePort: number,
-  ) => any;
-  portReleaseCallback?: (udid: string, systemPort: number) => any;
+  portForwardCallback?: PortForwardCallback;
+  portReleaseCallback?: PortReleaseCallback;
   packageName: string;
   flutterCaps: DriverCaps<FlutterDriverConstraints>;
 }): Promise<number | null> {
