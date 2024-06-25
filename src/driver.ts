@@ -31,7 +31,7 @@ import {
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
-import { sleep } from 'asyncbox';
+import type { PortForwardCallback, PortReleaseCallback } from './types';
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   // @ts-ignore
@@ -228,17 +228,25 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         ? this.proxydriver.opts.appPackage!
         : this.proxydriver.opts.bundleId!;
 
-    let portcallbacks = {};
+    const portcallbacks: {
+      portForwardCallback?: PortForwardCallback,
+      portReleaseCallback?: PortReleaseCallback,
+    } = {};
     if (this.proxydriver instanceof AndroidUiautomator2Driver) {
-      portcallbacks = {
-        portForwardCallback: androidPortForward,
-        portReleaseCallback: androidRemovePortForward,
-      };
+      portcallbacks.portForwardCallback = async (_: string, systemPort: number, devicePort: number) => await androidPortForward(
+        // @ts-ignore ADB instance is ok
+        (this.proxydriver as AndroidUiautomator2Driver).adb,
+        systemPort,
+        devicePort
+      );
+      portcallbacks.portReleaseCallback = async (_: string, systemPort: number) => await androidRemovePortForward(
+        // @ts-ignore ADB instance is ok
+        (this.proxydriver as AndroidUiautomator2Driver).adb,
+        systemPort
+      );
     } else if (this.proxydriver.isRealDevice()) {
-      portcallbacks = {
-        portForwardCallback: iosPortForward,
-        portReleaseCallback: iosRemovePortForward,
-      };
+      portcallbacks.portForwardCallback = iosPortForward;
+      portcallbacks.portReleaseCallback = iosRemovePortForward;
     }
     const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
       flutterServerLaunchTimeout: this.internalCaps.flutterServerLaunchTimeout || 5000,
