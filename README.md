@@ -134,6 +134,29 @@ For more details, refer to the documentation for each driver:
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
 
 
+## Element attributes
+
+The Flutter Integration Driver supports all the attributes that are returned by native flutter components.
+
+How does the driver fetch the attributes?
+
+The driver uses the flutter [diagnostic node](https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html) to fetch the attributes and also [Semantic data](https://api.flutter.dev/flutter/semantics/SemanticsNode/getSemanticsData.html). We merged all the attributes from both the trees.
+
+For example: If you want to know all the attributes that are attached to an element from flutter, you can use the below command.
+
+```javascript
+    const allProps = await browser.flutterBySemanticsLabel$('switch_button');
+    await allProps.getAttribute('all')
+```
+
+What is the way to check if the button, checkbox, toggle button state?
+
+```javascript
+    const prop3 = await browser.flutterByValueKey$('enabled_text_field');
+    await prop3.getAttribute('flags');
+```
+Flutter has flags which basically returns the state of the element. https://api.flutter.dev/flutter/dart-ui/SemanticsFlag-class.html
+
 ## Locating Elements
 
 You can use the following locators to find elements in your Flutter app. Custom finders are built for WDIO. Refer to the [wdio-flutter-by-service](https://www.npmjs.com/package/wdio-flutter-by-service?activeTab=readme).

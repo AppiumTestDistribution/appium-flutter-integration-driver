@@ -99,22 +99,25 @@ describe('My Login application', () => {
     expect(popUpText).toBe(true);
   });
 
-  it.only('Properties Test', async () => {
+  it('Properties Test', async () => {
     await performLogin();
     await openScreen('UI Elements');
-    // const prop = await browser.flutterByValueKey$('radio_button_yes_radio');
-    // await prop.click();
-    // console.log(await prop.getAttribute('selected'));
-    // const prop1 = await browser.flutterBySemanticsLabel$('radio_button_no_radio');
-    // await prop1.click();
-    // console.log(await prop1.getAttribute('selected'));
+    const prop2 = await browser.flutterByValueKey$('disabled_text_field');
+    console.log(await prop2.getAttribute('flags'));
 
-    const prop2 = await browser.flutterByValueKey$('enabled_checkbox');
+    const prop6 = await browser.flutterByValueKey$('disabled_checkbox');
+    console.log(await prop6.getAttribute('flags'));
 
-    console.log(await prop2.getAttribute('enabled'));
     await browser.flutterByValueKey$('enabled_text_field').addValue('Hello');
     const prop3 = await browser.flutterByValueKey$('enabled_text_field');
-    await prop3.getAttribute('enabled')
+    await prop3.getAttribute('flags');
+
+    const prop4 = await browser.flutterBySemanticsLabel$('switch_button');
+    await prop4.getAttribute('flags')
+    await prop4.click();
+    const prop5 = await browser.flutterBySemanticsLabel$('switch_button');
+    await prop5.getAttribute('all')
+
   });
 
   it.skip('Invalid Driver', async () => {
