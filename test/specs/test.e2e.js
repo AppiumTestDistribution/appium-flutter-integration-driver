@@ -99,7 +99,7 @@ describe('My Login application', () => {
     expect(popUpText).toBe(true);
   });
 
-  it.only('Properties Test', async () => {
+  it('Properties Test', async () => {
     await performLogin();
     await openScreen('UI Elements');
     const prop2 = await browser.flutterBySemanticsLabel$('disabled_text_field');
