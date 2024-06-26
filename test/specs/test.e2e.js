@@ -99,25 +99,65 @@ describe('My Login application', () => {
     expect(popUpText).toBe(true);
   });
 
-  it('Properties Test', async () => {
+  it.only('Properties Test', async () => {
     await performLogin();
     await openScreen('UI Elements');
-    const prop2 = await browser.flutterByValueKey$('disabled_text_field');
-    console.log(await prop2.getAttribute('flags'));
-
-    const prop6 = await browser.flutterByValueKey$('disabled_checkbox');
-    console.log(await prop6.getAttribute('flags'));
-
-    await browser.flutterByValueKey$('enabled_text_field').addValue('Hello');
-    const prop3 = await browser.flutterByValueKey$('enabled_text_field');
-    await prop3.getAttribute('flags');
+    const prop2 = await browser.flutterBySemanticsLabel$('disabled_text_field');
+    const disableTextFieldState = await prop2.getAttribute('flags');
+    expect(disableTextFieldState).toEqual('[isTextField, hasEnabledState, isReadOnly]');
 
     const prop4 = await browser.flutterBySemanticsLabel$('switch_button');
     await prop4.getAttribute('flags')
+    expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isFocusable]');
     await prop4.click();
+    await prop4.getAttribute('flags');
+    expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isToggled, isFocusable]');
     const prop5 = await browser.flutterBySemanticsLabel$('switch_button');
-    await prop5.getAttribute('all')
-
+    await prop5.getAttribute('all'); // Will return all attributes attached to the element
+    // {
+    //   owner: 'SemanticsOwner#fd8a3',
+    //     isMergedIntoParent: 'false',
+    //   mergeAllDescendantsIntoThisNode: 'false',
+    //   rect: 'Rect.fromLTRB(0.0, 0.0, 60.0, 48.0)',
+    //   tags: 'null',
+    //   actions: '[tap]',
+    //   customActions: '[]',
+    //   flags: '[hasEnabledState, isEnabled, hasToggledState, isToggled, isFocusable]',
+    //   isInvisible: 'false',
+    //   isHidden: 'false',
+    //   identifier: 'null',
+    //   label: 'switch_button',
+    //   value: 'null',
+    //   increasedValue: 'null',
+    //   decreasedValue: 'null',
+    //   hint: 'null',
+    //   tooltip: 'null',
+    //   textDirection: 'null',
+    //   sortKey: 'null',
+    //   platformViewId: 'null',
+    //   maxValueLength: 'null',
+    //   currentValueLength: 'null',
+    //   scrollChildren: 'null',
+    //   scrollIndex: 'null',
+    //   scrollExtentMin: 'null',
+    //   scrollPosition: 'null',
+    //   scrollExtentMax: 'null',
+    //   indexInParent: 'null',
+    //   elevation: '0.0',
+    //   thickness: '0.0',
+    //   container: 'true',
+    //   properties: 'SemanticsProperties(label: "switch_button")',
+    //   checked: 'null',
+    //   mixed: 'null',
+    //   expanded: 'null',
+    //   selected: 'null',
+    //   attributedLabel: 'null',
+    //   attributedValue: 'null',
+    //   attributedIncreasedValue: 'null',
+    //   attributedDecreasedValue: 'null',
+    //   attributedHint: 'null',
+    //   hintOverrides: 'null'
+    // }
   });
 
   it.skip('Invalid Driver', async () => {
