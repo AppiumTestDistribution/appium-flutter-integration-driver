@@ -172,4 +172,17 @@ describe('My Login application', () => {
 
     await browser.flutterByText$('Ok').click();
   });
+
+  it.only('Drag and Drop', async() => {
+    await performLogin();
+    await openScreen('Drag & Drop');
+    const dragElement = await browser.flutterBySemanticsLabel$('drag_me');
+    const dropElement = await browser.flutterBySemanticsLabel$('drop_zone');
+    await browser.flutterDragAndDrop({
+      source: dragElement,
+      target: dropElement,
+    });
+    const dropped = await browser.flutterByText$('The box is dropped').getText();
+    expect(dropped).toEqual('The box is dropped');
+  })
 });
