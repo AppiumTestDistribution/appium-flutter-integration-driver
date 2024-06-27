@@ -99,6 +99,13 @@ describe('My Login application', () => {
     expect(popUpText).toBe(true);
   });
 
+  it('Should be able perform action when frame is rendering', async () => {
+    await performLogin();
+    await openScreen('Loader Screen');
+    await browser.flutterByValueKey$('loader_login_button').click();
+    expect(await browser.flutterByText$('Button pressed').isDisplayed()).toBe(true);
+  });
+
   it('Properties Test', async () => {
     await performLogin();
     await openScreen('UI Elements');
@@ -173,7 +180,7 @@ describe('My Login application', () => {
     await browser.flutterByText$('Ok').click();
   });
 
-  it.only('Drag and Drop', async() => {
+  it('Drag and Drop', async() => {
     await performLogin();
     await openScreen('Drag & Drop');
     const dragElement = await browser.flutterBySemanticsLabel$('drag_me');
