@@ -111,6 +111,12 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         optional: ['origin', 'offset'],
       },
     },
+    'flutter: dragAndDrop': {
+      command: 'dragAndDrop',
+      params: {
+        required: ['source', 'target']
+      }
+    }
   };
 
   async doubleClick(origin: any, offset: any) {
@@ -156,6 +162,17 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       {
         origin,
         offset,
+      },
+    );
+  }
+
+  async dragAndDrop(source: any, target: any) {
+    return this.proxy?.command(
+      `/session/:sessionId/appium/gestures/drag_drop`,
+      'POST',
+      {
+        source,
+        target,
       },
     );
   }
