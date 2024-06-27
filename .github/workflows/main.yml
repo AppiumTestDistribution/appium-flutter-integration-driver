@@ -96,7 +96,7 @@ jobs:
             appium driver list
             mkdir ${{ github.workspace }}/appium-logs
             adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
-            npm run wdio-android
+            APP_PATH=$APP_PATH npm run wdio-android
             adb logcat -t 1000 | grep "flutter"
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
