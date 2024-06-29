@@ -25,6 +25,18 @@ The current Appium Flutter Driver is built on top of the `flutter_test` SDK, whi
 
 This driver is built using [Flutter Integration Test](https://docs.flutter.dev/cookbook/testing/integration/introduction).
 
+ :star: **⁠Strong Typing & Fluent APIs:** Ensures robust and easy-to-use interfaces.
+
+:star: **⁠Element Handling**: Automatically waits for elements to attach to the DOM before interacting.
+
+:star: **⁠Seamless Context Switching**: No need to switch between contexts, such as Flutter and native; the driver handles it effortlessly.
+
+:star: **Auto Wait for Render Cycles**: Automatically waits for frame render cycles, including animations and screen transitions.
+
+:star: **Simplified Powerful Gestures**: Supports powerful yet simplified gestures like LongPress, ScrollToElement, DragAndDrop, and DoubleClick.
+
+:star:*⁠*Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
+
 ## How to Use Appium Flutter Integration Driver
 
 1. In your Flutter app's `pubspec.yaml`, add the following dependencies:
