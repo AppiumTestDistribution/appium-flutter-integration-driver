@@ -192,4 +192,15 @@ describe('My Login application', () => {
     const dropped = await browser.flutterByText$('The box is dropped').getText();
     expect(dropped).toEqual('The box is dropped');
   })
+
+  it('Multi scroll view', async() => {
+    await performLogin();
+    await openScreen('Multiple Scrollview');
+    const scrollElement = await browser.flutterBySemanticsLabel('multiple_scroll_view_vertical_scroll');
+    await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText('3'),
+      scrollView: scrollElement,
+      scrollDirection: 'down',
+    });
+  });
 });

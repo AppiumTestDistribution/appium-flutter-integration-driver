@@ -8,8 +8,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'iOS',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
-      'appium:app':
-        '/Users/saikrishna/Downloads/git/flutter-learnings/counter_app/build/ios/iphonesimulator/Runner.app',
+      'appium:app': process.env.APP_PATH || join(process.cwd(), 'ios.zip'),
       'appium:newCommandTimeout': 240,
     },
   ],
