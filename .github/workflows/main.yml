@@ -33,6 +33,7 @@ jobs:
          echo "$android_app"
          ios_app=$(echo "$asset_urls" | tail -n 1)
          echo "$ios_app"
+         echo "APP_PATH=$android_app" >> $GITHUB_ENV
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -49,10 +50,7 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
-            asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
-            android_app=$(echo "$asset_urls" | head -n 1)
-            echo "$android_app"
+            echo ${{ env }}
             adb devices
             node --version
             npm install -g wait-on
@@ -64,7 +62,7 @@ jobs:
             mkdir ${{ github.workspace }}/appium-logs
             adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
             echo $android_app
-            APP_PATH=$android_app npm run wdio-android
+            APP_PATH=${{ env.APP_PATH }} npm run wdio-android
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
         if: always()
