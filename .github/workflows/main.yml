@@ -82,9 +82,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2.0.10
-
       - name: 'List files'
         run: |
           release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
