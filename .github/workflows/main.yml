@@ -116,6 +116,19 @@ jobs:
           xcrun simctl install $target_sim_id ${{ env.WDA_PATH }}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
           xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
           curl http://localhost:8100/status
+          max_attempts=10
+          attempt=0
+  
+          until [[ $attempt -ge $max_attempts ]]
+          do
+            curl http://localhost:8100/status && break
+            attempt=$[$attempt+1]
+            sleep 1
+          done
+  
+          if [[ $attempt -eq $max_attempts ]]; then
+            echo "Server did not respond after $max_attempts attempts."
+          fi
 
 #      - name: run tests
 #        run: |
