@@ -100,18 +100,23 @@ jobs:
 
       - name: Install Appium
         run: |
-          target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
-          echo $target_sim_id
-          xcrun simctl boot $target_sim_id
-          xcrun simctl bootstatus $target_sim_id -b
           npm install -g appium
           appium driver install xcuitest
           appium driver run xcuitest build-wda
           wda=$(ls -d /Users/runner/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
           echo $wda
-          xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
+          echo WDA_PATH=$wda >> $GITHUB_ENV
+
+      - name: Boot simulator
+        run: |
+          target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
+          echo $target_sim_id
+          xcrun simctl boot $target_sim_id
+          xcrun simctl bootstatus $target_sim_id -b
+          xcrun simctl install $target_sim_id ${{ env.WDA_PATH }}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
           xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
           curl http://localhost:8100/status
+
 #      - name: run tests
 #        run: |
 #          echo ${{ env }}
