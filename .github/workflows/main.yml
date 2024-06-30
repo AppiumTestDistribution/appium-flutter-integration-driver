@@ -111,6 +111,7 @@ jobs:
         run: |
           target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
           echo $target_sim_id
+          echo UDID=$target_sim_id >> $GITHUB_ENV
           xcrun simctl boot $target_sim_id
           xcrun simctl bootstatus $target_sim_id -b
           xcrun simctl install $target_sim_id ${{ env.WDA_PATH }}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
@@ -124,7 +125,7 @@ jobs:
           npm run build
           appium driver list
           mkdir ${{ github.workspace }}/appium-logs
-          APP_PATH=${{ env.APP_PATH }} npm run wdio-ios
+          UDID=${{ env.UDID }} APP_PATH=${{ env.APP_PATH }} npm run wdio-ios
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
         if: always()

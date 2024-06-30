@@ -8,6 +8,7 @@ export const config: WebdriverIO.Config = {
       platformName: 'iOS',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
+      'appium:udid': process.env.UDID,
       'appium:app': process.env.APP_PATH || join(process.cwd(), 'ios.zip'),
       'appium:newCommandTimeout': 240,
       "appium:usePreinstalledWDA": true,
