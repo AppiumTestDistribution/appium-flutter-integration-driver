@@ -115,31 +115,16 @@ jobs:
           xcrun simctl bootstatus $target_sim_id -b
           xcrun simctl install $target_sim_id ${{ env.WDA_PATH }}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
           xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
-          curl http://localhost:8100/status
-          max_attempts=10
-          attempt=0
-  
-          until [[ $attempt -ge $max_attempts ]]
-          do
-            curl http://localhost:8100/status && break
-            attempt=$[$attempt+1]
-            sleep 1
-          done
-  
-          if [[ $attempt -eq $max_attempts ]]; then
-            echo "Server did not respond after $max_attempts attempts."
-          fi
 
-#      - name: run tests
-#        run: |
-#          echo ${{ env }}
-#          node --version
-#          npm install -g wait-on
-#          npm install
-#          npm run build
-#          appium driver list
-#          mkdir ${{ github.workspace }}/appium-logs
-#          APP_PATH=${{ env.APP_PATH }} npm run wdio-ios
+      - name: run tests
+        run: |
+          echo ${{ env }}
+          node --version
+          npm install
+          npm run build
+          appium driver list
+          mkdir ${{ github.workspace }}/appium-logs
+          APP_PATH=${{ env.APP_PATH }} npm run wdio-ios
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
         if: always()
