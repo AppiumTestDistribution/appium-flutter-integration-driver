@@ -124,8 +124,9 @@ jobs:
           npm install
           npm run build
           appium driver list
-          xcrun simctl spawn booted log stream | grep flutter > ${{ github.workspace }}/appium-logs/flutter.txt &
           mkdir ${{ github.workspace }}/appium-logs
+          touch ${{ github.workspace }}/appium-logs/flutter.txt
+          xcrun simctl spawn booted log stream | grep flutter > ${{ github.workspace }}/appium-logs/flutter.txt &
           UDID=${{ env.UDID }} APP_PATH=${{ env.APP_PATH }} npm run wdio-ios
       #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
       - name: upload appium logs
