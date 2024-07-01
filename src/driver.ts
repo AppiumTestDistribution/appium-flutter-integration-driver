@@ -24,7 +24,8 @@ import {
 } from './commands/element';
 
 import {
-  fetchFlutterServerPort,
+  fetchFlutterServerPortForRealDevice,
+  fetchFlutterServerPortForSimulator,
   getFreePort,
   isFlutterDriverCommand,
 } from './utils';
@@ -245,6 +246,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         ? this.proxydriver.opts.appPackage!
         : this.proxydriver.opts.bundleId!;
 
+    const isIosSimulator =
+      this.proxydriver instanceof XCUITestDriver &&
+      !this.proxydriver.isRealDevice();
+
     const portcallbacks: {
       portForwardCallback?: PortForwardCallback;
       portReleaseCallback?: PortReleaseCallback;
@@ -270,7 +275,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
           (this.proxydriver as AndroidUiautomator2Driver).adb,
           systemPort,
         );
-    } else if (this.proxydriver.isRealDevice()) {
+    } else if (!isIosSimulator) {
       portcallbacks.portForwardCallback = iosPortForward;
       portcallbacks.portReleaseCallback = iosRemovePortForward;
     }
@@ -280,20 +285,19 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       flutterSystemPort:
         this.internalCaps.flutterSystemPort || (await getFreePort()),
     } as DriverCaps<FlutterDriverConstraints>;
-    const systemPort =
-      this.proxydriver instanceof XCUITestDriver &&
-      !this.proxydriver.isRealDevice()
-        ? null
-        : flutterCaps.flutterSystemPort!;
+    const systemPort = isIosSimulator ? null : flutterCaps.flutterSystemPort!;
 
     const udid = this.proxydriver.opts.udid!;
-    this.flutterPort = await fetchFlutterServerPort({
-      udid,
-      packageName,
-      ...portcallbacks,
-      systemPort,
-      flutterCaps,
-    });
+
+    this.flutterPort = isIosSimulator
+      ? await fetchFlutterServerPortForSimulator(udid, packageName)
+      : await fetchFlutterServerPortForRealDevice({
+          udid,
+          packageName,
+          ...portcallbacks,
+          systemPort,
+          flutterCaps,
+        });
 
     if (!this.flutterPort) {
       throw new Error(

@@ -7,9 +7,16 @@ import { JWProxy } from '@appium/base-driver';
 import { desiredCapConstraints } from './desiredCaps';
 import { DriverCaps } from '@appium/types';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
+import { Simctl } from 'node-simctl';
+import path from 'path';
+import fs from 'fs';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
+const SIMULATOR_SERVER_CONFIG_PATH = path.join(
+  'Documents',
+  'flutter_server_config.json',
+);
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 export async function getProxyDriver(
   strategy: string,
@@ -97,7 +104,36 @@ async function waitForFlutterServer(
   );
 }
 
-export async function fetchFlutterServerPort({
+export async function fetchFlutterServerPortForSimulator(
+  udid: string,
+  bundleId: string,
+) {
+  const errorMessage = `Unable to fetch flutter server port for simulator with udid ${udid}`;
+  try {
+    const simctl = new Simctl({ udid });
+    const dataContainerPath = await simctl.getAppContainer(bundleId, 'data');
+    const configPath = path.join(
+      dataContainerPath,
+      SIMULATOR_SERVER_CONFIG_PATH,
+    );
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      log.info(
+        `Successfully read flutter server config from file : ${JSON.stringify(config, null, 2)}`,
+      );
+      if (!config.port) {
+        throw new Error(errorMessage);
+      }
+      return config.port;
+    }
+  } catch (err) {
+    log.error(errorMessage);
+    log.error(err);
+    throw new Error(errorMessage);
+  }
+}
+
+export async function fetchFlutterServerPortForRealDevice({
   udid,
   systemPort,
   portForwardCallback,
@@ -113,18 +149,10 @@ export async function fetchFlutterServerPort({
   flutterCaps: DriverCaps<FlutterDriverConstraints>;
 }): Promise<number | null> {
   const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
-  const isSimulator = !systemPort;
   let devicePort = startPort;
   let forwardedPort = systemPort;
 
   while (devicePort <= endPort) {
-    /**
-     * For ios simulators, we dont need a dedicated system port and no port forwarding is required
-     * We need to use the same port range used by flutter server to check if the server is running
-     */
-    if (isSimulator) {
-      forwardedPort = devicePort;
-    }
     if (portForwardCallback) {
       await portForwardCallback(udid, systemPort!, devicePort);
     }
