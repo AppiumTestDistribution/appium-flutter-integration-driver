@@ -94,11 +94,9 @@ Check if your Flutter app is running on the device or emulator.
 
 For Android
 
-```
 1. Run adb command `adb logcat | grep flutter` to check if the Flutter app is running.
 2. Open the application in the device or emulator manually.
 3. Verify the logs in the console.
-```
 
 ```
 06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
