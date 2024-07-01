@@ -73,7 +73,7 @@ jobs:
           name: appium-logs
           path: ${{ github.workspace }}/appium-logs
   iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
       - name: Check out my other private repo
         uses: actions/checkout@master
