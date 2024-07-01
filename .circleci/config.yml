@@ -50,7 +50,7 @@ jobs:
             echo 'export WDA_PATH=$wda' >> $BASH_ENV
             echo ${WDA_PATH}
             echo ${PROJECT_ENV_VAR}
-            xcrun simctl install $target_sim_id ${WDA_PATH}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
+            xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
             xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
             mkdir appium-logs
             UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios
