@@ -22,15 +22,6 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       - run: xcrun simctl list devices available
-      - run: 
-          name: Boot Simulator
-          command: |
-            target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
-            echo $target_sim_id
-            echo 'export UDID=$target_sim_id' >> $BASH_ENV
-            xcrun simctl boot $target_sim_id
-            xcrun simctl bootstatus $target_sim_id -b
-            echo ${UDID}
       - run:
           name: Node Version
           command: |
@@ -38,8 +29,17 @@ jobs:
       - run:
           name: Install Appium and Run iOS Test
           command: |
+            release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
+            asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
+            ios_app=$(echo "$asset_urls" | tail -n 1)
+            echo "$ios_app"
             nvm install v19.0.0 && nvm alias default 19.0.0
             node -v
+            target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
+            echo $target_sim_id
+            echo 'export UDID=$target_sim_id' >> $BASH_ENV
+            xcrun simctl boot $target_sim_id
+            xcrun simctl bootstatus $target_sim_id -b
             npm install -g appium
             appium driver install xcuitest
             appium driver run xcuitest build-wda 
@@ -50,6 +50,10 @@ jobs:
             echo 'export WDA_PATH=$wda' >> $BASH_ENV
             echo ${WDA_PATH}
             echo ${PROJECT_ENV_VAR}
+            xcrun simctl install $target_sim_id ${WDA_PATH}/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
+            xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
+            mkdir appium-logs
+            UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
