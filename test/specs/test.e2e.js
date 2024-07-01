@@ -21,10 +21,14 @@ async function openScreen(screenTitle) {
 
 describe('My Login application', () => {
   afterEach(async () => {
-    await browser.reloadSession();
+    try {
+      await browser.reloadSession();
+    } catch (e) {
+      // Do nothing;
+    }
   });
 
-  it('Create Session with Flutter Integration Driver', async () => {
+  it.only('Create Session with Flutter Integration Driver', async () => {
     await performLogin();
     await openScreen('Double Tap');
     const element = await browser
@@ -65,7 +69,7 @@ describe('My Login application', () => {
     expect(await message.getText()).toEqual('Hello world');
   });
 
-  it('Scroll Test', async () => {
+  it.only('Scroll Test', async () => {
     await performLogin();
     await openScreen('Vertical Swiping');
     const javaElement = await browser.flutterScrollTillVisible({

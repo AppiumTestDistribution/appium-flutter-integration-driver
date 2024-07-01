@@ -12,7 +12,7 @@ export const config: WebdriverIO.Config = {
       'appium:app': process.env.APP_PATH || join(process.cwd(), 'ios.zip'),
       'appium:newCommandTimeout': 240,
       "appium:usePreinstalledWDA": true,
-      "appium:showIOSLog": true,
+      "appium:showIOSLog": true
     },
   ],
 };
