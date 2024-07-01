@@ -25,7 +25,7 @@ The current Appium Flutter Driver is built on top of the `flutter_test` SDK, whi
 
 This driver is built using [Flutter Integration Test](https://docs.flutter.dev/cookbook/testing/integration/introduction).
 
-:star: **⁠Strong Typing & Fluent APIs:** Ensures robust and easy-to-use interfaces.
+:star: **⁠Strong Typing & Fluent APIs**: Ensures robust and easy-to-use interfaces.
 
 :star: **⁠Element Handling**: Automatically waits for elements to attach to the DOM before interacting.
 
@@ -35,7 +35,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
 :star: **Simplified Powerful Gestures**: Supports powerful yet simplified gestures like LongPress, ScrollToElement, DragAndDrop, and DoubleClick.
 
-:star:*⁠*Element Chaining\*\*: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
+:star: **Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
 
 ## How to Use Appium Flutter Integration Driver
 
@@ -118,19 +118,20 @@ Real Device: Check xcode device logs.
 
 2. Open the application in the device or emulator manually.
 
-````
+```
 06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
 06-17 17:02:13.584 32697 32735 I flutter : 00:00 +0: appium flutter server
 06-17 17:02:14.814 32697 32735 I flutter : shelfRun HTTP service running on port 9000
 06-17 17:02:14.814 32697 32735 I flutter : [APPIUM FLUTTER]  Appium flutter server is listening on port 9000
 06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
 06-17
+```
 
 ## Install the Flutter Integration Driver
 
 ```bash
 appium driver install --source npm appium-flutter-integration-driver
-````
+```
 
 ## Appium Flutter Integration Driver vs. Appium UiAutomator2/XCUITest Driver
 
