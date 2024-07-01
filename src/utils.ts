@@ -125,6 +125,10 @@ export async function fetchFlutterServerPortForSimulator(
         throw new Error(errorMessage);
       }
       return config.port;
+    } else {
+      throw new Error(
+        `Unable to find flutter server config for simulator ${udid} in path ${configPath}`,
+      );
     }
   } catch (err) {
     log.error(errorMessage);
