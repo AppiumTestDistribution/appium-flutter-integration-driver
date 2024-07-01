@@ -22,5 +22,8 @@ export const desiredCapConstraints = {
   },
   flutterSystemPort: {
     isNumber: true,
-  }
+  },
+  address: {
+    isString: true,
+  },
 } as const;

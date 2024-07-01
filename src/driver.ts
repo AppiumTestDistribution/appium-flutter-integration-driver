@@ -114,9 +114,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     'flutter: dragAndDrop': {
       command: 'dragAndDrop',
       params: {
-        required: ['source', 'target']
-      }
-    }
+        required: ['source', 'target'],
+      },
+    },
   };
 
   async doubleClick(origin: any, offset: any) {
@@ -246,28 +246,39 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         : this.proxydriver.opts.bundleId!;
 
     const portcallbacks: {
-      portForwardCallback?: PortForwardCallback,
-      portReleaseCallback?: PortReleaseCallback,
+      portForwardCallback?: PortForwardCallback;
+      portReleaseCallback?: PortReleaseCallback;
     } = {};
     if (this.proxydriver instanceof AndroidUiautomator2Driver) {
-      portcallbacks.portForwardCallback = async (_: string, systemPort: number, devicePort: number) => await androidPortForward(
-        // @ts-ignore ADB instance is ok
-        (this.proxydriver as AndroidUiautomator2Driver).adb,
-        systemPort,
-        devicePort
-      );
-      portcallbacks.portReleaseCallback = async (_: string, systemPort: number) => await androidRemovePortForward(
-        // @ts-ignore ADB instance is ok
-        (this.proxydriver as AndroidUiautomator2Driver).adb,
-        systemPort
-      );
+      portcallbacks.portForwardCallback = async (
+        _: string,
+        systemPort: number,
+        devicePort: number,
+      ) =>
+        await androidPortForward(
+          // @ts-ignore ADB instance is ok
+          (this.proxydriver as AndroidUiautomator2Driver).adb,
+          systemPort,
+          devicePort,
+        );
+      portcallbacks.portReleaseCallback = async (
+        _: string,
+        systemPort: number,
+      ) =>
+        await androidRemovePortForward(
+          // @ts-ignore ADB instance is ok
+          (this.proxydriver as AndroidUiautomator2Driver).adb,
+          systemPort,
+        );
     } else if (this.proxydriver.isRealDevice()) {
       portcallbacks.portForwardCallback = iosPortForward;
       portcallbacks.portReleaseCallback = iosRemovePortForward;
     }
     const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
-      flutterServerLaunchTimeout: this.internalCaps.flutterServerLaunchTimeout || 5000,
-      flutterSystemPort: this.internalCaps.flutterSystemPort || await getFreePort(),
+      flutterServerLaunchTimeout:
+        this.internalCaps.flutterServerLaunchTimeout || 5000,
+      flutterSystemPort:
+        this.internalCaps.flutterSystemPort || (await getFreePort()),
     } as DriverCaps<FlutterDriverConstraints>;
     const systemPort =
       this.proxydriver instanceof XCUITestDriver &&
@@ -281,7 +292,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       packageName,
       ...portcallbacks,
       systemPort,
-      flutterCaps
+      flutterCaps,
     });
 
     if (!this.flutterPort) {
@@ -294,7 +305,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
     // @ts-ignore
     this.proxy = new JWProxy({
-      server: '127.0.0.1',
+      server: this.internalCaps.address || '127.0.0.1',
       port: this.flutterPort,
     });
 
