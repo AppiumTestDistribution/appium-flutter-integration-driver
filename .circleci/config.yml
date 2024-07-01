@@ -21,8 +21,34 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      - run: pod install # Install CocoaPods dependencies
-      - run: fastlane scan # Run tests using Fastlane
+      - run: xcrun simctl list devices available
+      - run: 
+        name: Boot Simulator
+        command: |
+          target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
+          echo $target_sim_id
+          echo 'export UDID=$target_sim_id' >> "$BASH_ENV"
+          xcrun simctl boot $target_sim_id
+          xcrun simctl bootstatus $target_sim_id -b
+          echo ${UDID}
+      - run:
+          name: Node Version
+          command: |
+            nvm install v19.0.0 && nvm alias default 19.0.0
+      - run:
+          name: Install Appium and Run iOS Test
+          command: |
+            nvm install v19.0.0 && nvm alias default 19.0.0
+            node -v
+            npm install -g appium
+            appium driver install xcuitest
+            appium driver run xcuitest build-wda 
+            npm install
+            npm run build
+            wda=$(ls -d /Users/runner/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
+            echo $wda
+            echo 'export WDA_PATH=$wda' >> "$BASH_ENV"
+            echo ${WDA_PATH}
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
