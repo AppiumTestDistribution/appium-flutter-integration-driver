@@ -8,9 +8,11 @@ export const config: WebdriverIO.Config = {
       platformName: 'iOS',
       'appium:automationName': 'FlutterIntegration',
       'appium:orientation': 'PORTRAIT',
-      'appium:app':
-        '/Users/saikrishna/Downloads/git/flutter-learnings/counter_app/build/ios/iphonesimulator/Runner.app',
+      'appium:udid': process.env.UDID,
+      'appium:app': process.env.APP_PATH,
       'appium:newCommandTimeout': 240,
+      "appium:usePreinstalledWDA": true,
+      "appium:showIOSLog": true
     },
   ],
 };
