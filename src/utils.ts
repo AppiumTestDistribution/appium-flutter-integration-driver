@@ -58,7 +58,11 @@ export async function getFreePort() {
   return await findAPortNotInUse(start, end);
 }
 
-async function waitForFlutterServer(port: number, packageName: string, flutterCaps: DriverCaps<FlutterDriverConstraints>) {
+async function waitForFlutterServer(
+  port: number,
+  packageName: string,
+  flutterCaps: DriverCaps<FlutterDriverConstraints>,
+) {
   const proxy = new JWProxy({
     server: '127.0.0.1',
     port: port,
@@ -71,12 +75,15 @@ async function waitForFlutterServer(port: number, packageName: string, flutterCa
           return false;
         }
         if (response?.appInfo?.packageName === packageName) {
-          log.info(`Flutter server version the application is build with ${response.serverVersion}`);
+          log.info(
+            `Flutter server version the application is build with ${response.serverVersion}`,
+          );
           return true;
         } else {
-          throw new Error(
+          log.info(
             `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`,
           );
+          return false;
         }
       } catch (err: any) {
         log.info(`FlutterServer not reachable on port ${port}, Retrying..`);
@@ -96,7 +103,7 @@ export async function fetchFlutterServerPort({
   portForwardCallback,
   portReleaseCallback,
   packageName,
-  flutterCaps
+  flutterCaps,
 }: {
   udid: string;
   systemPort?: number | null;
