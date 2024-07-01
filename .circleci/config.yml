@@ -27,7 +27,7 @@ jobs:
           command: |
             target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
             echo $target_sim_id
-            echo 'export UDID="$target_sim_id"' >> "$BASH_ENV"
+            echo 'export UDID=$target_sim_id' >> $BASH_ENV
             xcrun simctl boot $target_sim_id
             xcrun simctl bootstatus $target_sim_id -b
             echo ${UDID}
@@ -47,7 +47,7 @@ jobs:
             npm run build
             wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
             echo $wda
-            echo 'export WDA_PATH="$wda"' >> "$BASH_ENV"
+            echo 'export WDA_PATH=$wda' >> $BASH_ENV
             echo ${WDA_PATH}
             echo ${PROJECT_ENV_VAR}
 
