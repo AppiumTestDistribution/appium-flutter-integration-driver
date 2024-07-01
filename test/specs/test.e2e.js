@@ -20,13 +20,8 @@ async function openScreen(screenTitle) {
 }
 
 describe('My Login application', () => {
-  afterEach(async () => {
-    await browser.deleteSession({ shutdownDriver: true })
-    try {
-      await browser.reloadSession();
-    } catch (e) {
-      // Do nothing;
-    }
+  beforeEach(async () => {
+    await browser.reloadSession();
   });
 
   it('Create Session with Flutter Integration Driver', async () => {
