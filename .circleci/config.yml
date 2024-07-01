@@ -23,14 +23,14 @@ jobs:
       - checkout
       - run: xcrun simctl list devices available
       - run: 
-        name: Boot Simulator
-        command: |
-          target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
-          echo $target_sim_id
-          echo 'export UDID=$target_sim_id' >> "$BASH_ENV"
-          xcrun simctl boot $target_sim_id
-          xcrun simctl bootstatus $target_sim_id -b
-          echo ${UDID}
+          name: Boot Simulator
+          command: |
+            target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
+            echo $target_sim_id
+            echo 'export UDID=$target_sim_id' >> "$BASH_ENV"
+            xcrun simctl boot $target_sim_id
+            xcrun simctl bootstatus $target_sim_id -b
+            echo ${UDID}
       - run:
           name: Node Version
           command: |
