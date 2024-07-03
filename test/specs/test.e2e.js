@@ -116,8 +116,8 @@ describe('My Login application', () => {
   it('Properties Test', async () => {
     await performLogin();
     await openScreen('UI Elements');
-    const prop2 = await browser.flutterByValueKey$('disabled_text_field');
-    const disableTextFieldState = await prop2.getAttribute('all');
+    const prop2 = await browser.flutterBySemanticsLabel$('disabled_text_field');
+    const disableTextFieldState = await prop2.getAttribute('flags');
     expect(disableTextFieldState).toEqual('[isTextField, hasEnabledState, isReadOnly]');
 
     const prop4 = await browser.flutterBySemanticsLabel$('switch_button');
