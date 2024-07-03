@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { config as baseConfig } from './wdio.conf.ts';
 
 export const config: WebdriverIO.Config = {
@@ -12,7 +13,8 @@ export const config: WebdriverIO.Config = {
       'appium:app': process.env.APP_PATH,
       'appium:newCommandTimeout': 240,
       "appium:usePreinstalledWDA": true,
-      "appium:showIOSLog": true
+      "appium:showIOSLog": false,
+      "appium:wdaLocalPort": 8456
     },
   ],
 };

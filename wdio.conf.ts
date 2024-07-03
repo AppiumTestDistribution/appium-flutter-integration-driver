@@ -119,16 +119,16 @@ export const config: Options.Testrunner = {
   // commands. Instead, they hook themselves up into the test process.
   services: [
     ['flutter-by', {}],
-    [
-      'appium',
-      {
-        args: {
-          basePath: '/wd/hub',
-          port: 4723,
-          log: join(process.cwd(), 'appium-logs', 'logs.txt')
-        },
-      },
-    ],
+    // [
+    //   'appium',
+    //   {
+    //     args: {
+    //       basePath: '/wd/hub',
+    //       port: 4723,
+    //       log: join(process.cwd(), 'appium-logs', 'logs.txt')
+    //     },
+    //   },
+    // ],
   ],
   //
   // Framework you want to run your specs with.

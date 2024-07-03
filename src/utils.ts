@@ -49,6 +49,7 @@ export function isFlutterDriverCommand(command: string) {
       'getAttribute',
       'elementDisplayed',
       'execute',
+      'activateApp'
     ].indexOf(command) >= 0
   );
 }
@@ -58,19 +59,11 @@ export async function getFreePort() {
   return await findAPortNotInUse(start, end);
 }
 
-async function waitForFlutterServer(
-  port: number,
-  packageName: string,
-  flutterCaps: DriverCaps<FlutterDriverConstraints>,
-) {
-  const proxy = new JWProxy({
-    server: '127.0.0.1',
-    port: port,
-  });
+export async function waitForFlutterServerToBeActive(proxy: JWProxy | undefined, packageName: string, port: any, flutterCaps: DriverCaps<FlutterDriverConstraints>) {
   await waitForCondition(
     async () => {
       try {
-        const response: any = await proxy.command('/status', 'GET');
+        const response: any = await proxy?.command('/status', 'GET');
         if (!response) {
           return false;
         }
@@ -80,10 +73,9 @@ async function waitForFlutterServer(
           );
           return true;
         } else {
-          log.info(
-            `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`,
+          throw new Error(
+            `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`
           );
-          return false;
         }
       } catch (err: any) {
         log.info(`FlutterServer not reachable on port ${port}, Retrying..`);
@@ -92,9 +84,17 @@ async function waitForFlutterServer(
     },
     {
       waitMs: flutterCaps.flutterServerLaunchTimeout,
-      intervalMs: 150,
-    },
+      intervalMs: 150
+    }
   );
+}
+
+export async function waitForFlutterServer(port: number, packageName: string, flutterCaps: DriverCaps<FlutterDriverConstraints>) {
+  const proxy = new JWProxy({
+    server: '127.0.0.1',
+    port: port,
+  });
+  await waitForFlutterServerToBeActive(proxy, packageName, port, flutterCaps);
 }
 
 export async function fetchFlutterServerPort({

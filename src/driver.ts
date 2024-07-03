@@ -27,6 +27,7 @@ import {
   fetchFlutterServerPort,
   getFreePort,
   isFlutterDriverCommand,
+  waitForFlutterServerToBeActive
 } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 import { androidPortForward, androidRemovePortForward } from './android';
@@ -327,5 +328,16 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     }
     await this.proxydriver?.deleteSession();
     await super.deleteSession();
+  }
+
+  async activateApp(appId: string, bundleId: string) {
+    const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
+      flutterServerLaunchTimeout: this.internalCaps?.flutterServerLaunchTimeout || 5000,
+    } as DriverCaps<FlutterDriverConstraints>;
+    // @ts-ignore
+    const activateAppResponse = await this.proxydriver.activateApp(appId || bundleId);
+    await waitForFlutterServerToBeActive(this.proxy, appId, this.flutterPort, flutterCaps);
+    await this.proxy?.command('/session', 'POST', { capabilities: this.proxydriver.originalCaps });
+    return activateAppResponse;
   }
 }
