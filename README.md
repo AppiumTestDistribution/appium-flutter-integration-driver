@@ -37,7 +37,12 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
 :star:*⁠*Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
 
-## How to Use Appium Flutter Integration Driver
+## Install the Flutter Integration Driver
+
+```bash
+appium driver install --source npm appium-flutter-integration-driver
+```
+## Prepare the app with Flutter Integration Server
 
 1. In your Flutter app's `pubspec.yaml`, add the following dependencies:
 
@@ -81,10 +86,14 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
    ```
 
 6. Build the iOS app:
-
+   For Simulator - Debug mode
    ```bash
-   flutter build ios integration_test/appium.dart --release
+   flutter build ios integration_test/appium.dart --simulator
    ```
+   For Real Device - Release mode
+   ```bash
+    flutter build ipa --release integration_test/test.dart
+    ```
 
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
 
@@ -137,6 +146,9 @@ For more details, refer to the documentation for each driver:
 
 - [Appium UiAutomator2 Driver](https://github.com/appium/appium-uiautomator2-driver)
 - [Appium XCUITest Driver](https://appium.github.io/appium-xcuitest-driver/latest)
+
+## How to Inspect elements?
+- You can use the flutter inspector tool to inspect the elements in your Flutter app. You can find the tool [here](https://docs.flutter.dev/tools/devtools/inspector)
 
 ## Capabilities for Appium Flutter Integration Driver
 
