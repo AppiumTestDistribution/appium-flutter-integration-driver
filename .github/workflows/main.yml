@@ -24,7 +24,7 @@ jobs:
           distribution: 'adopt'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2.0.10
-      
+
       - name: 'List files'
         run: | 
          release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
@@ -44,6 +44,10 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Linting
+        run: |
+          npm install
+          npm run prettier-check
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
