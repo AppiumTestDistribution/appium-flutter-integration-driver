@@ -118,16 +118,16 @@ describe('My Login application', () => {
     await openScreen('UI Elements');
     const prop2 = await browser.flutterByValueKey$('disabled_text_field');
     const disableTextFieldState = await prop2.getAttribute('all');
-    // expect(disableTextFieldState).toEqual('[isTextField, hasEnabledState, isReadOnly]');
+    expect(disableTextFieldState).toEqual('[isTextField, hasEnabledState, isReadOnly]');
 
-    // const prop4 = await browser.flutterBySemanticsLabel$('switch_button');
-    // await prop4.getAttribute('flags')
-    // expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isFocusable]');
-    // await prop4.click();
-    // await prop4.getAttribute('flags');
-    // expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isToggled, isFocusable]');
-    // const prop5 = await browser.flutterBySemanticsLabel$('switch_button');
-    // await prop5.getAttribute('all'); // Will return all attributes attached to the element
+    const prop4 = await browser.flutterBySemanticsLabel$('switch_button');
+    await prop4.getAttribute('flags')
+    expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isFocusable]');
+    await prop4.click();
+    await prop4.getAttribute('flags');
+    expect(await prop4.getAttribute('flags')).toEqual('[hasEnabledState, isEnabled, hasToggledState, isToggled, isFocusable]');
+    const prop5 = await browser.flutterBySemanticsLabel$('switch_button');
+    await prop5.getAttribute('all'); // Will return all attributes attached to the element
     // {
     //   owner: 'SemanticsOwner#fd8a3',
     //     isMergedIntoParent: 'false',

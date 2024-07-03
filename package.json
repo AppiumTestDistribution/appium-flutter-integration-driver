@@ -40,7 +40,7 @@
     "watch": "tsc --watch",
     "appium-home": "rm -rf /tmp/some-temp-dir && export APPIUM_HOME=/tmp/some-temp-dir",
     "test": "mocha --require ts-node/register ./test/*.spec.js --timeout 260000 ",
-    "run-server": "./node_modules/.bin/appium server -ka 800 -pa /wd/hub",
+    "run-server": "appium server -ka 800 -pa /wd/hub",
     "install-driver": "npm run build && appium driver install --source=local $(pwd)",
     "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
     "wdio-android": "wdio run ./android.conf.ts",
