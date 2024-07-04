@@ -24,9 +24,11 @@ import {
 } from './commands/element';
 
 import {
+  attachAppLaunchArguments,
   fetchFlutterServerPort,
   getFreePort,
   isFlutterDriverCommand,
+  isW3cCaps,
 } from './utils';
 import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 import { androidPortForward, androidRemovePortForward } from './android';
@@ -225,11 +227,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   public async createSession(
     ...args: any[]
   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
-    console.log((JSON.parse(JSON.stringify(args))));
-    const incomingCaps = args[2];
-    if (incomingCaps.alwaysMatch['platformName'] == 'iOS' && incomingCaps.alwaysMatch['appium:flutterSystemPort']) {
-      incomingCaps.alwaysMatch['appium:processArguments'] = { args: [`--port=${incomingCaps.alwaysMatch['appium:flutterSystemPort']}` ]};
-    }
     const [sessionId, caps] = await super.createSession(
       ...(JSON.parse(JSON.stringify(args)) as [
         W3CDriverCaps,
@@ -238,7 +235,15 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
         DriverData[],
       ]),
     );
+
     this.internalCaps = caps;
+    /**
+     * To support parallel execution in iOS simulators
+     * flutterServerPort need to be passed as lauch argument using appium:processArguments
+     * Refer: https://appium.github.io/appium-xcuitest-driver/latest/reference/capabilities/
+     */
+    attachAppLaunchArguments(caps, ...args);
+
     let sessionCreated = await createSession.call(
       this,
       sessionId,
@@ -286,21 +291,22 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
       flutterServerLaunchTimeout:
         this.internalCaps.flutterServerLaunchTimeout || 5000,
-      flutterSystemPort: isIosSimulator ? this.internalCaps.flutterSystemPort : this.internalCaps.flutterSystemPort || await getFreePort()
+      flutterSystemPort: isIosSimulator
+        ? this.internalCaps.flutterSystemPort
+        : this.internalCaps.flutterSystemPort || (await getFreePort()),
     } as DriverCaps<FlutterDriverConstraints>;
 
     const systemPort = flutterCaps.flutterSystemPort!;
     const udid = this.proxydriver.opts.udid!;
 
-    this.flutterPort =
-      await fetchFlutterServerPort({
-          udid,
-          packageName,
-          ...portcallbacks,
-          systemPort,
-          flutterCaps,
-          isIosSimulator
-        });
+    this.flutterPort = await fetchFlutterServerPort({
+      udid,
+      packageName,
+      ...portcallbacks,
+      systemPort,
+      flutterCaps,
+      isIosSimulator,
+    });
 
     if (!this.flutterPort) {
       throw new Error(
