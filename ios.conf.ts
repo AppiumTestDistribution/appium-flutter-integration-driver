@@ -12,7 +12,8 @@ export const config: WebdriverIO.Config = {
       'appium:app': process.env.APP_PATH,
       'appium:newCommandTimeout': 240,
       "appium:usePreinstalledWDA": true,
-      "appium:showIOSLog": true
+      "appium:showIOSLog": false,
+      "appium:flutterSystemPort": 31321
     },
   ],
 };

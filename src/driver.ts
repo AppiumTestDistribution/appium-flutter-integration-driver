@@ -225,7 +225,11 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   public async createSession(
     ...args: any[]
   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
-    
+    console.log((JSON.parse(JSON.stringify(args))));
+    const incomingCaps = args[2];
+    if (incomingCaps.alwaysMatch['platformName'] == 'iOS' && incomingCaps.alwaysMatch['appium:flutterSystemPort']) {
+      incomingCaps.alwaysMatch['appium:processArguments'] = { args: [`--port=${incomingCaps.alwaysMatch['appium:flutterSystemPort']}` ]};
+    }
     const [sessionId, caps] = await super.createSession(
       ...(JSON.parse(JSON.stringify(args)) as [
         W3CDriverCaps,
@@ -288,7 +292,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     const systemPort = flutterCaps.flutterSystemPort!;
     const udid = this.proxydriver.opts.udid!;
 
-    this.flutterPort = 
+    this.flutterPort =
       await fetchFlutterServerPort({
           udid,
           packageName,
