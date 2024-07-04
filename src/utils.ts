@@ -12,10 +12,7 @@ import _ from 'lodash';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
-const SIMULATOR_SERVER_CONFIG_PATH = path.join(
-  'Documents',
-  'flutter_server_config.json',
-);
+
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 export async function getProxyDriver(
   strategy: string,
@@ -138,6 +135,10 @@ export async function fetchFlutterServerPort({
   }
 
   while (devicePort <= endPort) {
+    /**
+     * For ios simulators, we dont need a dedicated system port and no port forwarding is required
+     * We need to use the same port range used by flutter server to check if the server is running
+     */
     if (isIosSimulator) {
       forwardedPort = devicePort;
     }
