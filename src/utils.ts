@@ -104,46 +104,14 @@ async function waitForFlutterServer(
   );
 }
 
-export async function fetchFlutterServerPortForSimulator(
-  udid: string,
-  bundleId: string,
-) {
-  const errorMessage = `Unable to fetch flutter server port for simulator with udid ${udid}`;
-  try {
-    const simctl = new Simctl({ udid });
-    const dataContainerPath = await simctl.getAppContainer(bundleId, 'data');
-    const configPath = path.join(
-      dataContainerPath,
-      SIMULATOR_SERVER_CONFIG_PATH,
-    );
-    if (fs.existsSync(configPath)) {
-      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-      log.info(
-        `Successfully read flutter server config from file : ${JSON.stringify(config, null, 2)}`,
-      );
-      if (!config.port) {
-        throw new Error(errorMessage);
-      }
-      return config.port;
-    } else {
-      throw new Error(
-        `Unable to find flutter server config for simulator ${udid} in path ${configPath}`,
-      );
-    }
-  } catch (err) {
-    log.error(errorMessage);
-    log.error(err);
-    throw new Error(errorMessage);
-  }
-}
-
-export async function fetchFlutterServerPortForRealDevice({
+export async function fetchFlutterServerPort({
   udid,
   systemPort,
   portForwardCallback,
   portReleaseCallback,
   packageName,
   flutterCaps,
+  isIosSimulator
 }: {
   udid: string;
   systemPort?: number | null;
@@ -151,14 +119,31 @@ export async function fetchFlutterServerPortForRealDevice({
   portReleaseCallback?: PortReleaseCallback;
   packageName: string;
   flutterCaps: DriverCaps<FlutterDriverConstraints>;
+  isIosSimulator: boolean
 }): Promise<number | null> {
+
   const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
   let devicePort = startPort;
   let forwardedPort = systemPort;
+  
+  if(isIosSimulator && systemPort) {
+    try {
+      log.info(`Checking if flutter server is running on port ${systemPort} for simulator with id ${udid}`);
+      await waitForFlutterServer(systemPort!, packageName, flutterCaps);
+      log.info(`Flutter server is successfully running on port ${systemPort}`);
+      return systemPort!;
+    } catch (e) {
+      return null;
+    }
+  }
 
   while (devicePort <= endPort) {
+    if(isIosSimulator) {
+      forwardedPort = devicePort;
+    }
+
     if (portForwardCallback) {
-      await portForwardCallback(udid, systemPort!, devicePort);
+      await portForwardCallback(udid, forwardedPort!, devicePort);
     }
     try {
       log.info(`Checking if flutter server is running on port ${devicePort}`);
@@ -167,7 +152,7 @@ export async function fetchFlutterServerPortForRealDevice({
       return forwardedPort!;
     } catch (e) {
       if (portReleaseCallback) {
-        await portReleaseCallback(udid, systemPort!);
+        await portReleaseCallback(udid, forwardedPort!);
       }
     }
     devicePort++;

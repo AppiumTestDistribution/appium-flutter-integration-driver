@@ -24,8 +24,7 @@ import {
 } from './commands/element';
 
 import {
-  fetchFlutterServerPortForRealDevice,
-  fetchFlutterServerPortForSimulator,
+  fetchFlutterServerPort,
   getFreePort,
   isFlutterDriverCommand,
 } from './utils';
@@ -226,6 +225,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
   public async createSession(
     ...args: any[]
   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
+    
     const [sessionId, caps] = await super.createSession(
       ...(JSON.parse(JSON.stringify(args)) as [
         W3CDriverCaps,
@@ -282,21 +282,20 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
     const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
       flutterServerLaunchTimeout:
         this.internalCaps.flutterServerLaunchTimeout || 5000,
-      flutterSystemPort:
-        this.internalCaps.flutterSystemPort || (await getFreePort()),
+      flutterSystemPort: isIosSimulator ? this.internalCaps.flutterSystemPort : this.internalCaps.flutterSystemPort || await getFreePort()
     } as DriverCaps<FlutterDriverConstraints>;
-    const systemPort = isIosSimulator ? null : flutterCaps.flutterSystemPort!;
 
+    const systemPort = flutterCaps.flutterSystemPort!;
     const udid = this.proxydriver.opts.udid!;
 
-    this.flutterPort = isIosSimulator
-      ? await fetchFlutterServerPortForSimulator(udid, packageName)
-      : await fetchFlutterServerPortForRealDevice({
+    this.flutterPort = 
+      await fetchFlutterServerPort({
           udid,
           packageName,
           ...portcallbacks,
           systemPort,
           flutterCaps,
+          isIosSimulator
         });
 
     if (!this.flutterPort) {
