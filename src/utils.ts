@@ -3,8 +3,6 @@ import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
-import { desiredCapConstraints } from './desiredCaps';
-import { DriverCaps } from '@appium/types';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
@@ -12,7 +10,6 @@ import _ from 'lodash';
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
 
-type FlutterDriverConstraints = typeof desiredCapConstraints;
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
