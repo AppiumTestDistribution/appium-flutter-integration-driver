@@ -25,7 +25,7 @@ The current Appium Flutter Driver is built on top of the `flutter_test` SDK, whi
 
 This driver is built using [Flutter Integration Test](https://docs.flutter.dev/cookbook/testing/integration/introduction).
 
-:star: **⁠Strong Typing & Fluent APIs**: Ensures robust and easy-to-use interfaces.
+ :star: **⁠Strong Typing & Fluent APIs:** Ensures robust and easy-to-use interfaces.
 
 :star: **⁠Element Handling**: Automatically waits for elements to attach to the DOM before interacting.
 
@@ -35,9 +35,14 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
 :star: **Simplified Powerful Gestures**: Supports powerful yet simplified gestures like LongPress, ScrollToElement, DragAndDrop, and DoubleClick.
 
-:star: **Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
+:star:*⁠*Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
 
-## How to Use Appium Flutter Integration Driver
+## Install the Flutter Integration Driver
+
+```bash
+appium driver install --source npm appium-flutter-integration-driver
+```
+## Prepare the app with Flutter Integration Server
 
 1. In your Flutter app's `pubspec.yaml`, add the following dependencies:
 
@@ -45,7 +50,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.13
+     appium_flutter_server: 0.0.14
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -60,9 +65,7 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
      initializeTest(app: const MyApp());
    }
    ```
-
    If you are in need to configure certain prerequists before the testing app is loaded, you can try the following code:
-
    ```dart
    import 'package:appium_testing_app/main.dart'; as app;
    void main() {
@@ -83,21 +86,25 @@ This driver is built using [Flutter Integration Test](https://docs.flutter.dev/c
    ```
 
 6. Build the iOS app:
-
+   For Simulator - Debug mode
    ```bash
-   flutter build ios integration_test/appium.dart --release
+   flutter build ios integration_test/appium.dart --simulator
    ```
+   For Real Device - Release mode
+   ```bash
+    flutter build ipa --release integration_test/test.dart
+    ```
 
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
 
 Check if your Flutter app is running on the device or emulator.
 
 For Android
-
+```
 1. Run adb command `adb logcat | grep flutter` to check if the Flutter app is running.
 2. Open the application in the device or emulator manually.
 3. Verify the logs in the console.
-
+```
 ```
 06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
 06-17 17:02:13.584 32697 32735 I flutter : 00:00 +0: appium flutter server
@@ -110,12 +117,11 @@ For Android
 For iOS
 Simulator:
 
-`xcrun simctl spawn booted log stream | grep flutter`
+```xcrun simctl spawn booted log stream | grep flutter```
 
 Real Device: Check xcode device logs.
 
 2. Open the application in the device or emulator manually.
-
 ```
 06-17 17:02:13.246 32697 32743 I flutter : The Dart VM service is listening on http://127.0.0.1:33339/E2REX61NaiI=/
 06-17 17:02:13.584 32697 32735 I flutter : 00:00 +0: appium flutter server
@@ -123,7 +129,6 @@ Real Device: Check xcode device logs.
 06-17 17:02:14.814 32697 32735 I flutter : [APPIUM FLUTTER]  Appium flutter server is listening on port 9000
 06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
 06-17
-```
 
 ## Install the Flutter Integration Driver
 
@@ -142,32 +147,35 @@ For more details, refer to the documentation for each driver:
 - [Appium UiAutomator2 Driver](https://github.com/appium/appium-uiautomator2-driver)
 - [Appium XCUITest Driver](https://appium.github.io/appium-xcuitest-driver/latest)
 
+## How to Inspect elements?
+- You can use the flutter inspector tool to inspect the elements in your Flutter app. You can find the tool [here](https://docs.flutter.dev/tools/devtools/inspector)
+
 ## Capabilities for Appium Flutter Integration Driver
 
-| Capability                        | Description                                                                                                                                                                                                                            | Required |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms                                                                                                                                                                | No       |
-| appium:flutterSystemPort          | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine. | No       |
-| appium:address                    | Address to connect with flutter server                                                                                                                                                                                                 | No       |
+| Capability                       | Description                                                             | Required |
+|----------------------------------|-------------------------------------------------------------------------|----------|
+| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
+| appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
+
 
 ## Locating Elements
 
 You can use the following locators to find elements in your Flutter app. Custom finders are built for WDIO. Refer to the [wdio-flutter-by-service](https://www.npmjs.com/package/wdio-flutter-by-service?activeTab=readme).
 
-| Locator                                                                                                                                                                                                                                                                               | Description                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `flutterByValueKey(value: string): Flutter.Locator`                                                                                                                                                                                                                                   | Locate by value key                                               |
-| `flutterByValueKey$(value: string): WebdriverIO.Element`                                                                                                                                                                                                                              | Locate single element by value key                                |
-| `flutterByValueKey$$(value: string): WebdriverIO.Element[]`                                                                                                                                                                                                                           | Locate multiple elements by value key                             |
-| `flutterBySemanticsLabel(label: string): Flutter.Locator`                                                                                                                                                                                                                             | Locate by semantics label                                         |
-| `flutterBySemanticsLabel$(label: string): WebdriverIO.Element`                                                                                                                                                                                                                        | Locate single element by semantics label                          |
-| `flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[]`                                                                                                                                                                                                                     | Locate multiple elements by semantics label                       |
-| `flutterByText(text: string): Flutter.Locator`                                                                                                                                                                                                                                        | Locate by text                                                    |
-| `flutterByText$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by text                                     |
-| `flutterByType$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by Type(Checkbox, RadioButton, ListView)    |
-| `flutterByType$$(text: string): WebdriverIO.Element[]`                                                                                                                                                                                                                                | Locate multiple elements by text(Checkbox, RadioButton, ListView) |
-| `flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element`                                                                                                                                                                                                               | Double click on an element                                        |
-| `flutterWaitForAbsent(options: { element: WebdriverIO.Element; locator: Flutter.Locator; }): void`                                                                                                                                                                                    | Wait for an element to be absent                                  |
-| `flutterScrollTillVisible(options: { finder: WebdriverIO.Element; scrollView?: WebdriverIO.Element; scrollDirection?: 'up','right','down','left'; delta?: number; maxScrolls?: number; settleBetweenScrollsTimeout?: number; dragDuration?: number; }): Promise<WebdriverIO.Element>` | Scroll until an element is visible                                |
+| Locator                                                                                                                                                                                                                                                                               | Description                                                    |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| `flutterByValueKey(value: string): Flutter.Locator`                                                                                                                                                                                                                                   | Locate by value key                                            |
+| `flutterByValueKey$(value: string): WebdriverIO.Element`                                                                                                                                                                                                                              | Locate single element by value key                             |
+| `flutterByValueKey$$(value: string): WebdriverIO.Element[]`                                                                                                                                                                                                                           | Locate multiple elements by value key                          |
+| `flutterBySemanticsLabel(label: string): Flutter.Locator`                                                                                                                                                                                                                             | Locate by semantics label                                      |
+| `flutterBySemanticsLabel$(label: string): WebdriverIO.Element`                                                                                                                                                                                                                        | Locate single element by semantics label                       |
+| `flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[]`                                                                                                                                                                                                                     | Locate multiple elements by semantics label                    |
+| `flutterByText(text: string): Flutter.Locator`                                                                                                                                                                                                                                        | Locate by text                                                 |
+| `flutterByText$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by text                                  |
+| `flutterByType$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by Type(Checkbox, RadioButton, ListView) |
+| `flutterByType$$(text: string): WebdriverIO.Element[]`                                                                                                                                                                                                                                | Locate multiple elements by text(Checkbox, RadioButton, ListView)|
+| `flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element`                                                                                                                                                                                                               | Double click on an element                                     |
+| `flutterWaitForAbsent(options: { element: WebdriverIO.Element; locator: Flutter.Locator; }): void`                                                                                                                                                                                    | Wait for an element to be absent                               |
+| `flutterScrollTillVisible(options: { finder: WebdriverIO.Element; scrollView?: WebdriverIO.Element; scrollDirection?: 'up','right','down','left'; delta?: number; maxScrolls?: number; settleBetweenScrollsTimeout?: number; dragDuration?: number; }): Promise<WebdriverIO.Element>` | Scroll until an element is visible                             |
 
 For more examples, see the [test file](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/blob/main/test/specs/test.e2e.js).

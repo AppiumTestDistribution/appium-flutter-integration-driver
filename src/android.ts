@@ -5,34 +5,31 @@ import { AppiumFlutterDriver } from './driver';
 import ADB from 'appium-adb';
 
 const setupNewAndroidDriver = async (
-  ...args: any[]
+   ...args: any[]
 ): Promise<AndroidUiautomator2Driver> => {
-  const androiddriver = new AndroidUiautomator2Driver({} as InitialOpts);
-  //@ts-ignore Args are ok
-  await androiddriver.createSession(...args);
-  return androiddriver;
+   const androiddriver = new AndroidUiautomator2Driver({} as InitialOpts);
+   //@ts-ignore Args are ok
+   await androiddriver.createSession(...args);
+   return androiddriver;
 };
 
 export const startAndroidSession = async (
-  flutterDriver: AppiumFlutterDriver,
-  caps: Record<string, any>,
-  ...args: any[]
+   flutterDriver: AppiumFlutterDriver,
+   caps: Record<string, any>,
+   ...args: any[]
 ): Promise<AndroidUiautomator2Driver> => {
-  log.info(`Starting an Android proxy session`);
-  return await setupNewAndroidDriver(...args);
+   log.info(`Starting an Android proxy session`);
+   return await setupNewAndroidDriver(...args);
 };
 
 export async function androidPortForward(
-  adb: ADB,
-  systemPort: number,
-  devicePort: number,
+   adb: ADB,
+   systemPort: number,
+   devicePort: number,
 ) {
-  await adb.forwardPort(systemPort!, devicePort);
+   await adb.forwardPort(systemPort!, devicePort);
 }
 
-export async function androidRemovePortForward(
-  adb: ADB,
-  systemPort: number,
-) {
-  await adb.removePortForward(systemPort);
+export async function androidRemovePortForward(adb: ADB, systemPort: number) {
+   await adb.removePortForward(systemPort);
 }
