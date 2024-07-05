@@ -14,7 +14,7 @@ export async function createSession(
    try {
       switch (_.toLower(caps.platformName)) {
          case PLATFORM.IOS:
-            this.proxydriver = await startIOSSession.bind(this)(caps, ...args);
+            this.proxydriver = await startIOSSession.bind(this)(...args);
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;
@@ -22,10 +22,7 @@ export async function createSession(
 
             break;
          case PLATFORM.ANDROID:
-            this.proxydriver = await startAndroidSession.bind(this)(
-               caps,
-               ...args,
-            );
+            this.proxydriver = await startAndroidSession.bind(this)(...args);
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;

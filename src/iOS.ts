@@ -10,7 +10,7 @@ export async function startIOSSession(
 ): Promise<XCUITestDriver> {
    this.log.info(`Starting an IOS proxy session`);
    const iosdriver = new XCUITestDriver({} as InitialOpts);
-   await iosdriver.createSession(...args.slice(1));
+   await iosdriver.createSession(...args);
    return iosdriver;
 }
 
