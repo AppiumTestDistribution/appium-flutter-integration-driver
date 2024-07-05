@@ -223,13 +223,20 @@ export function attachAppLaunchArguments(parsedCaps: any, ...caps: any) {
    const capsToUpdate = [...caps].find(isW3cCaps);
    const platformName: string | undefined = parsedCaps['platformName'];
    const systemPort: string | undefined = parsedCaps['flutterSystemPort'];
-
+   console.log(
+      'Caps to update:',
+      systemPort,
+      capsToUpdate,
+      `${capsToUpdate.alwaysMatch['appium:flutterSystemPort']}`,
+   );
    if (platformName && systemPort && platformName.toLowerCase() == 'ios') {
-      const args = [`--port=${capsToUpdate.alwaysMatch['flutterSystemPort']}`];
+      const args = [
+         `--port=${capsToUpdate.alwaysMatch['appium:flutterSystemPort']}`,
+      ];
       log.info(
          `iOS platform detected and flutterSystemPort capability is present. So attaching processArguments: ${JSON.stringify(args)}`,
       );
-      capsToUpdate.alwaysMatch['processArguments'] = {
+      capsToUpdate.alwaysMatch['appium:processArguments'] = {
          args,
       };
    }

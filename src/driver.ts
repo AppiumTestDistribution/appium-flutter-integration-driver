@@ -349,10 +349,22 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          flutterServerLaunchTimeout:
             this.internalCaps?.flutterServerLaunchTimeout || 5000,
       } as DriverCaps<FlutterDriverConstraints>;
-      // @ts-ignore
-      const activateAppResponse = await this.proxydriver.activateApp(
-         appId || bundleId,
-      );
+      let activateAppResponse;
+      //run only for ios
+      if (
+         this.proxydriver instanceof XCUITestDriver &&
+         this.proxydriver.isSimulator() &&
+         this.internalCaps?.flutterSystemPort
+      ) {
+         activateAppResponse = await this.proxydriver.activateApp(
+            appId || bundleId,
+            { arguments: [`--port=${this.internalCaps?.flutterSystemPort}`] },
+         );
+      } else {
+         // @ts-ignore
+         await this.proxydriver.activateApp(appId || bundleId);
+      }
+
       await waitForFlutterServerToBeActive(
          this.proxy,
          appId,
