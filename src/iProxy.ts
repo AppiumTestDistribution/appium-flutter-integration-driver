@@ -5,7 +5,7 @@ import { logger, util, timing } from '@appium/support';
 import { utilities } from 'appium-ios-device';
 import { checkPortStatus } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
-import { AppiumLogger } from '@appium/types';
+import type { AppiumLogger } from '@appium/types';
 
 const LOCALHOST = '127.0.0.1';
 
