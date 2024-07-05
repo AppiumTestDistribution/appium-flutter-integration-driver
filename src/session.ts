@@ -3,14 +3,14 @@ import _ from 'lodash';
 import { PLATFORM } from './platform';
 import { startAndroidSession } from './android';
 import { startIOSSession } from './iOS';
-import type { StringRecord } from '@appium/types';
+import type { DefaultCreateSessionResult } from '@appium/types';
 
 export async function createSession(
    this: AppiumFlutterDriver,
    sessionId: string,
    caps: any,
    ...args: any[]
-): Promise<[string, StringRecord]> {
+): Promise<DefaultCreateSessionResult<any>> {
    try {
       switch (_.toLower(caps.platformName)) {
          case PLATFORM.IOS:

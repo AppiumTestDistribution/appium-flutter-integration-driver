@@ -10,7 +10,7 @@ import type {
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import { createSession } from './session';
+import { createSession as createSessionMixin } from './session';
 import {
    findElOrEls,
    click,
@@ -160,8 +160,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
        */
       attachAppLaunchArguments.bind(this)(caps, ...args);
 
-      let sessionCreated = await createSession.call(
-         this,
+      let sessionCreated = await createSessionMixin.bind(this)(
          sessionId,
          caps,
          ...JSON.parse(JSON.stringify(args)),
