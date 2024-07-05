@@ -10,7 +10,7 @@ import type {
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import { createSession } from './session';
+import { createSession as createSessionMixin } from './session';
 import {
    findElOrEls,
    click,
@@ -239,8 +239,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          ]),
       );
       this.internalCaps = caps;
-      let sessionCreated = await createSession.call(
-         this,
+      let sessionCreated = await createSessionMixin.bind(this)(
          sessionId,
          caps,
          ...JSON.parse(JSON.stringify(args)),
@@ -279,25 +278,17 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          portcallbacks.portForwardCallback = iosPortForward;
          portcallbacks.portReleaseCallback = iosRemovePortForward;
       }
-      const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
-         flutterServerLaunchTimeout:
-            this.internalCaps.flutterServerLaunchTimeout || 5000,
-         flutterSystemPort:
-            this.internalCaps.flutterSystemPort || (await getFreePort()),
-      } as DriverCaps<FlutterDriverConstraints>;
       const systemPort =
-         this.proxydriver instanceof XCUITestDriver &&
-         !this.proxydriver.isRealDevice()
+         this.proxydriver instanceof XCUITestDriver && !this.proxydriver.isRealDevice()
             ? null
-            : flutterCaps.flutterSystemPort!;
+            : (this.opts.flutterSystemPort ?? await getFreePort());
 
       const udid = this.proxydriver.opts.udid!;
-      this.flutterPort = await fetchFlutterServerPort({
+      this.flutterPort = await fetchFlutterServerPort.bind(this)({
          udid,
          packageName,
          ...portcallbacks,
          systemPort,
-         flutterCaps,
       });
 
       if (!this.flutterPort) {
@@ -335,20 +326,11 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    async activateApp(appId: string, bundleId: string) {
-      const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
-         flutterServerLaunchTimeout:
-            this.internalCaps?.flutterServerLaunchTimeout || 5000,
-      } as DriverCaps<FlutterDriverConstraints>;
       // @ts-ignore
       const activateAppResponse = await this.proxydriver.activateApp(
          appId || bundleId,
       );
-      await waitForFlutterServerToBeActive(
-         this.proxy,
-         appId,
-         this.flutterPort,
-         flutterCaps,
-      );
+      await waitForFlutterServerToBeActive.bind(this)(appId);
       await this.proxy?.command('/session', 'POST', {
          capabilities: this.proxydriver.originalCaps,
       });

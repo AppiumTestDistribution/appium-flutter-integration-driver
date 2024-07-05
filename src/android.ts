@@ -1,25 +1,17 @@
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import { log } from './logger';
 import type { InitialOpts } from '@appium/types';
 import { AppiumFlutterDriver } from './driver';
 import ADB from 'appium-adb';
 
-const setupNewAndroidDriver = async (
+export async function startAndroidSession (
+   this: AppiumFlutterDriver,
    ...args: any[]
-): Promise<AndroidUiautomator2Driver> => {
+): Promise<AndroidUiautomator2Driver> {
+   this.log.info(`Starting an Android proxy session`);
    const androiddriver = new AndroidUiautomator2Driver({} as InitialOpts);
    //@ts-ignore Args are ok
    await androiddriver.createSession(...args);
    return androiddriver;
-};
-
-export const startAndroidSession = async (
-   flutterDriver: AppiumFlutterDriver,
-   caps: Record<string, any>,
-   ...args: any[]
-): Promise<AndroidUiautomator2Driver> => {
-   log.info(`Starting an Android proxy session`);
-   return await setupNewAndroidDriver(...args);
 };
 
 export async function androidPortForward(

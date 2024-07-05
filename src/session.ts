@@ -3,16 +3,18 @@ import _ from 'lodash';
 import { PLATFORM } from './platform';
 import { startAndroidSession } from './android';
 import { startIOSSession } from './iOS';
-export const createSession: any = async function (
+import type { StringRecord } from '@appium/types';
+
+export async function createSession (
    this: AppiumFlutterDriver,
    sessionId: string,
    caps: any,
    ...args: any[]
-) {
+): Promise<[string, StringRecord]> {
    try {
       switch (_.toLower(caps.platformName)) {
          case PLATFORM.IOS:
-            this.proxydriver = await startIOSSession(this, caps, ...args);
+            this.proxydriver = await startIOSSession.bind(this)(caps, ...args);
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;
@@ -20,7 +22,7 @@ export const createSession: any = async function (
 
             break;
          case PLATFORM.ANDROID:
-            this.proxydriver = await startAndroidSession(this, caps, ...args);
+            this.proxydriver = await startAndroidSession.bind(this)(caps, ...args);
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;
