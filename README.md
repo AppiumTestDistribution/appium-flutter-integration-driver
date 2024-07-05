@@ -1,9 +1,9 @@
 <h1 align="center">
-	<br>
-	<img src="Logo.png" alt="Flutter-Appium">
-	<br>
-	<br>
-	<br>
+  <br>
+  <img src="Logo.png" alt="Flutter-Appium">
+  <br>
+  <br>
+  <br>
 </h1>
 Appium Flutter Integration Driver is a test automation tool for Flutter apps on multiple platforms/OSes. It is part of the Appium mobile test automation tool maintained by the community. Feel free to create PRs to fix issues or improve this driver.
 
@@ -25,17 +25,18 @@ The current Appium Flutter Driver is built on top of the `flutter_test` SDK, whi
 
 This driver is built using [Flutter Integration Test](https://docs.flutter.dev/cookbook/testing/integration/introduction).
 
- :star: **⁠Strong Typing & Fluent APIs:** Ensures robust and easy-to-use interfaces.
+:star: **Strong Typing & Fluent APIs:** Ensures robust and easy-to-use interfaces.
 
-:star: **⁠Element Handling**: Automatically waits for elements to attach to the DOM before interacting.
+:star: **Element Handling**: Automatically waits for elements to attach to the DOM before interacting.
 
-:star: **⁠Seamless Context Switching**: No need to switch between contexts, such as Flutter and native; the driver handles it effortlessly.
+:star: **Seamless Context Switching**: No need to switch between contexts, such as Flutter and native; the driver handles it effortlessly.
 
 :star: **Auto Wait for Render Cycles**: Automatically waits for frame render cycles, including animations and screen transitions.
 
 :star: **Simplified Powerful Gestures**: Supports powerful yet simplified gestures like LongPress, ScrollToElement, DragAndDrop, and DoubleClick.
 
-:star:*⁠*Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
+:star: **Element Chaining**: Allows chaining of elements, enabling you to find child elements under a specific parent easily.
+
 
 ## Install the Flutter Integration Driver
 
@@ -46,11 +47,11 @@ appium driver install --source npm appium-flutter-integration-driver
 
 1. In your Flutter app's `pubspec.yaml`, add the following dependencies:
 
-   Get the latest version from `https://pub.dev/packages/appium_flutter_server/install`
+Get the latest version from `https://pub.dev/packages/appium_flutter_server/install`
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.14
+     appium_flutter_server: 0.0.15
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -86,13 +87,13 @@ appium driver install --source npm appium-flutter-integration-driver
    ```
 
 6. Build the iOS app:
-   For Simulator - Debug mode
-   ```bash
-   flutter build ios integration_test/appium.dart --simulator
-   ```
-   For Real Device - Release mode
-   ```bash
-    flutter build ipa --release integration_test/test.dart
+    For Simulator - Debug mode
+    ```bash
+      flutter build ios integration_test/appium.dart --simulator
+    ```
+    For Real Device - Release mode
+    ```bash
+      flutter build ipa --release integration_test/appium.dart
     ```
 
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
@@ -129,13 +130,7 @@ Real Device: Check xcode device logs.
 06-17 17:02:14.814 32697 32735 I flutter : [APPIUM FLUTTER]  Appium flutter server is listening on port 9000
 06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
 06-17
-
-## Install the Flutter Integration Driver
-
-```bash
-appium driver install --source npm appium-flutter-integration-driver
 ```
-
 ## Appium Flutter Integration Driver vs. Appium UiAutomator2/XCUITest Driver
 
 - The driver manages the application under test and the device under test via Appium UiAutomator2/XCUITest drivers.
@@ -178,4 +173,4 @@ You can use the following locators to find elements in your Flutter app. Custom 
 | `flutterWaitForAbsent(options: { element: WebdriverIO.Element; locator: Flutter.Locator; }): void`                                                                                                                                                                                    | Wait for an element to be absent                               |
 | `flutterScrollTillVisible(options: { finder: WebdriverIO.Element; scrollView?: WebdriverIO.Element; scrollDirection?: 'up','right','down','left'; delta?: number; maxScrolls?: number; settleBetweenScrollsTimeout?: number; dragDuration?: number; }): Promise<WebdriverIO.Element>` | Scroll until an element is visible                             |
 
-For more examples, see the [test file](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/blob/main/test/specs/test.e2e.js).
+  For more examples, see the [test file](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/blob/main/test/specs/test.e2e.js)
