@@ -205,7 +205,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          portcallbacks.portReleaseCallback = iosRemovePortForward;
       }
 
-      const systemPort = this.internalCaps.flutterSystemPort ?? (await getFreePort());
+      const systemPort =
+         this.internalCaps.flutterSystemPort ?? (await getFreePort());
       const udid = this.proxydriver.opts.udid!;
 
       this.flutterPort = await fetchFlutterServerPort.bind(this)({

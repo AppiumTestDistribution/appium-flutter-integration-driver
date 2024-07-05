@@ -4,7 +4,7 @@ import XCUITestDriver from 'appium-xcuitest-driver';
 import type { InitialOpts } from '@appium/types';
 import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
 
-export async function startIOSSession (
+export async function startIOSSession(
    this: AppiumFlutterDriver,
    ...args: any[]
 ): Promise<XCUITestDriver> {
@@ -12,7 +12,7 @@ export async function startIOSSession (
    const iosdriver = new XCUITestDriver({} as InitialOpts);
    await iosdriver.createSession(...args);
    return iosdriver;
-};
+}
 
 export async function iosPortForward(
    udid: string,

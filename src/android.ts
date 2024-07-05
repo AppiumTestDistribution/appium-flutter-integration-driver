@@ -3,7 +3,7 @@ import type { InitialOpts } from '@appium/types';
 import { AppiumFlutterDriver } from './driver';
 import ADB from 'appium-adb';
 
-export async function startAndroidSession (
+export async function startAndroidSession(
    this: AppiumFlutterDriver,
    ...args: any[]
 ): Promise<AndroidUiautomator2Driver> {
@@ -12,7 +12,7 @@ export async function startAndroidSession (
    //@ts-ignore Args are ok
    await androiddriver.createSession(...args);
    return androiddriver;
-};
+}
 
 export async function androidPortForward(
    adb: ADB,

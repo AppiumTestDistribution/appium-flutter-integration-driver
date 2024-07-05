@@ -56,11 +56,18 @@ export async function getText(this: AppiumFlutterDriver, elementId: string) {
    return String(await driver.command(`/element/${elementId}/text`, 'GET', {}));
 }
 
-export async function elementEnabled(this: AppiumFlutterDriver, elementId: string) {
+export async function elementEnabled(
+   this: AppiumFlutterDriver,
+   elementId: string,
+) {
    return toBool(await this.getAttribute('enabled', elementId));
 }
 
-export async function getAttribute(this: AppiumFlutterDriver, attribute: string, elementId: string) {
+export async function getAttribute(
+   this: AppiumFlutterDriver,
+   attribute: string,
+   elementId: string,
+) {
    const driver = ELEMENT_CACHE.get(elementId);
    return await driver.command(
       `/element/${elementId}/attribute/${attribute}`,
@@ -69,7 +76,11 @@ export async function getAttribute(this: AppiumFlutterDriver, attribute: string,
    );
 }
 
-export async function setValue(this: AppiumFlutterDriver, text: string, elementId: string) {
+export async function setValue(
+   this: AppiumFlutterDriver,
+   text: string,
+   elementId: string,
+) {
    const driver = ELEMENT_CACHE.get(elementId);
    return await driver.command(`/element/${elementId}/value`, 'POST', {
       text,
@@ -83,7 +94,10 @@ export async function clear(this: AppiumFlutterDriver, elementId: string) {
    });
 }
 
-export async function elementDisplayed(this: AppiumFlutterDriver, elementId: string) {
+export async function elementDisplayed(
+   this: AppiumFlutterDriver,
+   elementId: string,
+) {
    return await this.getAttribute('displayed', elementId);
 }
 

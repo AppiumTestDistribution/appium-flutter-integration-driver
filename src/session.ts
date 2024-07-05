@@ -5,7 +5,7 @@ import { startAndroidSession } from './android';
 import { startIOSSession } from './iOS';
 import type { StringRecord } from '@appium/types';
 
-export async function createSession (
+export async function createSession(
    this: AppiumFlutterDriver,
    sessionId: string,
    caps: any,
@@ -22,7 +22,10 @@ export async function createSession (
 
             break;
          case PLATFORM.ANDROID:
-            this.proxydriver = await startAndroidSession.bind(this)(caps, ...args);
+            this.proxydriver = await startAndroidSession.bind(this)(
+               caps,
+               ...args,
+            );
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;
@@ -40,4 +43,4 @@ export async function createSession (
       await this.deleteSession();
       throw e;
    }
-};
+}

@@ -13,7 +13,7 @@ const SYSTEM_PORT_RANGE = [10000, 11000];
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
-): Promise<JWProxy|undefined> {
+): Promise<JWProxy | undefined> {
    if (['key', 'semantics label', 'text', 'type'].includes(strategy)) {
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
@@ -79,7 +79,9 @@ export async function waitForFlutterServerToBeActive(
                );
             }
          } catch (err: any) {
-            this.log.info(`FlutterServer not reachable on port ${flutterPort}, Retrying..`);
+            this.log.info(
+               `FlutterServer not reachable on port ${flutterPort}, Retrying..`,
+            );
             return false;
          }
       },
@@ -118,7 +120,8 @@ export async function fetchFlutterServerPort(
       portReleaseCallback?: PortReleaseCallback;
       packageName: string;
       isIosSimulator: boolean;
-   }): Promise<number | null> {
+   },
+): Promise<number | null> {
    const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
    let devicePort = startPort;
    let forwardedPort = systemPort;
@@ -170,10 +173,7 @@ export async function fetchFlutterServerPort(
             this.log.info(
                `Checking if flutter server is running on port ${devicePort}`,
             );
-            await waitForFlutterServer.bind(this)(
-               forwardedPort!,
-               packageName,
-            );
+            await waitForFlutterServer.bind(this)(forwardedPort!, packageName);
             this.log.info(
                `Flutter server is successfully running on port ${devicePort}`,
             );
