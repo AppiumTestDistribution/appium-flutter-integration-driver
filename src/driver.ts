@@ -24,6 +24,7 @@ import {
 } from './commands/element';
 
 import {
+   attachAppLaunchArguments,
    fetchFlutterServerPort,
    getFreePort,
    isFlutterDriverCommand,
@@ -132,6 +133,113 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
    }
 
+   async executeCommand(command: any, ...args: any) {
+      if (isFlutterDriverCommand(command)) {
+         return await super.executeCommand(command, ...args);
+      }
+      return await this.proxydriver.executeCommand(command as string, ...args);
+   }
+
+   public async createSession(
+      ...args: any[]
+   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
+      const [sessionId, caps] = await super.createSession(
+         ...(JSON.parse(JSON.stringify(args)) as [
+            W3CDriverCaps,
+            W3CDriverCaps,
+            W3CDriverCaps,
+            DriverData[],
+         ]),
+      );
+
+      this.internalCaps = caps;
+      /**
+       * To support parallel execution in iOS simulators
+       * flutterServerPort need to be passed as lauch argument using appium:processArguments
+       * Refer: https://appium.github.io/appium-xcuitest-driver/latest/reference/capabilities/
+       */
+      attachAppLaunchArguments(caps, ...args);
+
+      let sessionCreated = await createSession.call(
+         this,
+         sessionId,
+         caps,
+         ...JSON.parse(JSON.stringify(args)),
+      );
+      const packageName =
+         this.proxydriver instanceof AndroidUiautomator2Driver
+            ? this.proxydriver.opts.appPackage!
+            : this.proxydriver.opts.bundleId!;
+
+      const isIosSimulator =
+         this.proxydriver instanceof XCUITestDriver &&
+         !this.proxydriver.isRealDevice();
+
+      const portcallbacks: {
+         portForwardCallback?: PortForwardCallback;
+         portReleaseCallback?: PortReleaseCallback;
+      } = {};
+      if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+         portcallbacks.portForwardCallback = async (
+            _: string,
+            systemPort: number,
+            devicePort: number,
+         ) =>
+            await androidPortForward(
+               // @ts-ignore ADB instance is ok
+               (this.proxydriver as AndroidUiautomator2Driver).adb,
+               systemPort,
+               devicePort,
+            );
+         portcallbacks.portReleaseCallback = async (
+            _: string,
+            systemPort: number,
+         ) =>
+            await androidRemovePortForward(
+               // @ts-ignore ADB instance is ok
+               (this.proxydriver as AndroidUiautomator2Driver).adb,
+               systemPort,
+            );
+      } else if (!isIosSimulator) {
+         portcallbacks.portForwardCallback = iosPortForward;
+         portcallbacks.portReleaseCallback = iosRemovePortForward;
+      }
+      const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
+         flutterServerLaunchTimeout:
+            this.internalCaps.flutterServerLaunchTimeout || 5000,
+         flutterSystemPort: isIosSimulator
+            ? this.internalCaps.flutterSystemPort
+            : this.internalCaps.flutterSystemPort || (await getFreePort()),
+      } as DriverCaps<FlutterDriverConstraints>;
+
+      const systemPort = flutterCaps.flutterSystemPort!;
+      const udid = this.proxydriver.opts.udid!;
+
+      this.flutterPort = await fetchFlutterServerPort({
+         udid,
+         packageName,
+         ...portcallbacks,
+         systemPort,
+         flutterCaps,
+         isIosSimulator,
+      });
+
+      if (!this.flutterPort) {
+         throw new Error(
+            `Flutter server is not started. ` +
+               `Please make sure the application under test is configured properly.Please refer ` +
+               `https://github.com/AppiumTestDistribution/appium-flutter-integration-driver?tab=readme-ov-file#how-to-use-appium-flutter-integration-driver.`,
+         );
+      }
+      // @ts-ignore
+      this.proxy = new JWProxy({
+         server: this.internalCaps.address || '127.0.0.1',
+         port: this.flutterPort,
+      });
+
+      await this.proxy.command('/session', 'POST', { capabilities: caps });
+      return sessionCreated;
+   }
    async waitForElementToBeGone(element: any, locator: any, timeout: number) {
       return this.proxy?.command(
          `/session/:sessionId/element/wait/absent`,
@@ -220,104 +328,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       return await this.executeMethod(script, args);
    }
 
-   async executeCommand(command: any, ...args: any) {
-      if (isFlutterDriverCommand(command)) {
-         return await super.executeCommand(command, ...args);
-      }
-      return await this.proxydriver.executeCommand(command as string, ...args);
-   }
-
-   public async createSession(
-      ...args: any[]
-   ): Promise<DefaultCreateSessionResult<FlutterDriverConstraints>> {
-      const [sessionId, caps] = await super.createSession(
-         ...(JSON.parse(JSON.stringify(args)) as [
-            W3CDriverCaps,
-            W3CDriverCaps,
-            W3CDriverCaps,
-            DriverData[],
-         ]),
-      );
-      this.internalCaps = caps;
-      let sessionCreated = await createSession.call(
-         this,
-         sessionId,
-         caps,
-         ...JSON.parse(JSON.stringify(args)),
-      );
-      const packageName =
-         this.proxydriver instanceof AndroidUiautomator2Driver
-            ? this.proxydriver.opts.appPackage!
-            : this.proxydriver.opts.bundleId!;
-
-      const portcallbacks: {
-         portForwardCallback?: PortForwardCallback;
-         portReleaseCallback?: PortReleaseCallback;
-      } = {};
-      if (this.proxydriver instanceof AndroidUiautomator2Driver) {
-         portcallbacks.portForwardCallback = async (
-            _: string,
-            systemPort: number,
-            devicePort: number,
-         ) =>
-            await androidPortForward(
-               // @ts-ignore ADB instance is ok
-               (this.proxydriver as AndroidUiautomator2Driver).adb,
-               systemPort,
-               devicePort,
-            );
-         portcallbacks.portReleaseCallback = async (
-            _: string,
-            systemPort: number,
-         ) =>
-            await androidRemovePortForward(
-               // @ts-ignore ADB instance is ok
-               (this.proxydriver as AndroidUiautomator2Driver).adb,
-               systemPort,
-            );
-      } else if (this.proxydriver.isRealDevice()) {
-         portcallbacks.portForwardCallback = iosPortForward;
-         portcallbacks.portReleaseCallback = iosRemovePortForward;
-      }
-      const flutterCaps: DriverCaps<FlutterDriverConstraints> = {
-         flutterServerLaunchTimeout:
-            this.internalCaps.flutterServerLaunchTimeout || 5000,
-         flutterSystemPort:
-            this.internalCaps.flutterSystemPort || (await getFreePort()),
-      } as DriverCaps<FlutterDriverConstraints>;
-      const systemPort =
-         this.proxydriver instanceof XCUITestDriver &&
-         !this.proxydriver.isRealDevice()
-            ? null
-            : flutterCaps.flutterSystemPort!;
-
-      const udid = this.proxydriver.opts.udid!;
-      this.flutterPort = await fetchFlutterServerPort({
-         udid,
-         packageName,
-         ...portcallbacks,
-         systemPort,
-         flutterCaps,
-      });
-
-      if (!this.flutterPort) {
-         throw new Error(
-            `Flutter server is not started. ` +
-               `Please make sure the application under test is configured properly.Please refer ` +
-               `https://github.com/AppiumTestDistribution/appium-flutter-integration-driver?tab=readme-ov-file#how-to-use-appium-flutter-integration-driver.`,
-         );
-      }
-
-      // @ts-ignore
-      this.proxy = new JWProxy({
-         server: this.internalCaps.address || '127.0.0.1',
-         port: this.flutterPort,
-      });
-
-      await this.proxy.command('/session', 'POST', { capabilities: caps });
-      return sessionCreated;
-   }
-
    canProxy() {
       return false;
    }
@@ -339,10 +349,22 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          flutterServerLaunchTimeout:
             this.internalCaps?.flutterServerLaunchTimeout || 5000,
       } as DriverCaps<FlutterDriverConstraints>;
-      // @ts-ignore
-      const activateAppResponse = await this.proxydriver.activateApp(
-         appId || bundleId,
-      );
+      let activateAppResponse;
+      //run only for ios
+      if (
+         this.proxydriver instanceof XCUITestDriver &&
+         this.proxydriver.isSimulator() &&
+         this.internalCaps?.flutterSystemPort
+      ) {
+         activateAppResponse = await this.proxydriver.activateApp(
+            appId || bundleId,
+            { arguments: [`--port=${this.internalCaps?.flutterSystemPort}`] },
+         );
+      } else {
+         // @ts-ignore
+         await this.proxydriver.activateApp(appId || bundleId);
+      }
+
       await waitForFlutterServerToBeActive(
          this.proxy,
          appId,

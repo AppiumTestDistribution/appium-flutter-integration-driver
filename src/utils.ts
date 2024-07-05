@@ -7,9 +7,12 @@ import { JWProxy } from '@appium/base-driver';
 import { desiredCapConstraints } from './desiredCaps';
 import { DriverCaps } from '@appium/types';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
+import path from 'path';
+import _ from 'lodash';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
+
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 export async function getProxyDriver(
    strategy: string,
@@ -113,6 +116,7 @@ export async function fetchFlutterServerPort({
    portReleaseCallback,
    packageName,
    flutterCaps,
+   isIosSimulator,
 }: {
    udid: string;
    systemPort?: number | null;
@@ -120,22 +124,38 @@ export async function fetchFlutterServerPort({
    portReleaseCallback?: PortReleaseCallback;
    packageName: string;
    flutterCaps: DriverCaps<FlutterDriverConstraints>;
+   isIosSimulator: boolean;
 }): Promise<number | null> {
    const [startPort, endPort] = DEVICE_PORT_RANGE as [number, number];
-   const isSimulator = !systemPort;
    let devicePort = startPort;
    let forwardedPort = systemPort;
+
+   if (isIosSimulator && systemPort) {
+      try {
+         log.info(
+            `Checking if flutter server is running on port ${systemPort} for simulator with id ${udid}`,
+         );
+         await waitForFlutterServer(systemPort!, packageName, flutterCaps);
+         log.info(
+            `Flutter server is successfully running on port ${systemPort}`,
+         );
+         return systemPort!;
+      } catch (e) {
+         return null;
+      }
+   }
 
    while (devicePort <= endPort) {
       /**
        * For ios simulators, we dont need a dedicated system port and no port forwarding is required
        * We need to use the same port range used by flutter server to check if the server is running
        */
-      if (isSimulator) {
+      if (isIosSimulator) {
          forwardedPort = devicePort;
       }
+
       if (portForwardCallback) {
-         await portForwardCallback(udid, systemPort!, devicePort);
+         await portForwardCallback(udid, forwardedPort!, devicePort);
       }
       try {
          log.info(
@@ -148,10 +168,76 @@ export async function fetchFlutterServerPort({
          return forwardedPort!;
       } catch (e) {
          if (portReleaseCallback) {
-            await portReleaseCallback(udid, systemPort!);
+            await portReleaseCallback(udid, forwardedPort!);
          }
+         if (portForwardCallback) {
+            await portForwardCallback(udid, systemPort!, devicePort);
+         }
+         try {
+            log.info(
+               `Checking if flutter server is running on port ${devicePort}`,
+            );
+            await waitForFlutterServer(
+               forwardedPort!,
+               packageName,
+               flutterCaps,
+            );
+            log.info(
+               `Flutter server is successfully running on port ${devicePort}`,
+            );
+            return forwardedPort!;
+         } catch (e) {
+            if (portReleaseCallback) {
+               await portReleaseCallback(udid, systemPort!);
+            }
+         }
+         devicePort++;
       }
-      devicePort++;
    }
    return null;
+}
+
+export function isW3cCaps(caps: any) {
+   if (!_.isPlainObject(caps)) {
+      return false;
+   }
+
+   const isFirstMatchValid = () =>
+      _.isArray(caps.firstMatch) &&
+      !_.isEmpty(caps.firstMatch) &&
+      _.every(caps.firstMatch, _.isPlainObject);
+   const isAlwaysMatchValid = () => _.isPlainObject(caps.alwaysMatch);
+   if (_.has(caps, 'firstMatch') && _.has(caps, 'alwaysMatch')) {
+      return isFirstMatchValid() && isAlwaysMatchValid();
+   }
+   if (_.has(caps, 'firstMatch')) {
+      return isFirstMatchValid();
+   }
+   if (_.has(caps, 'alwaysMatch')) {
+      return isAlwaysMatchValid();
+   }
+   return false;
+}
+
+export function attachAppLaunchArguments(parsedCaps: any, ...caps: any) {
+   const capsToUpdate = [...caps].find(isW3cCaps);
+   const platformName: string | undefined = parsedCaps['platformName'];
+   const systemPort: string | undefined = parsedCaps['flutterSystemPort'];
+   console.log(
+      'Caps to update:',
+      systemPort,
+      capsToUpdate,
+      `${capsToUpdate.alwaysMatch['appium:flutterSystemPort']}`,
+   );
+   if (platformName && systemPort && platformName.toLowerCase() == 'ios') {
+      const args = [
+         `--port=${capsToUpdate.alwaysMatch['appium:flutterSystemPort']}`,
+      ];
+      log.info(
+         `iOS platform detected and flutterSystemPort capability is present. So attaching processArguments: ${JSON.stringify(args)}`,
+      );
+      capsToUpdate.alwaysMatch['appium:processArguments'] = {
+         args,
+      };
+   }
 }
