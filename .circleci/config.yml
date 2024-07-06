@@ -9,12 +9,12 @@ version: 2.1
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   build:
-    # Specify the execution environment. 
+    # Specify the execution environment.
     # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
     macos:
       # Specify the Xcode version you desire here
       # See: https://circleci.com/docs/using-macos/
-      xcode: 15.2.0 
+      xcode: 15.2.0
 
     # Add steps to the job
     # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Node Version
           command: |
-            nvm install v19.0.0 && nvm alias default 19.0.0
+            nvm install v20.0.0 && nvm alias default 20.0.0
       - run:
           name: Install Appium and Run iOS Test
           command: |
@@ -33,7 +33,7 @@ jobs:
             asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
             ios_app=$(echo "$asset_urls" | tail -n 1)
             echo "$ios_app"
-            nvm install v19.0.0 && nvm alias default 19.0.0
+            nvm install v20.0.0 && nvm alias default 20.0.0
             node -v
             target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
             echo $target_sim_id
