@@ -345,17 +345,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       await super.deleteSession();
    }
 
-   async mobileActivateApp(
-      appId: string,
-      _arguments: string[],
-      environment: any,
-   ) {
+   async mobileActivateApp(appId: string, args: string[], environment: any) {
       let activateAppResponse;
-      let iosLaunchArgs = {
-         arguments: !_.isArray(_arguments) ? [_arguments] : _arguments,
-         environment: environment,
-      };
-      let scriptArgs =
+      const launchArgs = _.assign(
+         { arguments: [] as string[] },
+         { arguments: args, environment },
+      );
+
+      let parameters =
          this.proxydriver instanceof XCUITestDriver
             ? { bundleId: appId }
             : { appId };
@@ -365,15 +362,16 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          this.proxydriver instanceof XCUITestDriver &&
          this.internalCaps?.flutterSystemPort
       ) {
-         iosLaunchArgs.arguments.push(
-            `--port=${this.internalCaps?.flutterSystemPort}`,
-         );
-         _.assign(scriptArgs, iosLaunchArgs);
+         launchArgs.arguments = _.flatten([
+            launchArgs.arguments,
+            `--port=${this.internalCaps.flutterSystemPort}`,
+         ]);
+         _.assign(parameters, launchArgs);
       }
 
       activateAppResponse = await (this.proxydriver as any).execute(
          'mobile: activateApp',
-         [scriptArgs],
+         [parameters],
       );
 
       await waitForFlutterServerToBeActive.bind(this)(
