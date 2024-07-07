@@ -232,7 +232,7 @@ export function attachAppLaunchArguments(
 
       const capsToUpdate =
          firstMatchWithProcessArguments ?? w3cCaps.alwaysMatch;
-      capsToUpdate['appium:processArguments'] ??= { args: [], env: [] };
+      capsToUpdate['appium:processArguments'] ??= { args: [] };
       capsToUpdate['appium:processArguments'].args.push(portArgument);
 
       this.log.info(
