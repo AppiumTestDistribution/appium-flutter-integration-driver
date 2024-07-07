@@ -28,7 +28,7 @@ describe('My Login application', () => {
          await browser.removeApp(appID);
       }
       await browser.installApp(process.env.APP_PATH);
-      await browser.execute('flutter: activateApp', {
+      await browser.execute('flutter: launchApp', {
          appId: appID,
          arguments: ['--dummy-arguments'],
          environment: {},
