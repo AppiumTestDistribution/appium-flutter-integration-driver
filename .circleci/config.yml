@@ -54,7 +54,6 @@ jobs:
             echo ${PROJECT_ENV_VAR}
             xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
             xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
-            mkdir appium-logs
             UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios
 
       # Collect XML test results data to show in the UI, and save the same XML
