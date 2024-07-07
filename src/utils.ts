@@ -44,7 +44,6 @@ export function isFlutterDriverCommand(command: string) {
          'getAttribute',
          'elementDisplayed',
          'execute',
-         'activateApp',
       ].indexOf(command) >= 0
    );
 }
@@ -215,18 +214,30 @@ export function attachAppLaunchArguments(
    parsedCaps: any,
    ...caps: any
 ) {
-   const capsToUpdate = [...caps].find(isW3cCaps);
+   const w3cCaps = [...caps].find(isW3cCaps);
+   // If no W3C caps are passed, session creation will eventually fail. So its not required to update the caps
+   if (!w3cCaps) {
+      return;
+   }
    const platformName: string | undefined = parsedCaps['platformName'];
    const systemPort: string | undefined = parsedCaps['flutterSystemPort'];
+
    if (platformName && systemPort && platformName.toLowerCase() == 'ios') {
-      const args = [
-         `--port=${capsToUpdate.alwaysMatch['appium:flutterSystemPort']}`,
-      ];
-      this.log.info(
-         `iOS platform detected and flutterSystemPort capability is present. So attaching processArguments: ${JSON.stringify(args)}`,
+      const portArgument = [`--port=${systemPort}`];
+      w3cCaps.firstMatch ??= [];
+      w3cCaps.alwaysMatch ??= {};
+      const firstMatchWithProcessArguments = w3cCaps.firstMatch.find(
+         (caps: Record<string, any>) => caps['appium:processArguments'],
       );
-      capsToUpdate.alwaysMatch['appium:processArguments'] = {
-         args,
-      };
+
+      const capsToUpdate =
+         firstMatchWithProcessArguments ?? w3cCaps.alwaysMatch;
+      capsToUpdate['appium:processArguments'] ??= { args: [], env: [] };
+      capsToUpdate['appium:processArguments'].args.push(portArgument);
+
+      this.log.info(
+         `iOS platform detected and flutterSystemPort capability is present. 
+         So attaching processArguments: ${JSON.stringify(capsToUpdate['appium:processArguments'])}`,
+      );
    }
 }
