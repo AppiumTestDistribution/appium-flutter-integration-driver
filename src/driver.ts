@@ -35,6 +35,8 @@ import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import _ from 'lodash';
+import UiAutomator2Server from 'appium-uiautomator2-driver/build/lib/uiautomator2';
+import { AppiumDriver } from 'appium/build/lib/appium';
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
@@ -322,11 +324,11 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    async execute(script: any, args: any) {
-      if (script.startsWith('mobile:')) {
-         // @ts-ignore
-         return await this.proxydriver.executeMethod(script, args);
+      if (script.startsWith('flutter:')) {
+         return await this.executeMethod(script, args);
       }
-      return await this.executeMethod(script, args);
+      // @ts-ignore
+      return await this.proxydriver.execute(script, args);
    }
 
    canProxy() {
@@ -363,7 +365,6 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       // Add port parameter to launch argument and only supported for iOS
       if (
          this.proxydriver instanceof XCUITestDriver &&
-         !this.proxydriver.isRealDevice() &&
          this.internalCaps?.flutterSystemPort
       ) {
          iosLaunchArgs.arguments.push(
@@ -372,7 +373,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          _.assign(scriptArgs, iosLaunchArgs);
       }
 
-      await this.proxydriver.executeMethod('mobile: activateApp', [scriptArgs]);
+      activateAppResponse = await (this.proxydriver as any).execute(
+         'mobile: activateApp',
+         [scriptArgs],
+      );
 
       await waitForFlutterServerToBeActive.bind(this)(
          this.proxy,
