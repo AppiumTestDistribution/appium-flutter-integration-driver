@@ -28,11 +28,15 @@ describe('My Login application', () => {
          await browser.removeApp(appID);
       }
       await browser.installApp(process.env.APP_PATH);
-      await browser.execute('flutter: launchApp', {
-         appId: appID,
-         arguments: ['--dummy-arguments'],
-         environment: {},
-      });
+      await browser.pause(2000);
+      if (await browser.isAppInstalled(appID)){
+         console.log('App is installed');
+         await browser.execute('flutter: launchApp', {
+            appId: appID,
+            arguments: ['--dummy-arguments'],
+            environment: {},
+         });
+      }
    });
 
    it('Create Session with Flutter Integration Driver', async () => {
