@@ -45,7 +45,8 @@ jobs:
             appium driver run xcuitest build-wda 
             npm install
             npm run build
-            npm run run-server
+            mkdir appium-logs
+            appium server -ka 800 -pa /wd/hub > appium-logs/log1.txt &
             wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
             echo $wda
             echo 'export WDA_PATH=$wda' >> $BASH_ENV
