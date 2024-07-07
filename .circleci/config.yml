@@ -33,7 +33,7 @@ jobs:
             asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
             ios_app=$(echo "$asset_urls" | tail -n 1)
             echo "$ios_app"
-            nvm install v19.0.0 && nvm alias default 19.0.0
+            nvm install v20.0.0 && nvm alias default 20.0.0
             node -v
             target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
             echo $target_sim_id
@@ -41,7 +41,7 @@ jobs:
             xcrun simctl boot $target_sim_id
             xcrun simctl bootstatus $target_sim_id -b
             npm install -g appium
-            npm install
+            npm ci
             npm run build
             appium driver run xcuitest build-wda 
             wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
