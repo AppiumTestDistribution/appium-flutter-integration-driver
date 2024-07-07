@@ -18,7 +18,7 @@ export async function getProxyDriver(
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
       return this.proxydriver.uiautomator2.jwproxy;
-   } else {
+   } else if (this.proxydriver instanceof XCUITestDriver) {
       return this.proxydriver.wda.jwproxy;
    }
 }
