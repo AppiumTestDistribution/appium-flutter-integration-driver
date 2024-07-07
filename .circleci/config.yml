@@ -54,13 +54,8 @@ jobs:
                  mkdir appium-logs
                  UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios
 
-         # Collect XML test results data to show in the UI, and save the same XML
-         # files under test-results folder in the Artifacts tab
-         - store_test_results:
-              path: appium-logs
          - store_artifacts:
               path: appium-logs
-              destination: scan-output
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
