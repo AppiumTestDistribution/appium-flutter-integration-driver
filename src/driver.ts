@@ -35,8 +35,6 @@ import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import _ from 'lodash';
-import UiAutomator2Server from 'appium-uiautomator2-driver/build/lib/uiautomator2';
-import { AppiumDriver } from 'appium/build/lib/appium';
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
