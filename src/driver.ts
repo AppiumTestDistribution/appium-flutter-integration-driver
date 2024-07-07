@@ -350,12 +350,12 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    async mobileActivateApp(
       appId: string,
       _arguments: string[],
-      environment: string[],
+      environment: any,
    ) {
       let activateAppResponse;
       let iosLaunchArgs = {
          arguments: !_.isArray(_arguments) ? [_arguments] : _arguments,
-         environment: !_.isArray(environment) ? [environment] : environment,
+         environment: environment,
       };
       let scriptArgs =
          this.proxydriver instanceof XCUITestDriver
