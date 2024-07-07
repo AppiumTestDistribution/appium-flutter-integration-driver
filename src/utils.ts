@@ -13,12 +13,12 @@ const SYSTEM_PORT_RANGE = [10000, 11000];
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
-): Promise<JWProxy | undefined> {
+): Promise<any> {
    if (['key', 'semantics label', 'text', 'type'].includes(strategy)) {
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
       return this.proxydriver.uiautomator2.jwproxy;
-   } else if (this.proxydriver instanceof XCUITestDriver) {
+   } else {
       return this.proxydriver.wda.jwproxy;
    }
 }
