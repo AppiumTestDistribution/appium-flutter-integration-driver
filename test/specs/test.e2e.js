@@ -31,6 +31,7 @@ describe('My Login application', () => {
       await browser.execute('flutter: activateApp', {
          appId: appID,
          arguments: ['--dummy-arguments'],
+         environment: {},
       });
    });
 

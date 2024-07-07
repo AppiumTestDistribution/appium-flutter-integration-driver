@@ -120,8 +120,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             required: ['source', 'target'],
          },
       },
-      'flutter: activateApp': {
-         command: 'mobileActivateApp',
+      'flutter: launchApp': {
+         command: 'mobilelaunchApp',
          params: {
             required: ['appId'],
             optional: ['arguments', 'environment'],
@@ -345,17 +345,12 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       await super.deleteSession();
    }
 
-   async mobileActivateApp(appId: string, args: string[], environment: any) {
+   async mobilelaunchApp(appId: string, args: string[], environment: any) {
       let activateAppResponse;
       const launchArgs = _.assign(
          { arguments: [] as string[] },
          { arguments: args, environment },
       );
-
-      let parameters =
-         this.proxydriver instanceof XCUITestDriver
-            ? { bundleId: appId }
-            : { appId };
 
       // Add port parameter to launch argument and only supported for iOS
       if (
@@ -366,13 +361,21 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             launchArgs.arguments,
             `--port=${this.internalCaps.flutterSystemPort}`,
          ]);
-         _.assign(parameters, launchArgs);
+         this.log.info(
+            'Attaching launch arguments to XCUITestDriver ' +
+               JSON.stringify(launchArgs),
+         );
+         activateAppResponse = await this.proxydriver.execute(
+            'mobile: launchApp',
+            [{ bundleId: appId, ...launchArgs }],
+         );
+      } else {
+         //@ts-ignore this.proxydriver will be an instance of AndroidUiautomator2Driver
+         activateAppResponse = await this.proxydriver.execute(
+            'mobile: activateApp',
+            [{ appId }],
+         );
       }
-
-      activateAppResponse = await (this.proxydriver as any).execute(
-         'mobile: activateApp',
-         [parameters],
-      );
 
       await waitForFlutterServerToBeActive.bind(this)(
          this.proxy,
