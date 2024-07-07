@@ -1,5 +1,4 @@
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
@@ -18,7 +17,7 @@ export async function getProxyDriver(
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
       return this.proxydriver.uiautomator2.jwproxy;
-   } else if (this.proxydriver instanceof XCUITestDriver) {
+   } else {
       return this.proxydriver.wda.jwproxy;
    }
 }
