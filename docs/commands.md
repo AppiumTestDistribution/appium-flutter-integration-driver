@@ -1,6 +1,6 @@
 # Flutter Commands
 
-## mobile: scheduleAction
+## mobile: launchApp
 
 Launches the app with given app with appId(Android) or bundleId iOS. Will throw error when the app is not installed. 
 
