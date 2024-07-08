@@ -117,7 +117,7 @@ describe('My Login application', () => {
    it('Should be able perform action when frame is rendering', async () => {
       await performLogin();
       await openScreen('Loader Screen');
-      await browser.flutterByValueKey$('loader_login_button').click();
+      await browser.flutterByType$('ElevatedButton').click();
       expect(await browser.flutterByText$('Button pressed').isDisplayed()).toBe(
          true,
       );
