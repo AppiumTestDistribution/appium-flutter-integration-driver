@@ -4,42 +4,42 @@ name: Update README with latest flutter server version
 
 # Controls when the workflow will run
 on:
-  repository_dispatch:
-    types: [server-update]
+   repository_dispatch:
+      types: [server-update]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+   # This workflow contains a single job called "build"
+   build:
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+         - uses: actions/checkout@v4
 
-      - name: Update README with latest commit id and push to repo
-        run: |
-          npm install -g mustache
-          touch data.json
-          echo "{\"SERVER_VERSION\": \"${{ github.event.client_payload.version }}\"}" > data.json
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git status
-          BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
-          echo "Running on branch: '$BRANCH_NAME'"
-            if [[ "$BRANCH_NAME" = "main" ]]; then
-              git pull --rebase origin main
-              cat data.json
-              mustache data.json template.mustache > README_new.md
-              mv README_new.md README.md
-              rm -rf data.json
-              echo "There are changes in 'main'. Update README"
-              git add README.md
-              git commit -m "Update README with latest commit ID - ${{ github.event.client_payload.version }}"
-              git push -u origin main
-          
-            fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.UPDATE_TOKEN }}
+         - name: Update README with latest commit id and push to repo
+           run: |
+              npm install -g mustache
+              touch data.json
+              echo "{\"SERVER_VERSION\": \"${{ github.event.client_payload.version }}\"}" > data.json
+              git config --global user.name "GitHub Actions"
+              git config --global user.email "actions@github.com"
+              git status
+              BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+              echo "Running on branch: '$BRANCH_NAME'"
+                if [[ "$BRANCH_NAME" = "main" ]]; then
+                  git pull --rebase origin main
+                  cat data.json
+                  mustache data.json template.mustache > README_new.md
+                  mv README_new.md README.md
+                  rm -rf data.json
+                  echo "There are changes in 'main'. Update README"
+                  git add README.md
+                  git commit -m "Update README with latest commit ID - ${{ github.event.client_payload.version }}"
+                  git push -u origin main
+
+                fi
+           env:
+              GITHUB_TOKEN: ${{ secrets.UPDATE_TOKEN }}

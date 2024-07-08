@@ -34,6 +34,7 @@ import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
 import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
+import _ from 'lodash';
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
@@ -117,6 +118,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          command: 'dragAndDrop',
          params: {
             required: ['source', 'target'],
+         },
+      },
+      'flutter: launchApp': {
+         command: 'mobilelaunchApp',
+         params: {
+            required: ['appId'],
+            optional: ['arguments', 'environment'],
          },
       },
    };
@@ -312,12 +320,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       }
       return element;
    }
+
    async execute(script: any, args: any) {
-      if (script.startsWith('mobile:')) {
-         // @ts-ignore
-         return await this.proxydriver.execute(script, args);
+      if (script.startsWith('flutter:')) {
+         return await this.executeMethod(script, args);
       }
-      return await this.executeMethod(script, args);
+      // @ts-ignore
+      return await this.proxydriver.execute(script, args);
    }
 
    canProxy() {
@@ -336,21 +345,36 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       await super.deleteSession();
    }
 
-   async activateApp(appId: string, bundleId: string) {
+   async mobilelaunchApp(appId: string, args: string[], environment: any) {
       let activateAppResponse;
-      //run only for ios
+      const launchArgs = _.assign(
+         { arguments: [] as string[] },
+         { arguments: args, environment },
+      );
+
+      // Add port parameter to launch argument and only supported for iOS
       if (
          this.proxydriver instanceof XCUITestDriver &&
-         this.proxydriver.isSimulator() &&
          this.internalCaps?.flutterSystemPort
       ) {
-         activateAppResponse = await this.proxydriver.activateApp(
-            appId || bundleId,
-            { arguments: [`--port=${this.internalCaps?.flutterSystemPort}`] },
+         launchArgs.arguments = _.flatten([
+            launchArgs.arguments,
+            `--flutter-server-port=${this.internalCaps.flutterSystemPort}`,
+         ]);
+         this.log.info(
+            'Attaching launch arguments to XCUITestDriver ' +
+               JSON.stringify(launchArgs),
+         );
+         activateAppResponse = await this.proxydriver.execute(
+            'mobile: launchApp',
+            [{ bundleId: appId, ...launchArgs }],
          );
       } else {
-         // @ts-ignore
-         await this.proxydriver.activateApp(appId || bundleId);
+         //@ts-ignore this.proxydriver will be an instance of AndroidUiautomator2Driver
+         activateAppResponse = await this.proxydriver.execute(
+            'mobile: activateApp',
+            [{ appId }],
+         );
       }
 
       await waitForFlutterServerToBeActive.bind(this)(
