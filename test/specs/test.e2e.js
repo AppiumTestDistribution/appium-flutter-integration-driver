@@ -9,7 +9,9 @@ async function performLogin(userName = 'admin', password = '1234') {
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
-   await browser.flutterByValueKey$('login_button').click();
+   //Login Button
+   expect(await browser.flutterByType$('ElevatedButton').flutterByType$("Text").getText()).toEqual('Login');
+   await browser.flutterByType$('ElevatedButton').click();
 }
 
 async function openScreen(screenTitle) {
@@ -117,7 +119,7 @@ describe('My Login application', () => {
    it('Should be able perform action when frame is rendering', async () => {
       await performLogin();
       await openScreen('Loader Screen');
-      await browser.flutterByType$('ElevatedButton').click();
+      await browser.flutterByValueKey$('loader_login_button').click();
       expect(await browser.flutterByText$('Button pressed').isDisplayed()).toBe(
          true,
       );
