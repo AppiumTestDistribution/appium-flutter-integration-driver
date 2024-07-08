@@ -131,6 +131,8 @@ Real Device: Check xcode device logs.
 06-17 17:02:14.866 32697 32735 I flutter : [APPIUM FLUTTER]  New Request [GET] http://127.0.0.1:10000/status
 06-17
 ```
+
+## [Getting Started](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/wiki/Get-Started)
 ## Appium Flutter Integration Driver vs. Appium UiAutomator2/XCUITest Driver
 
 - The driver manages the application under test and the device under test via Appium UiAutomator2/XCUITest drivers.
@@ -151,26 +153,3 @@ For more details, refer to the documentation for each driver:
 |----------------------------------|-------------------------------------------------------------------------|----------|
 | appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
-
-
-## Locating Elements
-
-You can use the following locators to find elements in your Flutter app. Custom finders are built for WDIO. Refer to the [wdio-flutter-by-service](https://www.npmjs.com/package/wdio-flutter-by-service?activeTab=readme).
-
-| Locator                                                                                                                                                                                                                                                                               | Description                                                    |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
-| `flutterByValueKey(value: string): Flutter.Locator`                                                                                                                                                                                                                                   | Locate by value key                                            |
-| `flutterByValueKey$(value: string): WebdriverIO.Element`                                                                                                                                                                                                                              | Locate single element by value key                             |
-| `flutterByValueKey$$(value: string): WebdriverIO.Element[]`                                                                                                                                                                                                                           | Locate multiple elements by value key                          |
-| `flutterBySemanticsLabel(label: string): Flutter.Locator`                                                                                                                                                                                                                             | Locate by semantics label                                      |
-| `flutterBySemanticsLabel$(label: string): WebdriverIO.Element`                                                                                                                                                                                                                        | Locate single element by semantics label                       |
-| `flutterBySemanticsLabel$$(label: string): WebdriverIO.Element[]`                                                                                                                                                                                                                     | Locate multiple elements by semantics label                    |
-| `flutterByText(text: string): Flutter.Locator`                                                                                                                                                                                                                                        | Locate by text                                                 |
-| `flutterByText$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by text                                  |
-| `flutterByType$(text: string): WebdriverIO.Element`                                                                                                                                                                                                                                   | Locate single element by Type(Checkbox, RadioButton, ListView) |
-| `flutterByType$$(text: string): WebdriverIO.Element[]`                                                                                                                                                                                                                                | Locate multiple elements by text(Checkbox, RadioButton, ListView)|
-| `flutterDoubleClick(element: WebdriverIO.Element): WebdriverIO.Element`                                                                                                                                                                                                               | Double click on an element                                     |
-| `flutterWaitForAbsent(options: { element: WebdriverIO.Element; locator: Flutter.Locator; }): void`                                                                                                                                                                                    | Wait for an element to be absent                               |
-| `flutterScrollTillVisible(options: { finder: WebdriverIO.Element; scrollView?: WebdriverIO.Element; scrollDirection?: 'up','right','down','left'; delta?: number; maxScrolls?: number; settleBetweenScrollsTimeout?: number; dragDuration?: number; }): Promise<WebdriverIO.Element>` | Scroll until an element is visible                             |
-
-  For more examples, see the [test file](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/blob/main/test/specs/test.e2e.js)
