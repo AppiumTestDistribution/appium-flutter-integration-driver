@@ -236,7 +236,7 @@ export function attachAppLaunchArguments(
 
       capsToUpdate['appium:processArguments'].args = _.flatten([
          capsToUpdate['appium:processArguments'].args,
-         `--port=${systemPort}`,
+         `--flutter-server-port=${systemPort}`,
       ]);
 
       this.log.info(

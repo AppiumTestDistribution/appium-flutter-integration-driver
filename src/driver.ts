@@ -359,7 +359,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       ) {
          launchArgs.arguments = _.flatten([
             launchArgs.arguments,
-            `--port=${this.internalCaps.flutterSystemPort}`,
+            `--flutter-server-port=${this.internalCaps.flutterSystemPort}`,
          ]);
          this.log.info(
             'Attaching launch arguments to XCUITestDriver ' +
