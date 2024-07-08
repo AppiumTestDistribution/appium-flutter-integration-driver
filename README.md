@@ -153,3 +153,8 @@ For more details, refer to the documentation for each driver:
 |----------------------------------|-------------------------------------------------------------------------|----------|
 | appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
+
+
+🚨 **Important Notice for iOS Testing**
+
+⚠️ Testing on real iOS devices for `semanticsLabel` may not work due to an issue raised with Flutter. For updates and more information, please refer to [GitHub issue #151238](https://github.com/flutter/flutter/issues/151238).
