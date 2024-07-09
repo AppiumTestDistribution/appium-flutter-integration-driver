@@ -8,6 +8,7 @@ import _ from 'lodash';
 import type { StringRecord } from '@appium/types';
 import { util, node } from 'appium/support';
 import path from 'node:path';
+import fs from 'node:fs';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
@@ -15,9 +16,15 @@ const SYSTEM_PORT_RANGE = [10000, 11000];
 // in the driver or server code
 const MIN_SUPPORTED_SERVER_VERSION = '0.0.15';
 const PACKAGE_VERSION = JSON.parse(
-   path.join(
-      node.getModuleRootSync('appium-flutter-integration-driver', __filename)!,
-      'package.json',
+   fs.readFileSync(
+      path.join(
+         node.getModuleRootSync(
+            'appium-flutter-integration-driver',
+            __filename,
+         )!,
+         'package.json',
+      ),
+      { encoding: 'utf8' },
    ),
 ).version;
 
