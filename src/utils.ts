@@ -5,9 +5,18 @@ import { JWProxy } from '@appium/base-driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
+import type { StringRecord } from '@appium/types';
+import { util, node } from 'appium/support';
+import path from 'node:path';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
+// Do not forget to update it if major compat changes are made
+// in the driver or server code
+const MIN_SUPPORTED_SERVER_VERSION = '0.0.15';
+const PACKAGE_VERSION = JSON.parse(
+   path.join(node.getModuleRootSync('appium-flutter-integration-driver', __filename)!, 'package.json')
+).version;
 
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
@@ -53,6 +62,40 @@ export async function getFreePort(): Promise<number> {
    return await findAPortNotInUse(start, end);
 }
 
+function validateServerStatus(
+   this: AppiumFlutterDriver,
+   status: StringRecord,
+   packageName: string
+): boolean {
+   let errMsg: string|null = null;
+   const compatibilityMessage = `Please check the driver readme to ensure the compatibility ` +
+         `between the server module integrated into the application under test ` +
+         `and the current driver version (${PACKAGE_VERSION}).`;
+   if (!_.isPlainObject(status)) {
+      errMsg = `The server response ${JSON.stringify(status)} ` +
+         `is not a valid object. ${compatibilityMessage}`;
+   } else if (!status.appInfo || !status.appInfo?.packageName) {
+      errMsg = `The server response ${JSON.stringify(status)} ` +
+         `does not contain a package name. ${compatibilityMessage}`;
+   } else if (status.appInfo.packageName !== packageName) {
+      errMsg = `The server response ` +
+         `contains a non-expected package name (${status.appInfo.packageName} != ${packageName}). ` +
+         `Does this server belong to another app?`;
+   } else if (!status.serverVersion) {
+      errMsg = `The server response ${JSON.stringify(status)} ` +
+         `does not contain a valid server version. ${compatibilityMessage}`;
+   } else if (util.compareVersions(status.serverVersion, '<', MIN_SUPPORTED_SERVER_VERSION)) {
+      errMsg = `The server response has ` +
+         `an unsupported version number (${status.serverVersion} < ${MIN_SUPPORTED_SERVER_VERSION}). ` +
+         compatibilityMessage;
+   }
+   if (errMsg) {
+      this.log.info(errMsg);
+      throw new Error(errMsg);
+   }
+   return true;
+}
+
 export async function waitForFlutterServerToBeActive(
    this: AppiumFlutterDriver,
    proxy: JWProxy,
@@ -61,27 +104,16 @@ export async function waitForFlutterServerToBeActive(
 ): Promise<void> {
    await waitForCondition(
       async () => {
+         let response: unknown;
          try {
-            const response: any = await proxy.command('/status', 'GET');
-            if (!response) {
-               return false;
-            }
-            if (response?.appInfo?.packageName === packageName) {
-               this.log.info(
-                  `Flutter server version the application is build with ${response.serverVersion}`,
-               );
-               return true;
-            } else {
-               this.log.error(
-                  `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`,
-               );
-            }
+            response = await proxy.command('/status', 'GET');
          } catch (err: any) {
             this.log.info(
                `FlutterServer not reachable on port ${flutterPort}, Retrying..`,
             );
             return false;
          }
+         return validateServerStatus.bind(this)(response, packageName);
       },
       {
          waitMs: this.opts.flutterServerLaunchTimeout ?? 5000,
@@ -240,7 +272,7 @@ export function attachAppLaunchArguments(
       ]);
 
       this.log.info(
-         `iOS platform detected and flutterSystemPort capability is present. 
+         `iOS platform detected and flutterSystemPort capability is present.
          So attaching processArguments: ${JSON.stringify(capsToUpdate['appium:processArguments'])}`,
       );
    }
