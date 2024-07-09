@@ -270,18 +270,21 @@ function validateServerStatus(
          `The server response ${formattedStatus} ` +
          `does not contain a package name. ${compatibilityMessage}`
       );
-   } else if (statusMap.appInfo.packageName !== packageName) {
+   }
+   if (statusMap.appInfo.packageName !== packageName) {
       logAndThrow(
          `The server response ` +
          `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
          `Does this server belong to another app?`
       );
-   } else if (!statusMap.serverVersion) {
+   }
+   if (!statusMap.serverVersion) {
       logAndThrow(
          `The server response ${formattedStatus} ` +
          `does not contain a valid server version. ${compatibilityMessage}`
       );
-   } else if (
+   }
+   if (
       !semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)
    ) {
       logAndThrow(
