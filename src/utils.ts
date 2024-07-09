@@ -249,42 +249,46 @@ function validateServerStatus(
    status: unknown,
    packageName: string,
 ): boolean {
-   let errMsg: string | null = null;
    const compatibilityMessage =
       `Please check the driver readme to ensure the compatibility ` +
       `between the server module integrated into the application under test ` +
       `and the current driver version ${PACKAGE_VERSION}.`;
    const formattedStatus = _.truncate(JSON.stringify(status), { length: 200 });
+   const logAndThrow = (errMsg: string) => {
+      this.log.info(errMsg);
+      throw new Error(errMsg);
+   };
    if (!_.isPlainObject(status)) {
-      errMsg =
+      logAndThrow(
          `The server response ${formattedStatus} ` +
-         `is not a valid object. ${compatibilityMessage}`;
+         `is not a valid object. ${compatibilityMessage}`
+      );
    }
    const statusMap = status as StringRecord;
    if (!statusMap.appInfo || !statusMap.appInfo?.packageName) {
-      errMsg =
+      logAndThrow(
          `The server response ${formattedStatus} ` +
-         `does not contain a package name. ${compatibilityMessage}`;
+         `does not contain a package name. ${compatibilityMessage}`
+      );
    } else if (statusMap.appInfo.packageName !== packageName) {
-      errMsg =
+      logAndThrow(
          `The server response ` +
          `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
-         `Does this server belong to another app?`;
+         `Does this server belong to another app?`
+      );
    } else if (!statusMap.serverVersion) {
-      errMsg =
+      logAndThrow(
          `The server response ${formattedStatus} ` +
-         `does not contain a valid server version. ${compatibilityMessage}`;
+         `does not contain a valid server version. ${compatibilityMessage}`
+      );
    } else if (
       !semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)
    ) {
-      errMsg =
+      logAndThrow(
          `The server version ${statusMap.serverVersion} does not satisfy the driver ` +
          `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
-         compatibilityMessage;
-   }
-   if (errMsg) {
-      this.log.info(errMsg);
-      throw new Error(errMsg);
+         compatibilityMessage
+      );
    }
    return true;
 }
