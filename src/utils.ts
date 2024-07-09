@@ -15,7 +15,10 @@ const SYSTEM_PORT_RANGE = [10000, 11000];
 // in the driver or server code
 const MIN_SUPPORTED_SERVER_VERSION = '0.0.15';
 const PACKAGE_VERSION = JSON.parse(
-   path.join(node.getModuleRootSync('appium-flutter-integration-driver', __filename)!, 'package.json')
+   path.join(
+      node.getModuleRootSync('appium-flutter-integration-driver', __filename)!,
+      'package.json',
+   ),
 ).version;
 
 export async function getProxyDriver(
@@ -65,27 +68,39 @@ export async function getFreePort(): Promise<number> {
 function validateServerStatus(
    this: AppiumFlutterDriver,
    status: StringRecord,
-   packageName: string
+   packageName: string,
 ): boolean {
-   let errMsg: string|null = null;
-   const compatibilityMessage = `Please check the driver readme to ensure the compatibility ` +
-         `between the server module integrated into the application under test ` +
-         `and the current driver version (${PACKAGE_VERSION}).`;
+   let errMsg: string | null = null;
+   const compatibilityMessage =
+      `Please check the driver readme to ensure the compatibility ` +
+      `between the server module integrated into the application under test ` +
+      `and the current driver version ${PACKAGE_VERSION}.`;
    if (!_.isPlainObject(status)) {
-      errMsg = `The server response ${JSON.stringify(status)} ` +
+      errMsg =
+         `The server response ${JSON.stringify(status)} ` +
          `is not a valid object. ${compatibilityMessage}`;
    } else if (!status.appInfo || !status.appInfo?.packageName) {
-      errMsg = `The server response ${JSON.stringify(status)} ` +
+      errMsg =
+         `The server response ${JSON.stringify(status)} ` +
          `does not contain a package name. ${compatibilityMessage}`;
    } else if (status.appInfo.packageName !== packageName) {
-      errMsg = `The server response ` +
+      errMsg =
+         `The server response ` +
          `contains a non-expected package name (${status.appInfo.packageName} != ${packageName}). ` +
          `Does this server belong to another app?`;
    } else if (!status.serverVersion) {
-      errMsg = `The server response ${JSON.stringify(status)} ` +
+      errMsg =
+         `The server response ${JSON.stringify(status)} ` +
          `does not contain a valid server version. ${compatibilityMessage}`;
-   } else if (util.compareVersions(status.serverVersion, '<', MIN_SUPPORTED_SERVER_VERSION)) {
-      errMsg = `The server response has ` +
+   } else if (
+      util.compareVersions(
+         status.serverVersion,
+         '<',
+         MIN_SUPPORTED_SERVER_VERSION,
+      )
+   ) {
+      errMsg =
+         `The server response has ` +
          `an unsupported version number (${status.serverVersion} < ${MIN_SUPPORTED_SERVER_VERSION}). ` +
          compatibilityMessage;
    }
