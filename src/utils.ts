@@ -261,36 +261,34 @@ function validateServerStatus(
    if (!_.isPlainObject(status)) {
       logAndThrow(
          `The server response ${formattedStatus} ` +
-         `is not a valid object. ${compatibilityMessage}`
+            `is not a valid object. ${compatibilityMessage}`,
       );
    }
    const statusMap = status as StringRecord;
    if (!statusMap.appInfo || !statusMap.appInfo?.packageName) {
       logAndThrow(
          `The server response ${formattedStatus} ` +
-         `does not contain a package name. ${compatibilityMessage}`
+            `does not contain a package name. ${compatibilityMessage}`,
       );
    }
    if (statusMap.appInfo.packageName !== packageName) {
       logAndThrow(
          `The server response ` +
-         `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
-         `Does this server belong to another app?`
+            `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
+            `Does this server belong to another app?`,
       );
    }
    if (!statusMap.serverVersion) {
       logAndThrow(
          `The server response ${formattedStatus} ` +
-         `does not contain a valid server version. ${compatibilityMessage}`
+            `does not contain a valid server version. ${compatibilityMessage}`,
       );
    }
-   if (
-      !semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)
-   ) {
+   if (!semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)) {
       logAndThrow(
          `The server version ${statusMap.serverVersion} does not satisfy the driver ` +
-         `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
-         compatibilityMessage
+            `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
+            compatibilityMessage,
       );
    }
    return true;
