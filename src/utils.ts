@@ -6,27 +6,17 @@ import type { PortForwardCallback, PortReleaseCallback } from './types';
 import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
 import type { StringRecord } from '@appium/types';
-import { util, node } from 'appium/support';
+import { node } from 'appium/support';
 import path from 'node:path';
 import fs from 'node:fs';
+import semver from 'semver';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
-// Do not forget to update it if major compat changes are made
-// in the driver or server code
-const MIN_SUPPORTED_SERVER_VERSION = '0.0.15';
-const PACKAGE_VERSION = JSON.parse(
-   fs.readFileSync(
-      path.join(
-         node.getModuleRootSync(
-            'appium-flutter-integration-driver',
-            __filename,
-         )!,
-         'package.json',
-      ),
-      { encoding: 'utf8' },
-   ),
-).version;
+const {
+   appium: { flutterServerVersion: FLUTTER_SERVER_VERSION_REQ },
+   version: PACKAGE_VERSION,
+} = readManifest();
 
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
@@ -70,52 +60,6 @@ export function isFlutterDriverCommand(command: string) {
 export async function getFreePort(): Promise<number> {
    const [start, end] = SYSTEM_PORT_RANGE;
    return await findAPortNotInUse(start, end);
-}
-
-function validateServerStatus(
-   this: AppiumFlutterDriver,
-   status: StringRecord,
-   packageName: string,
-): boolean {
-   let errMsg: string | null = null;
-   const compatibilityMessage =
-      `Please check the driver readme to ensure the compatibility ` +
-      `between the server module integrated into the application under test ` +
-      `and the current driver version ${PACKAGE_VERSION}.`;
-   if (!_.isPlainObject(status)) {
-      errMsg =
-         `The server response ${JSON.stringify(status)} ` +
-         `is not a valid object. ${compatibilityMessage}`;
-   } else if (!status.appInfo || !status.appInfo?.packageName) {
-      errMsg =
-         `The server response ${JSON.stringify(status)} ` +
-         `does not contain a package name. ${compatibilityMessage}`;
-   } else if (status.appInfo.packageName !== packageName) {
-      errMsg =
-         `The server response ` +
-         `contains a non-expected package name (${status.appInfo.packageName} != ${packageName}). ` +
-         `Does this server belong to another app?`;
-   } else if (!status.serverVersion) {
-      errMsg =
-         `The server response ${JSON.stringify(status)} ` +
-         `does not contain a valid server version. ${compatibilityMessage}`;
-   } else if (
-      util.compareVersions(
-         status.serverVersion,
-         '<',
-         MIN_SUPPORTED_SERVER_VERSION,
-      )
-   ) {
-      errMsg =
-         `The server response has ` +
-         `an unsupported version number (${status.serverVersion} < ${MIN_SUPPORTED_SERVER_VERSION}). ` +
-         compatibilityMessage;
-   }
-   if (errMsg) {
-      this.log.info(errMsg);
-      throw new Error(errMsg);
-   }
-   return true;
 }
 
 export async function waitForFlutterServerToBeActive(
@@ -298,4 +242,62 @@ export function attachAppLaunchArguments(
          So attaching processArguments: ${JSON.stringify(capsToUpdate['appium:processArguments'])}`,
       );
    }
+}
+
+function validateServerStatus(
+   this: AppiumFlutterDriver,
+   status: StringRecord,
+   packageName: string,
+): boolean {
+   let errMsg: string | null = null;
+   const compatibilityMessage =
+      `Please check the driver readme to ensure the compatibility ` +
+      `between the server module integrated into the application under test ` +
+      `and the current driver version ${PACKAGE_VERSION}.`;
+   const formattedStatus = _.truncate(JSON.stringify(status), { length: 200 });
+   if (!_.isPlainObject(status)) {
+      errMsg =
+         `The server response ${formattedStatus} ` +
+         `is not a valid object. ${compatibilityMessage}`;
+   } else if (!status.appInfo || !status.appInfo?.packageName) {
+      errMsg =
+         `The server response ${formattedStatus} ` +
+         `does not contain a package name. ${compatibilityMessage}`;
+   } else if (status.appInfo.packageName !== packageName) {
+      errMsg =
+         `The server response ` +
+         `contains an unexpected package name (${status.appInfo.packageName} != ${packageName}). ` +
+         `Does this server belong to another app?`;
+   } else if (!status.serverVersion) {
+      errMsg =
+         `The server response ${formattedStatus} ` +
+         `does not contain a valid server version. ${compatibilityMessage}`;
+   } else if (
+      !semver.satisfies(status.serverVersio, FLUTTER_SERVER_VERSION_REQ)
+   ) {
+      errMsg =
+         `The server version ${status.serverVersion} does not satisfy the driver ` +
+         `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
+         compatibilityMessage;
+   }
+   if (errMsg) {
+      this.log.info(errMsg);
+      throw new Error(errMsg);
+   }
+   return true;
+}
+
+function readManifest(): StringRecord {
+   return JSON.parse(
+      fs.readFileSync(
+         path.join(
+            node.getModuleRootSync(
+               'appium-flutter-integration-driver',
+               __filename,
+            )!,
+            'package.json',
+         ),
+         { encoding: 'utf8' },
+      ),
+   );
 }

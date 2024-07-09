@@ -31,7 +31,8 @@
       "Android",
       "iOS"
     ],
-    "mainClass": "AppiumFlutterDriver"
+    "mainClass": "AppiumFlutterDriver",
+    "flutterServerVersion": ">=0.0.18 <1.0.0"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -63,6 +64,7 @@
     "jest": "^29.7.0",
     "mocha": "^10.4.0",
     "rimraf": "^5.0.7",
+    "semver": "^7.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "wdio-flutter-by-service": "^1.0.11",
