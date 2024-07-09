@@ -246,7 +246,7 @@ export function attachAppLaunchArguments(
 
 function validateServerStatus(
    this: AppiumFlutterDriver,
-   status: StringRecord,
+   status: unknown,
    packageName: string,
 ): boolean {
    let errMsg: string | null = null;
@@ -259,24 +259,26 @@ function validateServerStatus(
       errMsg =
          `The server response ${formattedStatus} ` +
          `is not a valid object. ${compatibilityMessage}`;
-   } else if (!status.appInfo || !status.appInfo?.packageName) {
+   }
+   const statusMap = status as StringRecord;
+   if (!statusMap.appInfo || !statusMap.appInfo?.packageName) {
       errMsg =
          `The server response ${formattedStatus} ` +
          `does not contain a package name. ${compatibilityMessage}`;
-   } else if (status.appInfo.packageName !== packageName) {
+   } else if (statusMap.appInfo.packageName !== packageName) {
       errMsg =
          `The server response ` +
-         `contains an unexpected package name (${status.appInfo.packageName} != ${packageName}). ` +
+         `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
          `Does this server belong to another app?`;
-   } else if (!status.serverVersion) {
+   } else if (!statusMap.serverVersion) {
       errMsg =
          `The server response ${formattedStatus} ` +
          `does not contain a valid server version. ${compatibilityMessage}`;
    } else if (
-      !semver.satisfies(status.serverVersio, FLUTTER_SERVER_VERSION_REQ)
+      !semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)
    ) {
       errMsg =
-         `The server version ${status.serverVersion} does not satisfy the driver ` +
+         `The server version ${statusMap.serverVersion} does not satisfy the driver ` +
          `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
          compatibilityMessage;
    }
