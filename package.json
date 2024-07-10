@@ -5,15 +5,15 @@
     "appium",
     "flutter"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "",
   "license": "MIT License",
   "repository": {
     "type": "git",
-    "url": "https://github.com/appium/appium-fs-driver.git"
+    "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver"
   },
   "bugs": {
-    "url": "https://github.com/appium/appium-fs-driver/issues"
+    "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues"
   },
   "main": "./build/src/driver.js",
   "bin": {},
