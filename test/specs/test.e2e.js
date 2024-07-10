@@ -9,7 +9,8 @@ async function performLogin(userName = 'admin', password = '1234') {
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
-   await browser.flutterByValueKey$('login_button').click();
+   expect(await browser.flutterByType$('ElevatedButton').flutterByType$("Text").getText()).toEqual('Login');
+   await browser.flutterByType$('ElevatedButton').click();
 }
 
 async function openScreen(screenTitle) {
