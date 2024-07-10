@@ -5,9 +5,18 @@ import { JWProxy } from '@appium/base-driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
+import type { StringRecord } from '@appium/types';
+import { node } from 'appium/support';
+import path from 'node:path';
+import fs from 'node:fs';
+import semver from 'semver';
 
 const DEVICE_PORT_RANGE = [9000, 9020];
 const SYSTEM_PORT_RANGE = [10000, 11000];
+const {
+   appium: { flutterServerVersion: FLUTTER_SERVER_VERSION_REQ },
+   version: PACKAGE_VERSION,
+} = readManifest();
 
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
@@ -61,27 +70,16 @@ export async function waitForFlutterServerToBeActive(
 ): Promise<void> {
    await waitForCondition(
       async () => {
+         let response: unknown;
          try {
-            const response: any = await proxy.command('/status', 'GET');
-            if (!response) {
-               return false;
-            }
-            if (response?.appInfo?.packageName === packageName) {
-               this.log.info(
-                  `Flutter server version the application is build with ${response.serverVersion}`,
-               );
-               return true;
-            } else {
-               this.log.error(
-                  `Looking for flutter server with package ${packageName}. But found ${response.appInfo?.packageName}`,
-               );
-            }
+            response = await proxy.command('/status', 'GET');
          } catch (err: any) {
             this.log.info(
                `FlutterServer not reachable on port ${flutterPort}, Retrying..`,
             );
             return false;
          }
+         return validateServerStatus.bind(this)(response, packageName);
       },
       {
          waitMs: this.opts.flutterServerLaunchTimeout ?? 5000,
@@ -240,8 +238,73 @@ export function attachAppLaunchArguments(
       ]);
 
       this.log.info(
-         `iOS platform detected and flutterSystemPort capability is present. 
+         `iOS platform detected and flutterSystemPort capability is present.
          So attaching processArguments: ${JSON.stringify(capsToUpdate['appium:processArguments'])}`,
       );
    }
+}
+
+function validateServerStatus(
+   this: AppiumFlutterDriver,
+   status: unknown,
+   packageName: string,
+): boolean {
+   const compatibilityMessage =
+      `Please check the driver readme to ensure the compatibility ` +
+      `between the server module integrated into the application under test ` +
+      `and the current driver version ${PACKAGE_VERSION}.`;
+   const formattedStatus = _.truncate(JSON.stringify(status), { length: 200 });
+   const logAndThrow = (errMsg: string) => {
+      this.log.info(errMsg);
+      throw new Error(errMsg);
+   };
+   if (!_.isPlainObject(status)) {
+      logAndThrow(
+         `The server response ${formattedStatus} ` +
+            `is not a valid object. ${compatibilityMessage}`,
+      );
+   }
+   const statusMap = status as StringRecord;
+   if (!statusMap.appInfo || !statusMap.appInfo?.packageName) {
+      logAndThrow(
+         `The server response ${formattedStatus} ` +
+            `does not contain a package name. ${compatibilityMessage}`,
+      );
+   }
+   if (statusMap.appInfo.packageName !== packageName) {
+      logAndThrow(
+         `The server response ` +
+            `contains an unexpected package name (${statusMap.appInfo.packageName} != ${packageName}). ` +
+            `Does this server belong to another app?`,
+      );
+   }
+   if (!statusMap.serverVersion) {
+      logAndThrow(
+         `The server response ${formattedStatus} ` +
+            `does not contain a valid server version. ${compatibilityMessage}`,
+      );
+   }
+   if (!semver.satisfies(statusMap.serverVersion, FLUTTER_SERVER_VERSION_REQ)) {
+      logAndThrow(
+         `The server version ${statusMap.serverVersion} does not satisfy the driver ` +
+            `version requirement '${FLUTTER_SERVER_VERSION_REQ}'. ` +
+            compatibilityMessage,
+      );
+   }
+   return true;
+}
+
+function readManifest(): StringRecord {
+   return JSON.parse(
+      fs.readFileSync(
+         path.join(
+            node.getModuleRootSync(
+               'appium-flutter-integration-driver',
+               __filename,
+            )!,
+            'package.json',
+         ),
+         { encoding: 'utf8' },
+      ),
+   );
 }
