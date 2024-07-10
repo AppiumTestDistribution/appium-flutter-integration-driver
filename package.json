@@ -79,7 +79,7 @@
     "webdriverio": "^8.38.0"
   },
   "peerDependencies": {
-    "appium": "^2.10.3"
+    "appium": "^2.5.4"
   },
   "dependencies": {
     "@appium/base-driver": "^9.6.0",
