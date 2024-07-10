@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.3...v1.0.4) (2024-07-10)
+
+### Miscellaneous Chores
+
+* Reduce the appium peerdependency to 2.5 ([#43](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/43)) ([f3e20e2](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/f3e20e276833e684537fdbd205dd4781ffc2cbd8))
+
 ## [1.0.3](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.2...v1.0.3) (2024-07-10)
 
 ### Miscellaneous Chores
