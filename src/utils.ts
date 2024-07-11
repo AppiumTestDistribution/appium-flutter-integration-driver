@@ -124,16 +124,16 @@ export async function fetchFlutterServerPort(
    let devicePort = startPort;
    let forwardedPort = systemPort;
 
-   if (isIosSimulator && systemPort) {
+   if (isIosSimulator && (systemPort || devicePort)) {
       try {
          this.log.info(
-            `Checking if flutter server is running on port ${systemPort} for simulator with id ${udid}`,
+            `Checking if flutter server is running on port ${systemPort || devicePort} for simulator with id ${udid}`,
          );
-         await waitForFlutterServer.bind(this)(systemPort!, packageName);
+         await waitForFlutterServer.bind(this)((systemPort || devicePort)!, packageName);
          this.log.info(
-            `Flutter server is successfully running on port ${systemPort}`,
+            `Flutter server is successfully running on port ${systemPort || devicePort}`,
          );
-         return systemPort!;
+         return (systemPort || devicePort)!;
       } catch (e) {
          return null;
       }
