@@ -133,6 +133,8 @@ Real Device: Check xcode device logs.
 ```
 
 ## [Getting Started](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/wiki/Get-Started)
+## [How to Inspect elements?](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/wiki/Flutter-Inspector)
+
 ## Appium Flutter Integration Driver vs. Appium UiAutomator2/XCUITest Driver
 
 - The driver manages the application under test and the device under test via Appium UiAutomator2/XCUITest drivers.
@@ -144,8 +146,6 @@ For more details, refer to the documentation for each driver:
 - [Appium UiAutomator2 Driver](https://github.com/appium/appium-uiautomator2-driver)
 - [Appium XCUITest Driver](https://appium.github.io/appium-xcuitest-driver/latest)
 
-## How to Inspect elements?
-- You can use the flutter inspector tool to inspect the elements in your Flutter app. You can find the tool [here](https://docs.flutter.dev/tools/devtools/inspector)
 
 ## Capabilities for Appium Flutter Integration Driver
 
