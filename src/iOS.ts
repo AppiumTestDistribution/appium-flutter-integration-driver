@@ -1,6 +1,6 @@
-import { AppiumFlutterDriver } from './driver';
+import type { AppiumFlutterDriver } from './driver';
 // @ts-ignore
-import XCUITestDriver from 'appium-xcuitest-driver';
+import { XCUITestDriver } from 'appium-xcuitest-driver';
 import type { InitialOpts } from '@appium/types';
 import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
 

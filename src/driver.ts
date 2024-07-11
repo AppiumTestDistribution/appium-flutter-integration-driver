@@ -1,6 +1,5 @@
-import { BaseDriver } from '@appium/base-driver';
 import { desiredCapConstraints } from './desiredCaps';
-import { JWProxy } from '@appium/base-driver';
+import { JWProxy, BaseDriver } from 'appium/driver';
 import type {
    DefaultCreateSessionResult,
    DriverData,
@@ -8,8 +7,9 @@ import type {
    DriverCaps,
 } from '@appium/types';
 type FlutterDriverConstraints = typeof desiredCapConstraints;
-import XCUITestDriver from 'appium-xcuitest-driver/build/lib/driver';
-import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { XCUITestDriver } from 'appium-xcuitest-driver';
+import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { createSession as createSessionMixin } from './session';
 import {
    findElOrEls,
@@ -22,7 +22,6 @@ import {
    clear,
    ELEMENT_CACHE,
 } from './commands/element';
-
 import {
    attachAppLaunchArguments,
    fetchFlutterServerPort,
@@ -30,7 +29,7 @@ import {
    isFlutterDriverCommand,
    waitForFlutterServerToBeActive,
 } from './utils';
-import { W3C_WEB_ELEMENT_IDENTIFIER } from '@appium/support/build/lib/util';
+import { util } from 'appium/support';
 import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
@@ -312,9 +311,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             scrollDirection,
          },
       );
-      if (element.ELEMENT || element[W3C_WEB_ELEMENT_IDENTIFIER]) {
+      if (element.ELEMENT || element[util.W3C_WEB_ELEMENT_IDENTIFIER]) {
          ELEMENT_CACHE.set(
-            element.ELEMENT || element[W3C_WEB_ELEMENT_IDENTIFIER],
+            element.ELEMENT || element[util.W3C_WEB_ELEMENT_IDENTIFIER],
             this.proxy,
          );
       }

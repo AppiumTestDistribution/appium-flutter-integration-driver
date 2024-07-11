@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { getProxyDriver } from '../utils';
-import { JWProxy } from '@appium/base-driver';
-import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import { W3C_ELEMENT_KEY } from '@appium/base-driver/build/lib/constants';
+import { JWProxy } from 'appium/driver';
+import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+import { W3C_ELEMENT_KEY } from 'appium/driver';
 import type { AppiumFlutterDriver } from '../driver';
 
 export const ELEMENT_CACHE = new Map();
