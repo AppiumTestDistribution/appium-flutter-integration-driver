@@ -25,8 +25,10 @@ export async function getProxyDriver(
    if (['key', 'semantics label', 'text', 'type'].includes(strategy)) {
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+      // @ts-ignore Proxy instance is OK
       return this.proxydriver.uiautomator2.jwproxy;
    } else {
+      // @ts-ignore Proxy instance is OK
       return this.proxydriver.wda.jwproxy;
    }
 }
