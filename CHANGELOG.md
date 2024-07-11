@@ -1,3 +1,16 @@
+## [1.0.5](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.4...v1.0.5) (2024-07-11)
+
+### Bug Fixes
+
+* Mute irrelevant typescript complains ([#48](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/48)) ([c41316a](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/c41316af74dbdb6637697fcaa6392bb0b086d4b0))
+* use lts for semantic release ([#49](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/49)) ([9b47d50](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/9b47d50bcffed0ca1b536fcb3ca07b399cbc1bd3))
+* Various type declarations and imports ([#47](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/47)) ([fbe4e46](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/fbe4e461368aca22fc354f41aa7df10e239cc41b))
+
+### Miscellaneous Chores
+
+* add build step for publish ([#45](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/45)) ([bfed790](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/bfed790828bea1003b657f13a67cec17b1b81795))
+* fix node version ([#46](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/46)) ([b812327](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/b812327d8f63f010efd5f7b11ba011cb3f2cc9e8))
+
 ## [1.0.4](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.3...v1.0.4) (2024-07-10)
 
 ### Miscellaneous Chores
