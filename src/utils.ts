@@ -1,7 +1,7 @@
-import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
+import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
-import { JWProxy } from '@appium/base-driver';
+import { JWProxy } from 'appium/driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import type { AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
