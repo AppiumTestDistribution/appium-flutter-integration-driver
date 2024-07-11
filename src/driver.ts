@@ -212,7 +212,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       }
 
       const systemPort =
-         this.internalCaps.flutterSystemPort ?? (await getFreePort());
+         this.internalCaps.flutterSystemPort ||
+         (isIosSimulator ? null : await getFreePort());
       const udid = this.proxydriver.opts.udid!;
 
       this.flutterPort = await fetchFlutterServerPort.bind(this)({
@@ -352,13 +353,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       );
 
       // Add port parameter to launch argument and only supported for iOS
-      if (
-         this.proxydriver instanceof XCUITestDriver &&
-         this.internalCaps?.flutterSystemPort
-      ) {
+      if (this.proxydriver instanceof XCUITestDriver) {
          launchArgs.arguments = _.flatten([
             launchArgs.arguments,
-            `--flutter-server-port=${this.internalCaps.flutterSystemPort}`,
+            `--flutter-server-port=${this.internalCaps?.flutterSystemPort || this.flutterPort}`,
          ]);
          this.log.info(
             'Attaching launch arguments to XCUITestDriver ' +

@@ -1,0 +1,8 @@
+.github/
+README.md
+docs/commands.md
+finder.ts
+flutter-by/wdio-flutter-by-service/package.json
+flutter-by/wdio-flutter-by-service/package-lock.json
+*.conf.ts
+CHANGELOG.md

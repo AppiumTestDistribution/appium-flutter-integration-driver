@@ -1,25 +1,25 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@appium/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": false,
-    "target": "es2020",
-    "module": "NodeNext",
-    "removeComments": true,
-    "noImplicitAny": true,
-    "strictPropertyInitialization": true,
-    "strictNullChecks": true,
-    "outDir": "build",
-    "types": [
-      "node",
-      "@wdio/globals/types",
-      "@wdio/mocha-framework",
-      "expect-webdriverio",
-      "@wdio/types"
-    ],
-    "checkJs": true,
-    "moduleResolution": "Node16",
-    "resolvePackageJsonExports": true
-  },
-  "include": ["src", "typings/*.d.ts", "finder.ts", "./wdio"]
+   "$schema": "https://json.schemastore.org/tsconfig",
+   "extends": "@appium/tsconfig/tsconfig.json",
+   "compilerOptions": {
+      "sourceMap": false,
+      "target": "es2020",
+      "module": "NodeNext",
+      "removeComments": true,
+      "noImplicitAny": true,
+      "strictPropertyInitialization": true,
+      "strictNullChecks": true,
+      "outDir": "build",
+      "types": [
+         "node",
+         "@wdio/globals/types",
+         "@wdio/mocha-framework",
+         "expect-webdriverio",
+         "@wdio/types"
+      ],
+      "checkJs": true,
+      "moduleResolution": "Node16",
+      "resolvePackageJsonExports": true
+   },
+   "include": ["src", "typings/*.d.ts", "finder.ts", "./wdio"]
 }

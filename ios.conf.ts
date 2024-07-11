@@ -14,7 +14,6 @@ export const config: WebdriverIO.Config = {
          'appium:newCommandTimeout': 240,
          'appium:usePreinstalledWDA': true,
          'appium:showIOSLog': true,
-         'appium:flutterSystemPort': 31321,
          'appium:wdaLocalPort': 8456,
          'appium:flutterServerLaunchTimeout': 25000,
       },

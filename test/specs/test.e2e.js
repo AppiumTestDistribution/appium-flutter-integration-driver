@@ -9,7 +9,12 @@ async function performLogin(userName = 'admin', password = '1234') {
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
-   expect(await browser.flutterByType$('ElevatedButton').flutterByType$("Text").getText()).toEqual('Login');
+   expect(
+      await browser
+         .flutterByType$('ElevatedButton')
+         .flutterByType$('Text')
+         .getText(),
+   ).toEqual('Login');
    await browser.flutterByType$('ElevatedButton').click();
 }
 
@@ -30,7 +35,7 @@ describe('My Login application', () => {
       }
       await browser.installApp(process.env.APP_PATH);
       await browser.pause(2000);
-      if (await browser.isAppInstalled(appID)){
+      if (await browser.isAppInstalled(appID)) {
          console.log('App is installed');
          await browser.execute('flutter: launchApp', {
             appId: appID,
