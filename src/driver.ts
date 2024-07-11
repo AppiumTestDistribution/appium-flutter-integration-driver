@@ -212,7 +212,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       }
 
       const systemPort =
-         this.internalCaps.flutterSystemPort || (isIosSimulator ? null : await getFreePort());
+         this.internalCaps.flutterSystemPort ||
+         (isIosSimulator ? null : await getFreePort());
       const udid = this.proxydriver.opts.udid!;
 
       this.flutterPort = await fetchFlutterServerPort.bind(this)({

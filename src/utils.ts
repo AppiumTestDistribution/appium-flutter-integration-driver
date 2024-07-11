@@ -129,7 +129,10 @@ export async function fetchFlutterServerPort(
          this.log.info(
             `Checking if flutter server is running on port ${systemPort || devicePort} for simulator with id ${udid}`,
          );
-         await waitForFlutterServer.bind(this)((systemPort || devicePort)!, packageName);
+         await waitForFlutterServer.bind(this)(
+            (systemPort || devicePort)!,
+            packageName,
+         );
          this.log.info(
             `Flutter server is successfully running on port ${systemPort || devicePort}`,
          );
