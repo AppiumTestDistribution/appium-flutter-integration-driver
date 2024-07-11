@@ -1,3 +1,9 @@
+## [1.0.6](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.5...v1.0.6) (2024-07-11)
+
+### Bug Fixes
+
+* run ios simulator tests on default port ([#51](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/51)) ([526b65b](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/526b65b7320d334dc82cf67c4785b3b6f6151f06))
+
 ## [1.0.5](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.4...v1.0.5) (2024-07-11)
 
 ### Bug Fixes
