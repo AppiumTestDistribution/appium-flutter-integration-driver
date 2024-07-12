@@ -54,7 +54,7 @@ jobs:
          - name: Install Drivers
            run: |
              npm install -g appium
-             appium driver install --source local ${{ github.workspace }}
+             appium driver list
          - name: Checkout Test from Flutter Finder
            uses: actions/checkout@v2
            with:
