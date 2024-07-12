@@ -34,7 +34,8 @@ jobs:
                  echo "$ios_app"
                  curl -LO $ios_app
                  echo 'export APP_PATH=$CIRCLE_WORKING_DIRECTORY/ios.zip' >> $BASH_ENV
-                 echo $APP_PATH
+                 echo $pwd
+                 echo ls
                  nvm install v20.2.0 && nvm alias default 20.2.0
                  node -v
                  target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
@@ -106,6 +107,7 @@ jobs:
                  xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
                  mkdir appium-logs
                  git clone https://github.com/AppiumTestDistribution/flutter-finder.git
+                 cd flutter-finder/flutter-by/java
                  UDID=$target_sim_id APP_PATH=$ios_app Platform=ios ./gradlew clean test
 
          - store_artifacts:
