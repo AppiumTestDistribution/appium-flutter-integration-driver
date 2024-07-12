@@ -62,7 +62,6 @@ jobs:
          - name: run tests
            uses: reactivecircus/android-emulator-runner@v2
            with:
-              working-directory: ${{ github.workspace }}/flutter-by/wdio-flutter-by-service
               api-level: ${{ matrix.api-level }}
               target: ${{ matrix.target }}
               arch: x86_64
@@ -71,16 +70,13 @@ jobs:
                  echo ${{ env }}
                  adb devices
                  node --version
-                 npm install -g wait-on
-                 npm install
-                 npm run build
                  echo ${{ github.workspace }}
                  ls ${{ github.workspace }}
                  appium driver list
                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
                  echo $android_app
-                 APP_PATH=${{ env.APP_PATH }} npm run wdio-android
+                 APP_PATH=${{ env.APP_PATH }} npm run wdio-android-ci
          #        appium server -pa=/wd/hub & wait-on http://127.0.0.1:4723/wd/hub/status &&
          - name: upload appium logs
            if: always()
