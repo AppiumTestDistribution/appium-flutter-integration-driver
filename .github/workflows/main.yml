@@ -51,6 +51,10 @@ jobs:
          - name: Build Driver
            run: |
              npm run build
+         - name: Install Drivers
+           run: |
+             appium driver install uiautomator2
+             appium driver install --source local ${{ github.workspace }}
          - name: Checkout Test from Flutter Finder
            uses: actions/checkout@v2
            with:
@@ -73,8 +77,6 @@ jobs:
                  npm run build
                  echo ${{ github.workspace }}
                  ls ${{ github.workspace }}
-                 appium driver install uiautomator2
-                 appium driver install --source=local ${{ github.workspace }}
                  appium driver list
                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
