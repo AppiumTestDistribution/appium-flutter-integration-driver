@@ -73,7 +73,7 @@ jobs:
                  npm run build
                  echo ${{ github.workspace }}
                  appium driver install uiautomator2
-                 appium driver install --source=local ${{ github.workspace }}/appium-flutter-integration-driver
+                 appium driver install --source=local ${{ github.workspace }}
                  appium driver list
                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
