@@ -53,6 +53,7 @@ jobs:
              npm run build
          - name: Install Drivers
            run: |
+             npm install -g appium
              appium driver install uiautomator2
              appium driver install --source local ${{ github.workspace }}
          - name: Checkout Test from Flutter Finder
@@ -72,7 +73,6 @@ jobs:
                  adb devices
                  node --version
                  npm install -g wait-on
-                 npm install -g appium
                  npm install
                  npm run build
                  echo ${{ github.workspace }}
