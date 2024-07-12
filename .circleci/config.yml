@@ -11,9 +11,12 @@ jobs:
    WDIO_IOS:
       # Specify the execution environment.
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
-      # Add steps to the job
+      macos:
+         # Specify the Xcode version you desire here
+         # See: https://circleci.com/docs/using-macos/
+         xcode: 15.2.0
+
       # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
-      executor: macos/xcode-15.2.0
       steps:
          # Checkout the code as the first step.
          - checkout
@@ -61,7 +64,10 @@ jobs:
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
       # Add steps to the job
       # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
-      executor: macos/xcode-15.2.0
+      macos:
+         # Specify the Xcode version you desire here
+         # See: https://circleci.com/docs/using-macos/
+        xcode: 15.2.0
       steps:
          # Checkout the code as the first step.
          - checkout
