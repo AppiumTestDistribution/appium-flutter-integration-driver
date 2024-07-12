@@ -63,6 +63,7 @@ jobs:
                  npm install -g appium
                  npm install
                  npm run build
+                 npm run test
                  appium driver list
                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &

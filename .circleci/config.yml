@@ -43,7 +43,6 @@ jobs:
                  npm install -g appium
                  npm ci
                  npm run build
-                 npm run test
                  appium driver run xcuitest build-wda 
                  wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
                  echo $wda
