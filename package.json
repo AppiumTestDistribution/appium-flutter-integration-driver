@@ -48,7 +48,7 @@
     "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
     "wdio-android": "wdio run ./android.conf.ts",
     "wdio-ios": "wdio run ./ios.conf.ts",
-    "wdio-android-ci": "cd finder/flutter-finder/flutter-by/wdio-flutter-by-service && npm install && npm run build && npm run wdio-android"
+    "wdio-android-ci": "cd finder/flutter-by/wdio-flutter-by-service && npm install && npm run build && npm run wdio-android"
   },
   "devDependencies": {
     "@appium/types": "^0.x",
