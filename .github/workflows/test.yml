@@ -1,0 +1,24 @@
+on:
+   push:
+      branches:
+         - main
+   pull_request:
+      branches:
+         - main
+
+name: Tests
+
+jobs:
+   UnitTest:
+      runs-on: macos-latest
+      steps:
+         - uses: actions/checkout@v2
+         - uses: actions/setup-node@v4
+           with:
+              node-version: 20
+         - run: npm install
+           name: Install dependencies
+         - run: npm run build
+           name: Build
+         - run: npm run test
+           name: Unit Test
