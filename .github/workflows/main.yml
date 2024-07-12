@@ -72,6 +72,7 @@ jobs:
                  npm install
                  npm run build
                  echo ${{ github.workspace }}
+                 ls ${{ github.workspace }}
                  appium driver install uiautomator2
                  appium driver install --source=local ${{ github.workspace }}
                  appium driver list
