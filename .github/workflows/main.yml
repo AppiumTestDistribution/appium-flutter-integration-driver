@@ -162,5 +162,5 @@ jobs:
          if: always()
          uses: actions/upload-artifact@v4
          with:
-           name: appium-logs
+           name: appium-logs-java
            path: ${{ github.workspace }}/appium-logs
