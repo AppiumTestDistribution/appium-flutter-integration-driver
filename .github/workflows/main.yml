@@ -48,9 +48,17 @@ jobs:
            run: |
               npm install
               npm run prettier-check
+         - name: Build Driver
+           run: |
+             npm run build
+         - name: Checkout Test from Flutter Finder
+           uses: actions/checkout@v2
+           with:
+              repository: AppiumTestDistribution/flutter-finder
          - name: run tests
            uses: reactivecircus/android-emulator-runner@v2
            with:
+              working-directory: ${{ github.workspace }}/flutter-by/wdio-flutter-by-service
               api-level: ${{ matrix.api-level }}
               target: ${{ matrix.target }}
               arch: x86_64
@@ -63,6 +71,9 @@ jobs:
                  npm install -g appium
                  npm install
                  npm run build
+                 echo ${{ github.workspace }}
+                 appium driver install uiautomator2
+                 appium driver install --source=local ${{ github.workspace }}/appium-flutter-integration-driver
                  appium driver list
                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
