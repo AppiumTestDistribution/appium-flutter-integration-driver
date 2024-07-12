@@ -9,13 +9,7 @@ async function performLogin(userName = 'admin', password = '1234') {
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
-   expect(
-      await browser
-         .flutterByType$('ElevatedButton')
-         .flutterByType$('Text')
-         .getText(),
-   ).toEqual('Login');
-   await browser.flutterByType$('ElevatedButton').click();
+   await browser.flutterByValueKey$('LoginButton').click();
 }
 
 async function openScreen(screenTitle) {
@@ -35,7 +29,7 @@ describe('My Login application', () => {
       }
       await browser.installApp(process.env.APP_PATH);
       await browser.pause(2000);
-      if (await browser.isAppInstalled(appID)) {
+      if (await browser.isAppInstalled(appID)){
          console.log('App is installed');
          await browser.execute('flutter: launchApp', {
             appId: appID,
@@ -49,7 +43,7 @@ describe('My Login application', () => {
       await performLogin();
       await openScreen('Double Tap');
       const element = await browser
-         .flutterBySemanticsLabel$('double_tap_button')
+         .flutterByValueKey$('double_tap_button')
          .flutterByText$('Double Tap');
       expect(await element.getText()).toEqual('Double Tap');
       await browser.flutterDoubleClick({
@@ -72,16 +66,16 @@ describe('My Login application', () => {
    it('Wait Test', async () => {
       await performLogin();
       await openScreen('Lazy Loading');
-      const message = await browser.flutterBySemanticsLabel$('message_field');
+      const message = await browser.flutterByValueKey$('message_field');
       expect(await message.getText()).toEqual('Hello world');
-      await browser.flutterBySemanticsLabel$('toggle_button').click();
+      await browser.flutterByValueKey$('toggle_button').click();
       await browser.flutterWaitForAbsent({ element: message, timeout: 10 });
       expect(
          await (
-            await browser.flutterBySemanticsLabel$$('message_field')
+            await browser.flutterByValueKey$$('message_field')
          ).length,
       ).toEqual(0);
-      await browser.flutterBySemanticsLabel$('toggle_button').click();
+      await browser.flutterByValueKey$('toggle_button').click();
       await browser.flutterWaitForVisible({ element: message, timeout: 10 });
       expect(await message.getText()).toEqual('Hello world');
    });
@@ -112,7 +106,7 @@ describe('My Login application', () => {
       await performLogin();
       await openScreen('Long Press');
       const longPressElement =
-         await browser.flutterBySemanticsLabel$('long_press_button');
+         await browser.flutterByValueKey$('long_press_button');
       await browser.flutterLongPress({ element: longPressElement });
       const popUpText = await browser
          .flutterByText$('It was a long press')
@@ -218,8 +212,8 @@ describe('My Login application', () => {
    it('Drag and Drop', async () => {
       await performLogin();
       await openScreen('Drag & Drop');
-      const dragElement = await browser.flutterBySemanticsLabel$('drag_me');
-      const dropElement = await browser.flutterBySemanticsLabel$('drop_zone');
+      const dragElement = await browser.flutterByValueKey$('drag_me');
+      const dropElement = await browser.flutterByValueKey$('drop_zone');
       await browser.flutterDragAndDrop({
          source: dragElement,
          target: dropElement,
