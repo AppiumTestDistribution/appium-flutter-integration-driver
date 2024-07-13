@@ -38,6 +38,6 @@ jobs:
               git add README.md
               git commit -m "Update README with latest commit ID - ${{ github.event.client_payload.version }}"
               git push -u origin run-test-upstream-${{ github.event.client_payload.version }}
-              gh pr create --title "Update server version in ReadMe" --body "Test driver with latest server version"
+              gh pr create --title "docs: Update server version in ReadMe" --body "Test driver with latest server version"
            env:
               GITHUB_TOKEN: ${{ secrets.UPDATE_TOKEN }}
