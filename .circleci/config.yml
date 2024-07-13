@@ -111,7 +111,7 @@ jobs:
                  UDID=$target_sim_id APP_PATH=$ios_app Platform=ios ./gradlew clean test
 
          - store_artifacts:
-              path: appium-logs
+              path: flutter-finder/flutter-by/java/appium.log
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
