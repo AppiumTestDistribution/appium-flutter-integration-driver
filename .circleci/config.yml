@@ -108,7 +108,7 @@ jobs:
                  mkdir appium-logs
                  git clone https://github.com/AppiumTestDistribution/flutter-finder.git
                  cd flutter-finder/flutter-by/java
-                 UDID=$target_sim_id APP_PATH=$ios_app Platform=ios ./gradlew clean test
+                 UDID=$target_sim_id APP_PATH=$ios_app Platform=ios ./gradlew clean test --debug
 
          - store_artifacts:
               path: flutter-finder/flutter-by/java/appium.log
