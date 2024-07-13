@@ -1,3 +1,4 @@
+// @ts-nocheck
 import sinon from 'sinon';
 import * as utils from '../../src/utils';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';

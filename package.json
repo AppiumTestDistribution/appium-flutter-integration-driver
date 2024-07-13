@@ -42,7 +42,7 @@
     "prettier": "prettier 'src/**/*.ts' --write --single-quote",
     "prettier-check": "prettier 'src/**/*.ts' --check",
     "appium-home": "rm -rf /tmp/some-temp-dir && export APPIUM_HOME=/tmp/some-temp-dir",
-    "test": "NODE_OPTIONS='--loader ts-node/esm' mocha --project tsconfig.test.json",
+    "test": "NODE_OPTIONS='--loader ts-node/esm' mocha --require ts-node/register test/**/*.ts",
     "run-server": "appium server -ka 800 -pa /wd/hub",
     "install-driver": "npm run build && appium driver install --source=local $(pwd)",
     "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
