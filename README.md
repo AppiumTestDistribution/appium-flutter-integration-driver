@@ -146,14 +146,12 @@ For more details, refer to the documentation for each driver:
 - [Appium UiAutomator2 Driver](https://github.com/appium/appium-uiautomator2-driver)
 - [Appium XCUITest Driver](https://appium.github.io/appium-xcuitest-driver/latest)
 
-
 ## Capabilities for Appium Flutter Integration Driver
 
 | Capability                       | Description                                                             | Required |
 |----------------------------------|-------------------------------------------------------------------------|----------|
 | appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
-
 
 🚨 **Important Notice for iOS Testing**
 
