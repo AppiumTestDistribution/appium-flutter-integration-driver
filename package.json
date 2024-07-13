@@ -1,103 +1,105 @@
 {
-   "name": "appium-flutter-integration-driver",
-   "description": "Appium driver for automating flutter apps using flutter integration SDK",
-   "keywords": [
-      "appium",
-      "flutter"
-   ],
-   "version": "1.0.6",
-   "author": "",
-   "license": "MIT License",
-   "repository": {
-      "type": "git",
-      "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver"
-   },
-   "bugs": {
-      "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues"
-   },
-   "main": "./build/src/driver.js",
-   "bin": {},
-   "directories": {
-      "src": "src"
-   },
-   "files": [
-      "build",
-      "src"
-   ],
-   "appium": {
-      "driverName": "flutter-integration",
-      "automationName": "FlutterIntegration",
-      "platformNames": [
-         "Android",
-         "iOS"
-      ],
-      "mainClass": "AppiumFlutterDriver",
-      "flutterServerVersion": ">=0.0.18 <1.0.0"
-   },
-   "scripts": {
-      "format": "prettier --write .",
-      "clean": "rimraf package-lock.json && rimraf node_modules && npm install",
-      "build": "rimraf build && tsc",
-      "watch": "tsc --watch",
-      "prettier": "prettier 'src/**/*.ts' --write --single-quote",
-      "prettier-check": "prettier 'src/**/*.ts' --check",
-      "appium-home": "rm -rf /tmp/some-temp-dir && export APPIUM_HOME=/tmp/some-temp-dir",
-      "test": "NODE_OPTIONS='--loader ts-node/esm' mocha --project tsconfig.test.json",
-      "run-server": "appium server -ka 800 -pa /wd/hub",
-      "install-driver": "npm run build && appium driver install --source=local $(pwd)",
-      "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
-      "wdio-android": "wdio run ./android.conf.ts",
-      "wdio-ios": "wdio run ./ios.conf.ts"
-   },
-   "devDependencies": {
-      "@appium/types": "^0.x",
-      "@semantic-release/changelog": "^6.0.3",
-      "@semantic-release/commit-analyzer": "^13.0.0",
-      "@semantic-release/git": "^10.0.1",
-      "@semantic-release/npm": "^12.0.1",
-      "@semantic-release/release-notes-generator": "^14.0.1",
-      "@testing-library/webdriverio": "^3.2.1",
-      "@types/chai": "^4.3.16",
-      "@types/mocha": "^10.0.7",
-      "@types/sinon": "^17.0.3",
-      "@wdio/appium-service": "^8.38.0",
-      "@wdio/cli": "^8.38.0",
-      "@wdio/globals": "^8.38.0",
-      "@wdio/local-runner": "^8.38.0",
-      "@wdio/mocha-framework": "^8.38.0",
-      "@wdio/spec-reporter": "^8.38.0",
-      "@wdio/types": "^8.37.0",
-      "@wdio/utils": "^8.38.0",
-      "chai": "^5.1.1",
-      "chai-as-promised": "^8.0.0",
-      "conventional-changelog-conventionalcommits": "^8.0.0",
-      "eslint-config-prettier": "^9.1.0",
-      "eslint-plugin-prettier": "^5.1.3",
-      "jest": "^29.7.0",
-      "mocha": "^10.6.0",
-      "prettier": "^3.3.2",
-      "rimraf": "^5.0.7",
-      "semantic-release": "^24.0.0",
-      "sinon": "^18.0.0",
-      "ts-mocha": "^10.0.0",
-      "ts-node": "^10.9.2",
-      "typescript": "^5.5.3",
-      "wdio-flutter-by-service": "^1.0.11",
-      "webdriverio": "^8.38.0"
-   },
-   "peerDependencies": {
-      "appium": "^2.5.4"
-   },
-   "dependencies": {
-      "appium-adb": "^12.4.4",
-      "appium-ios-device": "^2.7.20",
-      "appium-uiautomator2-driver": "^3.6.1",
-      "appium-xcuitest-driver": "^7.20.1",
-      "async-retry": "^1.3.3",
-      "asyncbox": "^3.0.0",
-      "bluebird": "^3.7.2",
-      "lodash": "^4.17.21",
-      "portscanner": "^2.2.0",
-      "semver": "^7.6.2"
-   }
+  "name": "appium-flutter-integration-driver",
+  "description": "Appium driver for automating flutter apps using flutter integration SDK",
+  "keywords": [
+    "appium",
+    "flutter"
+  ],
+  "version": "1.0.6",
+  "author": "",
+  "license": "MIT License",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver"
+  },
+  "bugs": {
+    "url": "https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues"
+  },
+  "main": "./build/src/driver.js",
+  "bin": {},
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "appium": {
+    "driverName": "flutter-integration",
+    "automationName": "FlutterIntegration",
+    "platformNames": [
+      "Android",
+      "iOS"
+    ],
+    "mainClass": "AppiumFlutterDriver",
+    "flutterServerVersion": ">=0.0.18 <1.0.0"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "clean": "rimraf package-lock.json && rimraf node_modules && npm install",
+    "build": "rimraf build && tsc",
+    "watch": "tsc --watch",
+    "prettier": "prettier 'src/**/*.ts' --write --single-quote",
+    "prettier-check": "prettier 'src/**/*.ts' --check",
+    "appium-home": "rm -rf /tmp/some-temp-dir && export APPIUM_HOME=/tmp/some-temp-dir",
+    "test": "NODE_OPTIONS='--loader ts-node/esm' mocha --project tsconfig.test.json",
+    "run-server": "appium server -ka 800 -pa /wd/hub",
+    "install-driver": "npm run build && appium driver install --source=local $(pwd)",
+    "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
+    "wdio-android": "wdio run ./android.conf.ts",
+    "wdio-ios": "wdio run ./ios.conf.ts",
+    "wdio-android-ci": "cd finder/flutter-by/wdio-flutter-by-service && npm install && npm run build && npm run wdio-android",
+    "wdio-ios-ci": "cd flutter-finder/flutter-by/wdio-flutter-by-service && npm install && npm run build && npm run wdio-ios"
+  },
+  "devDependencies": {
+    "@appium/types": "^0.x",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "@testing-library/webdriverio": "^3.2.1",
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.7",
+    "@types/sinon": "^17.0.3",
+    "@wdio/appium-service": "^8.38.0",
+    "@wdio/cli": "^8.38.0",
+    "@wdio/globals": "^8.38.0",
+    "@wdio/local-runner": "^8.38.0",
+    "@wdio/mocha-framework": "^8.38.0",
+    "@wdio/spec-reporter": "^8.38.0",
+    "@wdio/types": "^8.37.0",
+    "@wdio/utils": "^8.38.0",
+    "chai": "^5.1.1",
+    "chai-as-promised": "^8.0.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "mocha": "^10.6.0",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "semantic-release": "^24.0.0",
+    "sinon": "^18.0.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "wdio-flutter-by-service": "^1.0.11",
+    "webdriverio": "^8.38.0"
+  },
+  "peerDependencies": {
+    "appium": "^2.5.4"
+  },
+  "dependencies": {
+    "appium-adb": "^12.4.4",
+    "appium-ios-device": "^2.7.20",
+    "appium-uiautomator2-driver": "^3.6.1",
+    "appium-xcuitest-driver": "^7.20.1",
+    "async-retry": "^1.3.3",
+    "asyncbox": "^3.0.0",
+    "bluebird": "^3.7.2",
+    "lodash": "^4.17.21",
+    "portscanner": "^2.2.0",
+    "semver": "^7.6.2"
+  }
 }
