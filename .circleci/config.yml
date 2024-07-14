@@ -8,28 +8,39 @@ on:
       types: [opened, reopened]
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
-jobs:
-   WDIO_IOS:
-      # Specify the execution environment.
-      # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
+executors:
+   macos_executor:
       macos:
-         # Specify the Xcode version you desire here
-         # See: https://circleci.com/docs/using-macos/
          xcode: 15.2.0
 
-      # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
+jobs:
+   checkout_code:
+      executor: macos_executor
       steps:
-         # Checkout the code as the first step.
          - checkout
          - run: xcrun simctl list devices available
+
+   setup_node:
+      executor: macos_executor
+      steps:
          - run:
-              name: Node Version
+              name: Install Node Version
               command: |
                  nvm install v20.2.0 && nvm alias default 20.2.0
+                 node -v
+
+   install_appium:
+      executor: macos_executor
+      steps:
          - run:
-              name: Install Appium and Run iOS Test
+              name: Install Appium
+              command: npm install -g appium
+
+   fetch_ios_app:
+      executor: macos_executor
+      steps:
+         - run:
+              name: Fetch iOS App
               command: |
                  release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
                  asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
@@ -37,89 +48,55 @@ jobs:
                  echo "$ios_app"
                  curl -LO $ios_app
                  echo 'export APP_PATH=$CIRCLE_WORKING_DIRECTORY/ios.zip' >> $BASH_ENV
-                 echo $pwd
-                 echo ls
-                 nvm install v20.2.0 && nvm alias default 20.2.0
-                 node -v
+
+   setup_simulator:
+      executor: macos_executor
+      steps:
+         - run:
+              name: Setup Simulator
+              command: |
                  target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
                  echo $target_sim_id
                  echo 'export UDID=$target_sim_id' >> $BASH_ENV
                  xcrun simctl boot $target_sim_id
                  xcrun simctl bootstatus $target_sim_id -b
-                 npm install -g appium
+
+   build_wda:
+      executor: macos_executor
+      steps:
+         - run:
+              name: Build WebDriverAgent
+              command: |
                  npm ci
                  npm run build
                  appium driver run xcuitest build-wda
                  wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
                  echo $wda
                  echo 'export WDA_PATH=$wda' >> $BASH_ENV
-                 echo ${WDA_PATH}
-                 echo ${PROJECT_ENV_VAR}
                  xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
                  xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
+
+   run_wdio_ios_tests:
+      executor: macos_executor
+      steps:
+         - run:
+              name: Run WDIO iOS Tests
+              command: |
                  mkdir appium-logs
                  git clone https://github.com/AppiumTestDistribution/flutter-finder.git
                  UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios-ci
-
          - store_artifacts:
               path: appium-logs
-   JAVA_IOS:
-      # Specify the execution environment.
-      # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
-      # Add steps to the job
-      # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
-      macos:
-         # Specify the Xcode version you desire here
-         # See: https://circleci.com/docs/using-macos/
-        xcode: 15.2.0
-      steps:
-         # Checkout the code as the first step.
-         - checkout
-         - run: xcrun simctl list devices available
-         - run:
-              name: Node Version
-              command: |
-                 nvm install v20.2.0 && nvm alias default 20.2.0
-         - run:
-              name: Install Appium and Run iOS Test
-              command: |
-                 release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
-                 asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
-                 ios_app=$(echo "$asset_urls" | tail -n 1)
-                 echo "$ios_app"
-                 curl -LO $ios_app
-                 echo 'export APP_PATH=$CIRCLE_WORKING_DIRECTORY/ios.zip' >> $BASH_ENV
-                 echo $APP_PATH
-                 nvm install v20.2.0 && nvm alias default 20.2.0
-                 node -v
-                 target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
-                 echo $target_sim_id
-                 echo 'export UDID=$target_sim_id' >> $BASH_ENV
-                 xcrun simctl boot $target_sim_id
-                 xcrun simctl bootstatus $target_sim_id -b
-                 npm install -g appium
-                 npm ci
-                 npm run build
-                 appium driver run xcuitest build-wda
-                 wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
-                 echo $wda
-                 echo 'export WDA_PATH=$wda' >> $BASH_ENV
-                 echo ${WDA_PATH}
-                 echo ${PROJECT_ENV_VAR}
-                 xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
-                 xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
-                 mkdir appium-logs
-                 git clone https://github.com/AppiumTestDistribution/flutter-finder.git
-                 cd flutter-finder/flutter-by/java
-                 UDID=$target_sim_id APP_PATH=$ios_app Platform=ios ./gradlew clean test --debug
-
-         - store_artifacts:
-              path: flutter-finder/flutter-by/java/appium.log
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
    ios: # This is the name of the workflow, feel free to change it to better match your workflow.
       # Inside the workflow, you define the jobs you want to run.
       jobs:
-         - WDIO_IOS
-         - JAVA_IOS
+         - checkout_code
+         - setup_node
+         - install_appium
+         - fetch_ios_app
+         - setup_simulator
+         - build_wda
+         - run_wdio_ios_tests
