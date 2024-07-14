@@ -12,6 +12,9 @@ version: 2.1
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
    WDIO_IOS:
+      branches:
+         ignore:
+            - main
       # Specify the execution environment.
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
       macos:
@@ -64,6 +67,9 @@ jobs:
          - store_artifacts:
               path: appium-logs
    JAVA_IOS:
+     branches:
+       ignore:
+         - main
       # Specify the execution environment.
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
       # Add steps to the job
