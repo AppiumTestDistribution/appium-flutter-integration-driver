@@ -12,9 +12,6 @@ version: 2.1
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
    WDIO_IOS:
-      branches:
-         ignore:
-            - main
       # Specify the execution environment.
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
       macos:
@@ -67,9 +64,6 @@ jobs:
          - store_artifacts:
               path: appium-logs
    JAVA_IOS:
-     branches:
-       ignore:
-         - main
       # Specify the execution environment.
       # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
       # Add steps to the job
@@ -77,7 +71,7 @@ jobs:
       macos:
          # Specify the Xcode version you desire here
          # See: https://circleci.com/docs/using-macos/
-        xcode: 15.2.0
+         xcode: 15.2.0
       steps:
          # Checkout the code as the first step.
          - checkout
@@ -127,5 +121,13 @@ workflows:
    ios: # This is the name of the workflow, feel free to change it to better match your workflow.
       # Inside the workflow, you define the jobs you want to run.
       jobs:
-         - WDIO_IOS
-         - JAVA_IOS
+         - WDIO_IOS:
+              filters:
+                 branches:
+                    ignore:
+                       - main
+         - JAVA_IOS:
+              filters:
+                 branches:
+                    ignore:
+                       - main
