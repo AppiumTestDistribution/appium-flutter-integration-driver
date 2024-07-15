@@ -56,16 +56,16 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          'xpath',
          'css selector',
          'id',
+         'name',
+         'class name',
          '-android uiautomator',
          'accessibility id',
          '-ios predicate string',
-         '-ios class chain',
-         'name',
-         'key',
-         'class name',
-         'semantics label',
-         'text',
-         'type',
+         '-ios class chain',  
+         '-flutter key',
+         '-flutter semantics label',
+         '-flutter text',
+         '-flutter type',
       ];
    }
 
