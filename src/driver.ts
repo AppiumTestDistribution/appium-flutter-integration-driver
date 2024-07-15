@@ -61,7 +61,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          '-android uiautomator',
          'accessibility id',
          '-ios predicate string',
-         '-ios class chain',  
+         '-ios class chain',
          '-flutter key',
          '-flutter semantics label',
          '-flutter text',

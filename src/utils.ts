@@ -22,7 +22,7 @@ export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
 ): Promise<JWProxy | undefined> {
-   if (strategy.startsWith("-flutter")) {
+   if (strategy.startsWith('-flutter')) {
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
       // @ts-ignore Proxy instance is OK
