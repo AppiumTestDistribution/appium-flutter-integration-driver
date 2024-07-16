@@ -3,7 +3,7 @@ import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from 'appium/driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
-import {type AppiumFlutterDriver } from './driver';
+import { type AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
 import type { StringRecord } from '@appium/types';
 import { node } from 'appium/support';

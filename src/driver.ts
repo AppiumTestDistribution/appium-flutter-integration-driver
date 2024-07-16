@@ -64,7 +64,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          '-ios predicate string',
          '-ios class chain',
          ...FLUTTER_LOCATORS, //to support backward compatibility
-         ...FLUTTER_LOCATORS.map(locator => `-flutter ${locator}`),
+         ...FLUTTER_LOCATORS.map((locator) => `-flutter ${locator}`),
       ];
    }
 
