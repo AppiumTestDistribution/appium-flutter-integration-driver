@@ -51,7 +51,7 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.18
+     appium_flutter_server: 0.0.19
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -146,14 +146,12 @@ For more details, refer to the documentation for each driver:
 - [Appium UiAutomator2 Driver](https://github.com/appium/appium-uiautomator2-driver)
 - [Appium XCUITest Driver](https://appium.github.io/appium-xcuitest-driver/latest)
 
-
 ## Capabilities for Appium Flutter Integration Driver
 
 | Capability                       | Description                                                             | Required |
 |----------------------------------|-------------------------------------------------------------------------|----------|
 | appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
-
 
 🚨 **Important Notice for iOS Testing**
 
