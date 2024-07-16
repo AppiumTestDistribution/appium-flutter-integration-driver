@@ -3,7 +3,7 @@ import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from 'appium/driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
-import type { AppiumFlutterDriver } from './driver';
+import {type AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
 import type { StringRecord } from '@appium/types';
 import { node } from 'appium/support';
@@ -17,12 +17,18 @@ const {
    appium: { flutterServerVersion: FLUTTER_SERVER_VERSION_REQ },
    version: PACKAGE_VERSION,
 } = readManifest();
-
+export const FLUTTER_LOCATORS = [
+   'key',
+   'semantics label',
+   'text',
+   'type',
+   'text containing',
+];
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
 ): Promise<JWProxy | undefined> {
-   if (strategy.startsWith('-flutter')) {
+   if (strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy)) {
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
       // @ts-ignore Proxy instance is OK

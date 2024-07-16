@@ -25,6 +25,7 @@ import {
 import {
    attachAppLaunchArguments,
    fetchFlutterServerPort,
+   FLUTTER_LOCATORS,
    getFreePort,
    isFlutterDriverCommand,
    waitForFlutterServerToBeActive,
@@ -62,10 +63,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          'accessibility id',
          '-ios predicate string',
          '-ios class chain',
-         '-flutter key',
-         '-flutter semantics label',
-         '-flutter text',
-         '-flutter type',
+         ...FLUTTER_LOCATORS, //to support backward compatibility
+         ...FLUTTER_LOCATORS.map(locator => `-flutter ${locator}`),
       ];
    }
 
