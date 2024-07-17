@@ -1,3 +1,9 @@
+## [1.0.7](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.6...v1.0.7) (2024-07-17)
+
+### Bug Fixes
+
+* Add support for locator with -flutter prefix ([#64](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/64)) ([42cf914](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/42cf91463d48ee6cad0dec542a79c95e98eee8fa))
+
 ## [1.0.6](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.5...v1.0.6) (2024-07-11)
 
 ### Bug Fixes
