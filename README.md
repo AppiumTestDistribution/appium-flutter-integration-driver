@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="Logo.png" alt="Flutter-Appium">
+  <img src="./logos/flutter-driver.png" alt="Flutter-Appium">
   <br>
   <br>
   <br>
@@ -158,3 +158,12 @@ For more details, refer to the documentation for each driver:
 🚨 **Important Notice for iOS Testing**
 
 ⚠️ Testing on real iOS devices for `semanticsLabel` may not work due to an issue raised with Flutter. For updates and more information, please refer to [GitHub issue #151238](https://github.com/flutter/flutter/issues/151238).
+
+## Acknowledgements 💚
+
+<p align="center">
+<a href= "https://saucelabs.com"><img src="./logos/sauce-labs.png" alt="Sauce Labs" width="60%" height="auto"></a>
+</p>
+
+We would like to extend our heartfelt thanks to Sauce Labs for their support in integrating the Appium Flutter Driver with their Real Device Cloud. Their assistance has been invaluable in enabling us to deliver robust and reliable testing solutions for Flutter applications. Thank you, Sauce Labs, for your continuous support.
+
