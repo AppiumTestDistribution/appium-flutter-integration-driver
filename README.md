@@ -165,5 +165,5 @@ For more details, refer to the documentation for each driver:
 <a href= "https://saucelabs.com"><img src="./logos/sauce-labs.png" alt="Sauce Labs" width="60%" height="auto"></a>
 </p>
 
-We would like to extend our heartfelt thanks to Sauce Labs for their support in integrating the Appium Flutter Driver with their Real Device Cloud. Their assistance has been invaluable in enabling us to deliver robust and reliable testing solutions for Flutter applications. Thank you, Sauce Labs, for your continuous support.
+We would like to extend our heartfelt thanks to Sauce Labs for integrating the Appium Flutter Driver with their Real Device Cloud. Their assistance has been invaluable in enabling us to deliver robust and reliable testing solutions for Flutter applications. If you want to try the Flutter Integration Driver on Sauce Labs, check their [docs](https://docs.saucelabs.com/mobile-apps/automated-testing/appium/appium-flutter-integration-driver/). Thank you, Sauce Labs, for your continuous support.
 
