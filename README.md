@@ -153,7 +153,7 @@ For more details, refer to the documentation for each driver:
 |----------------------------------|-------------------------------------------------------------------------|----------|
 | appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
 | appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
-
+| appium:flutterEnableMockCamera   | Mock camera image. This works if the AUT uses [image_picker](https://pub.dev/packages/image_picker). Currently works on Android. Make sure the server is started with `--allow-insecure=adb_shell`| No       |
 
 🚨 **Important Notice for iOS Testing**
 
