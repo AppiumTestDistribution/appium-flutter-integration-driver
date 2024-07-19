@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.7...v1.1.0) (2024-07-19)
+
+### Features
+
+* mock camera image ([#71](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/71)) ([c0818e9](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/c0818e996a85cbfbf5b0c82c98ec8aa1aeb8f68a))
+
 ## [1.0.7](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.6...v1.0.7) (2024-07-17)
 
 ### Bug Fixes
