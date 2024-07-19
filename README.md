@@ -157,3 +157,11 @@ For more details, refer to the documentation for each driver:
 🚨 **Important Notice for iOS Testing**
 
 ⚠️ Testing on real iOS devices for `semanticsLabel` may not work due to an issue raised with Flutter. For updates and more information, please refer to [GitHub issue #151238](https://github.com/flutter/flutter/issues/151238).
+
+## Acknowledgements 💚
+
+<p align="center">
+   <a href= "https://saucelabs.com"><img src="./logos/sauce-labs.png" alt="Sauce Labs" width="60%" height="auto"></a>
+</p>
+
+We would like to extend our heartfelt thanks to Sauce Labs for integrating the Appium Flutter Driver with their Real Device Cloud. Their assistance has been invaluable in enabling us to deliver robust and reliable testing solutions for Flutter applications. If you want to try the Flutter Integration Driver on Sauce Labs, check their [docs](https://docs.saucelabs.com/mobile-apps/automated-testing/appium/appium-flutter-integration-driver/). Thank you, Sauce Labs, for your continuous support.
