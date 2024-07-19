@@ -125,6 +125,18 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             optional: ['arguments', 'environment'],
          },
       },
+      'flutter: injectImage': {
+         command: 'injectImage',
+         params: {
+            required: ['base64Image'],
+         },
+      },
+      'flutter: activateInjectedImage': {
+         command: 'activateInjectedImage',
+         params: {
+            required: ['imageId'],
+         },
+      },
    };
 
    async doubleClick(origin: any, offset: any) {
@@ -137,6 +149,39 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          },
       );
       //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
+   }
+
+   async injectImage(base64Image: string) {
+      async function grantPermissions(permission: string) {
+         await this.proxydriver.execute('mobile: changePermissions', {
+            permissions: [permission],
+            action: 'allow',
+            target: 'appops',
+         });
+      }
+
+      if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+         // @ts-ignore
+         if (this.proxydriver.uiautomator2.adb._apiLevel < 33) {
+            await grantPermissions.call(this, 'WRITE_EXTERNAL_STORAGE');
+            await grantPermissions.call(this, 'READ_EXTERNAL_STORAGE');
+         } else {
+            await grantPermissions.call(this, 'MANAGE_EXTERNAL_STORAGE');
+         }
+      }
+      return this.proxy?.command(`/session/:sessionId/inject_image`, 'POST', {
+         base64Image,
+      });
+   }
+
+   async activateInjectedImage(imageId: string) {
+      return this.proxy?.command(
+         `/session/:sessionId/activate_inject_image`,
+         'POST',
+         {
+            imageId,
+         },
+      );
    }
 
    async executeCommand(command: any, ...args: any) {

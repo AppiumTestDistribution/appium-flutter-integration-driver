@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+// @ts-nocheck
 import { config as baseConfig } from './wdio.conf.ts';
 
 export const config: WebdriverIO.Config = {
@@ -12,7 +12,7 @@ export const config: WebdriverIO.Config = {
          'appium:app':
             process.env.APP_PATH || join(process.cwd(), 'app-debug.apk'),
          'appium:newCommandTimeout': 240,
-         'appium:flutterServerLaunchTimeout': 10000,
+         'appium:flutterServerLaunchTimeout': 10000
       },
    ],
 };

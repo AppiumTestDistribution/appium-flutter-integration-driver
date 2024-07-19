@@ -4,13 +4,12 @@ import { AppiumFlutterDriver } from '../../src/driver';
 import { JWProxy } from 'appium/driver';
 import sinon from 'sinon';
 
-
-describe('attachAppLaunchArguments', function() {
+describe('attachAppLaunchArguments', function () {
    let driver;
    let chai, expect;
    let sandbox;
 
-   beforeEach(async function() {
+   beforeEach(async function () {
       chai = await import('chai');
       const chaiAsPromised = await import('chai-as-promised');
 
@@ -27,22 +26,23 @@ describe('attachAppLaunchArguments', function() {
       });
    });
 
-   afterEach(function() {
+   afterEach(function () {
       sandbox.restore();
    });
 
-   it('should attach flutter server port to processArguments for iOS platform', function() {
+   it('should attach flutter server port to processArguments for iOS platform', function () {
       const parsedCaps = { platformName: 'iOS', flutterSystemPort: '12345' };
       const caps = [{}, { alwaysMatch: {}, firstMatch: [{}] }];
 
       utils.attachAppLaunchArguments.call(driver, parsedCaps, ...caps);
 
       const expectedArgs = ['--flutter-server-port=12345'];
-      expect(caps[1].alwaysMatch['appium:processArguments'].args).to.deep.equal(expectedArgs);
-
+      expect(caps[1].alwaysMatch['appium:processArguments'].args).to.deep.equal(
+         expectedArgs,
+      );
    });
 
-   it('should not modify caps if no W3C caps are passed', function() {
+   it('should not modify caps if no W3C caps are passed', function () {
       const parsedCaps = { platformName: 'iOS', flutterSystemPort: '12345' };
       const caps = [{}]; // No W3C caps
 
@@ -51,17 +51,22 @@ describe('attachAppLaunchArguments', function() {
       expect(caps[0]).to.deep.equal({});
    });
 
-   it('should not modify caps if platform is not iOS', function() {
-      const parsedCaps = { platformName: 'Android', flutterSystemPort: '12345' };
+   it('should not modify caps if platform is not iOS', function () {
+      const parsedCaps = {
+         platformName: 'Android',
+         flutterSystemPort: '12345',
+      };
       const caps = [{}, { alwaysMatch: {}, firstMatch: [{}] }];
 
       utils.attachAppLaunchArguments.call(driver, parsedCaps, ...caps);
 
-      expect(caps[1].firstMatch[0]).to.not.have.property('appium:processArguments');
+      expect(caps[1].firstMatch[0]).to.not.have.property(
+         'appium:processArguments',
+      );
    });
 });
 
-describe('Utils Test', function() {
+describe('Utils Test', function () {
    let chai, expect;
    let sandbox: sinon.SinonSandbox;
    let driver: AppiumFlutterDriver;
@@ -77,26 +82,26 @@ describe('Utils Test', function() {
       sandbox = sinon.createSandbox();
       driver = new AppiumFlutterDriver();
       proxy = new JWProxy({ server: '127.0.0.1', port: 4723 });
-      driver.proxy = function() {};
+      driver.proxy = function () {};
       // Mocking proxydriver and its wda property
       driver.proxydriver = {
          wda: {
             jwproxy: {
                // Mock any methods of jwproxy that you need for your tests
-            }
-         }
+            },
+         },
       };
    });
-   afterEach(function() {
+   afterEach(function () {
       sandbox.restore();
    });
-   it('should return the proxy for valid strategies', async function() {
+   it('should return the proxy for valid strategies', async function () {
       sandbox.stub(driver, 'proxy').value(proxy);
       const result = await utils.getProxyDriver.call(driver, 'key');
       expect(result).to.equal(proxy);
    });
 
-   it('should return true for valid W3C capabilities', function() {
+   it('should return true for valid W3C capabilities', function () {
       const caps = {
          alwaysMatch: { browserName: 'chrome' },
          firstMatch: [{}],
@@ -104,23 +109,23 @@ describe('Utils Test', function() {
       expect(utils.isW3cCaps(caps)).to.be.true;
    });
 
-   it('should return false for non-object values', function() {
+   it('should return false for non-object values', function () {
       expect(utils.isW3cCaps(null)).to.be.false;
       expect(utils.isW3cCaps(undefined)).to.be.false;
       expect(utils.isW3cCaps(42)).to.be.false;
       expect(utils.isW3cCaps('string')).to.be.false;
    });
 
-   it('should return false for empty objects', function() {
+   it('should return false for empty objects', function () {
       expect(utils.isW3cCaps({})).to.be.false;
    });
 
-   it('should return false for objects missing both alwaysMatch and firstMatch', function() {
+   it('should return false for objects missing both alwaysMatch and firstMatch', function () {
       const caps = { browserName: 'chrome' };
       expect(utils.isW3cCaps(caps)).to.be.false;
    });
 
-   it('should return true for objects with valid alwaysMatch and empty firstMatch', function() {
+   it('should return true for objects with valid alwaysMatch and empty firstMatch', function () {
       const caps = {
          alwaysMatch: { platformName: 'iOS' },
          firstMatch: [{}],
@@ -128,21 +133,21 @@ describe('Utils Test', function() {
       expect(utils.isW3cCaps(caps)).to.be.true;
    });
 
-   it('should return true for objects with valid firstMatch and no alwaysMatch', function() {
+   it('should return true for objects with valid firstMatch and no alwaysMatch', function () {
       const caps = {
          firstMatch: [{ platformName: 'Android' }],
       };
       expect(utils.isW3cCaps(caps)).to.be.true;
    });
 
-   it('should return false for objects with invalid firstMatch structure', function() {
+   it('should return false for objects with invalid firstMatch structure', function () {
       const caps = {
          firstMatch: 'invalid',
       };
       expect(utils.isW3cCaps(caps)).to.be.false;
    });
 
-   it('should return false for objects with invalid alwaysMatch structure', function() {
+   it('should return false for objects with invalid alwaysMatch structure', function () {
       const caps = {
          alwaysMatch: 'invalid',
       };
