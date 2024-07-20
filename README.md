@@ -51,7 +51,7 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.21
+     appium_flutter_server: 0.0.22
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
@@ -157,7 +157,6 @@ For more details, refer to the documentation for each driver:
 🚨 **Important Notice for iOS Testing**
 
 ⚠️ Testing on real iOS devices for `semanticsLabel` may not work due to an issue raised with Flutter. For updates and more information, please refer to [GitHub issue #151238](https://github.com/flutter/flutter/issues/151238).
-
 
 ## Acknowledgements 💚
 
