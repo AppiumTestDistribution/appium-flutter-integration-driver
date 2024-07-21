@@ -51,7 +51,7 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
 
    ```yaml
    dev_dependencies:
-     appium_flutter_server: 0.0.22
+     appium_flutter_server: 0.0.23
    ```
 
 2. Create a directory called `integration_test` in the root of your Flutter project.
