@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.0...v1.1.1) (2024-07-23)
+
+### Bug Fixes
+
+* update readMe and also add locator argument for doubleClick and longpress ([#76](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/76)) ([904d875](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/904d875f63647560fe019fe5c937792b927583ca))
+
 ## [1.1.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.0.7...v1.1.0) (2024-07-19)
 
 ### Features
