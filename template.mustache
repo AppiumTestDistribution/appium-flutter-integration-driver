@@ -148,12 +148,12 @@ For more details, refer to the documentation for each driver:
 
 ## Capabilities for Appium Flutter Integration Driver
 
-| Capability                       | Description                                                             | Required |
-|----------------------------------|-------------------------------------------------------------------------|----------|
-| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms | No       |
-| appium:flutterSystemPort         | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine.| No       |
-| appium:flutterEnableMockCamera   | Mock camera image. This works if the AUT uses [image_picker](https://pub.dev/packages/image_picker). Currently works on Android. Make sure the server is started with `--allow-insecure=adb_shell`| No       |
-
+| Capability                        | Description                                                                                                                                                                                                                            | Required |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| appium:flutterServerLaunchTimeout | Time in ms to wait for flutter server to be pingable. Default is 5000ms                                                                                                                                                                | No       |
+| appium:flutterSystemPort          | The number of the port on the host machine used for the Flutter server. By default the first free port from 10000..11000 range is selected. It is recommended to set this value if you are running parallel tests on the same machine. | No       |
+| appium:flutterEnableMockCamera    | Mock camera image. This works if the AUT uses [image_picker](https://pub.dev/packages/image_picker). Make sure the server is started with `--allow-insecure=adb_shell` for android                                                     | No       |
+| appium:flutterElementWaitTimeout  | Time in ms to wait for element to be in viewport, Default is 5000ms                                                                                                                                                                    | No       |
 🚨 **Important Notice for iOS Testing**
 
 ⚠️ Testing on real iOS devices for `semanticsLabel` may not work due to an issue raised with Flutter. For updates and more information, please refer to [GitHub issue #151238](https://github.com/flutter/flutter/issues/151238).

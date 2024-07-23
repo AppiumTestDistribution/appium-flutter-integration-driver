@@ -73,7 +73,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          command: 'doubleClick',
          params: {
             required: [],
-            optional: ['origin', 'offset'],
+            optional: ['origin', 'offset', 'locator'],
          },
       },
       'flutter: waitForVisible': {
@@ -109,7 +109,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          command: 'longPress',
          params: {
             required: [],
-            optional: ['origin', 'offset'],
+            optional: ['origin', 'offset', 'locator'],
          },
       },
       'flutter: dragAndDrop': {
@@ -139,13 +139,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       },
    };
 
-   async doubleClick(origin: any, offset: any) {
+   async doubleClick(origin: any, offset: any, locator: any) {
       return this.proxy?.command(
          `/session/:sessionId/appium/gestures/double_click`,
          'POST',
          {
             origin,
             offset,
+            locator
          },
       );
       //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
@@ -312,13 +313,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       );
    }
 
-   async longPress(origin: any, offset: any) {
+   async longPress(origin: any, offset: any, locator: any) {
       return this.proxy?.command(
          `/session/:sessionId/appium/gestures/long_press`,
          'POST',
          {
             origin,
             offset,
+            locator
          },
       );
    }
