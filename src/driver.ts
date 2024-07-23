@@ -146,7 +146,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          {
             origin,
             offset,
-            locator
+            locator,
          },
       );
       //console.log('DoubleTap', value, JSON.parse(JSON.stringify(value)).elementId);
@@ -320,7 +320,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          {
             origin,
             offset,
-            locator
+            locator,
          },
       );
    }
