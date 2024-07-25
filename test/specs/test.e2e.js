@@ -5,7 +5,9 @@ async function performLogin(userName = 'admin', password = '1234') {
    const att = await browser.flutterByValueKey$('username_text_field');
    console.log(await att.getAttribute('all'));
    await browser.flutterByValueKey$('username_text_field').clearValue();
-   await $('//android.view.View[@content-desc="username_text_field"]/android.widget.EditText').addValue(userName);
+   await $(
+      '//android.view.View[@content-desc="username_text_field"]/android.widget.EditText',
+   ).addValue(userName);
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
