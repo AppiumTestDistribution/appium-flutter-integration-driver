@@ -84,7 +84,7 @@ export async function setValue(
    const driver = ELEMENT_CACHE.get(elementId);
    return await driver.command(`/element/${elementId}/value`, 'POST', {
       text: text && _.isArray(text) ? text.join('') : text, // text should always be a string
-      value: text && _.isString(text) ? [...text]: text // value should always be a array of char
+      value: text && _.isString(text) ? [...text] : text, // value should always be a array of char
    });
 }
 
