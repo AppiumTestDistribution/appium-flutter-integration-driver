@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.1...v1.1.2) (2024-07-25)
+
+### Bug Fixes
+
+* backward compatability for setValue command ([#79](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/79)) ([aff491d](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/aff491d1964dcaeed123f0e5b2736a069773f782))
+
 ## [1.1.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.0...v1.1.1) (2024-07-23)
 
 ### Bug Fixes
