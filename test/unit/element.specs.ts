@@ -222,7 +222,7 @@ describe('Element Interaction Functions', () => {
             mockDriver.command.calledWith(
                `/element/${elementId}/value`,
                'POST',
-               { text },
+               { text, value: [...text] },
             ),
          ).to.be.true;
       });
