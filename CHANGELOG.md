@@ -1,3 +1,9 @@
+## [1.1.3](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.2...v1.1.3) (2024-07-26)
+
+### Miscellaneous Chores
+
+* update server version in readme without template ([#81](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/81)) ([37ac332](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/37ac3322ec23de3dde59ef93bc787a3900e834f9))
+
 ## [1.1.2](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.1...v1.1.2) (2024-07-25)
 
 ### Bug Fixes
