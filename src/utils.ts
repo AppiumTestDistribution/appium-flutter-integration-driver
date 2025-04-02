@@ -1,7 +1,7 @@
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
-import { JWProxy } from 'appium/driver';
+import { JWProxy } from '@appium/base-driver';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import { type AppiumFlutterDriver } from './driver';
 import _ from 'lodash';
@@ -104,6 +104,8 @@ export async function waitForFlutterServer(
    const proxy = new JWProxy({
       server: '127.0.0.1',
       port: port,
+      base: '',
+      reqBasePath: '',
    });
    await waitForFlutterServerToBeActive.bind(this)(proxy, packageName, port);
 }
