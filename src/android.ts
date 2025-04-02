@@ -8,7 +8,7 @@ export async function startAndroidSession(
    ...args: any[]
 ): Promise<AndroidUiautomator2Driver> {
    this.log.info(`Starting an Android proxy session`);
-   const androiddriver = new AndroidUiautomator2Driver({} as InitialOpts);
+   const androiddriver = new AndroidUiautomator2Driver();
    //@ts-ignore Args are ok
    await androiddriver.createSession(...args);
    return androiddriver;

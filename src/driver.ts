@@ -1,5 +1,5 @@
 import { desiredCapConstraints } from './desiredCaps';
-import { JWProxy, BaseDriver } from 'appium/driver';
+import { JWProxy, BaseDriver } from '@appium/base-driver';
 import type {
    DefaultCreateSessionResult,
    DriverData,
