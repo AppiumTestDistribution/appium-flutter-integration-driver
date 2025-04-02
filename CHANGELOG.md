@@ -1,3 +1,13 @@
+## [1.1.4](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.3...v1.1.4) (2025-04-02)
+
+### Bug Fixes
+
+* update driver versions and fix jwproxy base path ([#114](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/114)) ([05e9767](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/05e9767b59fb430e4f3b9e58afbf632bd207c908))
+
+### Miscellaneous Chores
+
+* fix build issues ([#115](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/115)) ([32e5152](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/32e515252fe99731459f6915cd612e3958a8f660))
+
 ## [1.1.3](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.2...v1.1.3) (2024-07-26)
 
 ### Miscellaneous Chores
