@@ -64,7 +64,7 @@ class iProxy {
          localSocket.pipe(remoteSocket);
          remoteSocket.pipe(localSocket);
       });
-      const listeningPromise = new B((resolve, reject) => {
+      const listeningPromise = new B((resolve: any, reject: any) => {
          /** @type {net.Server} */ this.localServer.once('listening', resolve);
          /** @type {net.Server} */ this.localServer.once('error', reject);
       });
