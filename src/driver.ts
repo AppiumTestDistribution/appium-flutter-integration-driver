@@ -1,5 +1,5 @@
 import { desiredCapConstraints } from './desiredCaps';
-import { JWProxy, BaseDriver } from '@appium/base-driver';
+import { JWProxy, BaseDriver } from 'appium/driver';
 import type {
    DefaultCreateSessionResult,
    DriverData,
@@ -137,6 +137,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             required: ['imageId'],
          },
       },
+      'flutter: getRenderTreeByType': {
+          command: 'getRenderTreeByType',
+          params: {
+            required: ['widgetType'],
+            optional: ['text', 'key'],
+          },
+        },
    };
 
    async doubleClick(origin: any, offset: any, locator: any) {
@@ -325,13 +332,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       );
    }
 
-   async dragAndDrop(source: any, target: any) {
+   async dragAndDrop(source: any, target: any, elementOptions: any) {
       return this.proxy?.command(
          `/session/:sessionId/appium/gestures/drag_drop`,
          'POST',
          {
             source,
             target,
+            elementOptions,
          },
       );
    }
@@ -430,4 +438,15 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       });
       return activateAppResponse;
    }
+
+   async getRenderTreeByType(widgetType: string, text?: string, key?: string) {
+      const query = new URLSearchParams({ widgetType });
+      if (text) query.append('text', text);
+      if (key) query.append('key', key);
+
+      return this.proxy?.command(
+        `/session/${this.sessionId}/element/render_tree?${query.toString()}`,
+        'GET'
+      );
+    }
 }
