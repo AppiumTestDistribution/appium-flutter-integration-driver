@@ -1,5 +1,5 @@
 import { desiredCapConstraints } from './desiredCaps';
-import { JWProxy, BaseDriver } from 'appium/driver';
+import { JWProxy, BaseDriver } from '@appium/base-driver';
 import type {
    DefaultCreateSessionResult,
    DriverData,
@@ -332,14 +332,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       );
    }
 
-   async dragAndDrop(source: any, target: any, elementOptions: any) {
+   async dragAndDrop(source: any, target: any) {
       return this.proxy?.command(
          `/session/:sessionId/appium/gestures/drag_drop`,
          'POST',
          {
             source,
             target,
-            elementOptions,
          },
       );
    }
