@@ -137,13 +137,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             required: ['imageId'],
          },
       },
-      'flutter: getRenderTree': {
-          command: 'getRenderTree',
-          params: {
+      'flutter: renderTree': {
+         command: 'renderTree',
+         params: {
             required: [],
             optional: ['widgetType', 'text', 'key'],
-          },
-        },
+         },
+      },
    };
 
    async doubleClick(origin: any, offset: any, locator: any) {
@@ -438,23 +438,20 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       return activateAppResponse;
    }
 
-    async getRenderTree(widgetType?: string, text?: string, key?: string) {
-      const query = new URLSearchParams();
+   async renderTree(widgetType?: string, text?: string, key?: string) {
+      const body: Record<string, string> = {};
 
-      if (widgetType) {
-        query.append('widgetType', widgetType);
+      if (widgetType !== undefined) {
+         body['widgetType'] = widgetType;
       }
-      if (text) {
-        query.append('text', text);
+      if (text !== undefined) {
+         body['text'] = text;
       }
-      if (key) {
-        query.append('key', key);
+      if (key !== undefined) {
+         body['key'] = key;
       }
 
-      const queryString = query.toString();
-      const url = queryString
-        ? `/session/${this.sessionId}/element/render_tree?${queryString}`
-        : `/session/${this.sessionId}/element/render_tree`;
-      return this.proxy?.command(url, 'GET');
-    }
+      const url = `/session/${this.sessionId}/element/render_tree`;
+      return this.proxy?.command(url, 'POST', body);
+   }
 }
