@@ -137,6 +137,13 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
             required: ['imageId'],
          },
       },
+      'flutter: renderTree': {
+         command: 'renderTree',
+         params: {
+            required: [],
+            optional: ['widgetType', 'text', 'key'],
+         },
+      },
    };
 
    async doubleClick(origin: any, offset: any, locator: any) {
@@ -429,5 +436,22 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          capabilities: this.proxydriver.originalCaps,
       });
       return activateAppResponse;
+   }
+
+   async renderTree(widgetType?: string, text?: string, key?: string) {
+      const body: Record<string, string> = {};
+
+      if (widgetType !== undefined) {
+         body['widgetType'] = widgetType;
+      }
+      if (text !== undefined) {
+         body['text'] = text;
+      }
+      if (key !== undefined) {
+         body['key'] = key;
+      }
+
+      const url = `/session/${this.sessionId}/element/render_tree`;
+      return this.proxy?.command(url, 'POST', body);
    }
 }
