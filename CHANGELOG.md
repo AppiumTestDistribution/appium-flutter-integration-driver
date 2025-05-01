@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.4...v1.2.0) (2025-05-01)
+
+### Features
+
+* add command to fetch render tree by widget type ([#119](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/119)) ([d439028](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/d439028228aa5481c30163cb95184f389566772b))
+
 ## [1.1.4](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.3...v1.1.4) (2025-04-02)
 
 ### Bug Fixes
