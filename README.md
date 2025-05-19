@@ -83,17 +83,17 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
 5. Build the Android app:
 
    ```bash
-   ./gradlew app:assembleDebug -Ptarget=`pwd`/../integration_test/appium.dart
+   ./gradlew app:assembleDebug -Ptarget=`pwd`/../integration_test/appium_test.dart
    ```
 
 6. Build the iOS app:
     For Simulator - Debug mode
     ```bash
-      flutter build ios integration_test/appium.dart --simulator
+      flutter build ios integration_test/appium_test.dart --simulator
     ```
     For Real Device - Release mode
     ```bash
-      flutter build ipa --release integration_test/appium.dart
+      flutter build ipa --release integration_test/appium_test.dart
     ```
 
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
