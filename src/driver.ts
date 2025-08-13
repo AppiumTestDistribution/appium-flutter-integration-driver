@@ -30,11 +30,30 @@ import {
    isFlutterDriverCommand,
    waitForFlutterServerToBeActive,
 } from './utils';
-import { util } from 'appium/support';
+import { logger, util } from 'appium/support';
 import { androidPortForward, androidRemovePortForward } from './android';
 import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import _ from 'lodash';
+
+import type {
+  RouteMatcher
+} from '@appium/types';
+
+const WEBVIEW_NO_PROXY = [
+  [`GET`, new RegExp(`^/session/[^/]+/appium`)],
+  [`GET`, new RegExp(`^/session/[^/]+/context`)],
+  [`GET`, new RegExp(`^/session/[^/]+/element/[^/]+/rect`)],
+  [`GET`, new RegExp(`^/session/[^/]+/log/types$`)],
+  [`GET`, new RegExp(`^/session/[^/]+/orientation`)],
+  [`POST`, new RegExp(`^/session/[^/]+/appium`)],
+  [`POST`, new RegExp(`^/session/[^/]+/context`)],
+  [`POST`, new RegExp(`^/session/[^/]+/log$`)],
+  [`POST`, new RegExp(`^/session/[^/]+/orientation`)],
+  [`POST`, new RegExp(`^/session/[^/]+/touch/multi/perform`)],
+  [`POST`, new RegExp(`^/session/[^/]+/touch/perform`)],
+] as import('@appium/types').RouteMatcher[];
+
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
@@ -42,6 +61,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    public flutterPort: number | null | undefined;
    private internalCaps: DriverCaps<FlutterDriverConstraints> | undefined;
    public proxy: JWProxy | undefined;
+   private proxyWebViewActive: boolean = false;
+   public readonly NATIVE_CONTEXT_NAME: string = `NATIVE_APP`;
+   public currentContext: string = this.NATIVE_CONTEXT_NAME;
    click = click;
    findElOrEls = findElOrEls;
    getText = getText;
@@ -193,11 +215,30 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    async executeCommand(command: any, ...args: any) {
-      if (isFlutterDriverCommand(command)) {
+      if (this.currentContext === this.NATIVE_CONTEXT_NAME && isFlutterDriverCommand(command)) {
          return await super.executeCommand(command, ...args);
       }
+
+      this.handleContextSwitch(command, args);
+      logger.default.info(`Executing the proxy command: ${command} with args: ${args}`);
       return await this.proxydriver.executeCommand(command as string, ...args);
    }
+
+   private handleContextSwitch(command: string, args: any[]): void {
+      if (command === 'setContext') {
+         const isWebviewContext = args.find((arg) => typeof arg === 'string' && arg.includes('WEBVIEW'));
+         this.currentContext = args[0];
+         if (isWebviewContext) {
+            this.proxyWebViewActive = true;
+         } else {
+            this.proxyWebViewActive = false;
+         }
+      }
+   }
+
+   public getProxyAvoidList(): RouteMatcher[] {
+    return WEBVIEW_NO_PROXY;
+  }
 
    public async createSession(
       ...args: any[]
@@ -382,8 +423,20 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       return await this.proxydriver.execute(script, args);
    }
 
-   canProxy() {
-      return false;
+   public proxyActive(): boolean {
+      // In WebView context, all request should got to each driver
+      // so that they can handle http request properly.
+      // On iOS, WebView context is handled by XCUITest driver while Android is by chromedriver.
+      // It means XCUITest driver should keep the XCUITest driver as a proxy,
+      // while UIAutomator2 driver should proxy to chromedriver instead of UIA2 proxy.
+      return (
+         this.proxyWebViewActive &&
+         this.proxydriver.constructor.name !== XCUITestDriver.name
+      );
+   }
+
+   public canProxy(): boolean {
+      return this.proxyWebViewActive;
    }
 
    async deleteSession() {
@@ -400,6 +453,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
    async mobilelaunchApp(appId: string, args: string[], environment: any) {
       let activateAppResponse;
+      this.currentContext = this.NATIVE_CONTEXT_NAME;
+      this.proxyWebViewActive = false;
       const launchArgs = _.assign(
          { arguments: [] as string[] },
          { arguments: args, environment },
