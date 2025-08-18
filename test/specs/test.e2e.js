@@ -5,9 +5,7 @@ async function performLogin(userName = 'admin', password = '1234') {
    const att = await browser.flutterByValueKey$('username_text_field');
    console.log(await att.getAttribute('all'));
    await browser.flutterByValueKey$('username_text_field').clearValue();
-   await $(
-      '//android.view.View[@content-desc="username_text_field"]/android.widget.EditText',
-   ).addValue(userName);
+   await browser.flutterByValueKey$('username_text_field').addValue(userName);
 
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
@@ -21,8 +19,29 @@ async function openScreen(screenTitle) {
    await screenListElement.click();
 }
 
+async function switchToWebview(timeout = 5000) {
+   const webviewContext = await browser.waitUntil(
+      async () => {
+         const contexts = await browser.getContexts();
+         return contexts.find((ctx) => ctx.includes('WEBVIEW'));
+      },
+      {
+         timeout,
+         timeoutMsg: `WEBVIEW context not found within ${timeout / 1000}s`,
+      },
+   );
+
+   await browser.switchContext(webviewContext);
+   return webviewContext;
+}
+
 describe('My Login application', () => {
    afterEach(async () => {
+      const currentContext = await browser.getContext();
+      if (currentContext !== 'NATIVE_APP') {
+         await browser.switchContext('NATIVE_APP');
+      }
+
       const appID = browser.isIOS
          ? 'com.example.appiumTestingApp'
          : 'com.example.appium_testing_app';
@@ -224,5 +243,59 @@ describe('My Login application', () => {
          .flutterByText$('The box is dropped')
          .getText();
       expect(dropped).toEqual('The box is dropped');
+   });
+
+   it('should switch to webview context and validate the page title', async () => {
+      await performLogin();
+      await openScreen('Web View');
+      await switchToWebview();
+
+      await browser.waitUntil(
+         async () => (await browser.getTitle()) === 'Hacker News',
+         {
+            timeout: 10000,
+            timeoutMsg: 'Expected Hacker News title not found',
+         },
+      );
+
+      const title = await browser.getTitle();
+      expect(title).toEqual(
+         'Hacker News',
+         'Webview title did not match expected',
+      );
+   });
+
+   it('should execute native commands correctly while in Webview context', async () => {
+      await performLogin();
+      await openScreen('Web View');
+      await switchToWebview();
+
+      // Verify no-proxy native commands still operate while in webview context
+      const currentContext = await browser.getContext();
+      expect(currentContext).toContain('WEBVIEW');
+
+      const contexts = await browser.getContexts();
+      expect(Array.isArray(contexts)).toBe(true);
+      expect(contexts.length).toBeGreaterThan(0);
+
+      const windowHandle = await browser.getWindowHandle();
+      expect(typeof windowHandle).toBe('string');
+
+      const pageSource = await browser.getPageSource();
+      expect(typeof pageSource).toBe('string');
+   });
+
+   it('should switch back and forth between native and Webview contexts', async () => {
+      await performLogin();
+      await openScreen('Web View');
+
+      await switchToWebview();
+      expect(await browser.getContext()).toContain('WEBVIEW');
+
+      await browser.switchContext('NATIVE_APP');
+      expect(await browser.getContext()).toBe('NATIVE_APP');
+
+      await switchToWebview();
+      expect(await browser.getContext()).toContain('WEBVIEW');
    });
 });

@@ -36,24 +36,21 @@ import { iosPortForward, iosRemovePortForward } from './iOS';
 import type { PortForwardCallback, PortReleaseCallback } from './types';
 import _ from 'lodash';
 
-import type {
-  RouteMatcher
-} from '@appium/types';
+import type { RouteMatcher } from '@appium/types';
 
 const WEBVIEW_NO_PROXY = [
-  [`GET`, new RegExp(`^/session/[^/]+/appium`)],
-  [`GET`, new RegExp(`^/session/[^/]+/context`)],
-  [`GET`, new RegExp(`^/session/[^/]+/element/[^/]+/rect`)],
-  [`GET`, new RegExp(`^/session/[^/]+/log/types$`)],
-  [`GET`, new RegExp(`^/session/[^/]+/orientation`)],
-  [`POST`, new RegExp(`^/session/[^/]+/appium`)],
-  [`POST`, new RegExp(`^/session/[^/]+/context`)],
-  [`POST`, new RegExp(`^/session/[^/]+/log$`)],
-  [`POST`, new RegExp(`^/session/[^/]+/orientation`)],
-  [`POST`, new RegExp(`^/session/[^/]+/touch/multi/perform`)],
-  [`POST`, new RegExp(`^/session/[^/]+/touch/perform`)],
+   [`GET`, new RegExp(`^/session/[^/]+/appium`)],
+   [`GET`, new RegExp(`^/session/[^/]+/context`)],
+   [`GET`, new RegExp(`^/session/[^/]+/element/[^/]+/rect`)],
+   [`GET`, new RegExp(`^/session/[^/]+/log/types$`)],
+   [`GET`, new RegExp(`^/session/[^/]+/orientation`)],
+   [`POST`, new RegExp(`^/session/[^/]+/appium`)],
+   [`POST`, new RegExp(`^/session/[^/]+/context`)],
+   [`POST`, new RegExp(`^/session/[^/]+/log$`)],
+   [`POST`, new RegExp(`^/session/[^/]+/orientation`)],
+   [`POST`, new RegExp(`^/session/[^/]+/touch/multi/perform`)],
+   [`POST`, new RegExp(`^/session/[^/]+/touch/perform`)],
 ] as import('@appium/types').RouteMatcher[];
-
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
@@ -215,19 +212,32 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    async executeCommand(command: any, ...args: any) {
-      if (this.currentContext === this.NATIVE_CONTEXT_NAME && isFlutterDriverCommand(command)) {
+      if (
+         this.currentContext === this.NATIVE_CONTEXT_NAME &&
+         isFlutterDriverCommand(command)
+      ) {
          return await super.executeCommand(command, ...args);
       }
 
       this.handleContextSwitch(command, args);
-      logger.default.info(`Executing the proxy command: ${command} with args: ${args}`);
+      logger.default.info(
+         `Executing the proxy command: ${command} with args: ${args}`,
+      );
       return await this.proxydriver.executeCommand(command as string, ...args);
    }
 
    private handleContextSwitch(command: string, args: any[]): void {
       if (command === 'setContext') {
-         const isWebviewContext = args.find((arg) => typeof arg === 'string' && arg.includes('WEBVIEW'));
-         this.currentContext = args[0];
+         const isWebviewContext =
+            typeof args[0] === 'string' && args[0].includes('WEBVIEW');
+         if (typeof args[0] === 'string' && args[0].length > 0) {
+            this.currentContext = args[0];
+         } else {
+            logger.default.warn(
+               `Attempted to set context to invalid value: ${args[0]}. Keeping current context: ${this.currentContext}`,
+            );
+         }
+
          if (isWebviewContext) {
             this.proxyWebViewActive = true;
          } else {
@@ -237,8 +247,8 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    public getProxyAvoidList(): RouteMatcher[] {
-    return WEBVIEW_NO_PROXY;
-  }
+      return WEBVIEW_NO_PROXY;
+   }
 
    public async createSession(
       ...args: any[]
@@ -424,14 +434,14 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    }
 
    public proxyActive(): boolean {
-      // In WebView context, all request should got to each driver
+      // In WebView context, all request should go to each driver
       // so that they can handle http request properly.
       // On iOS, WebView context is handled by XCUITest driver while Android is by chromedriver.
       // It means XCUITest driver should keep the XCUITest driver as a proxy,
       // while UIAutomator2 driver should proxy to chromedriver instead of UIA2 proxy.
       return (
          this.proxyWebViewActive &&
-         this.proxydriver.constructor.name !== XCUITestDriver.name
+         !(this.proxydriver instanceof XCUITestDriver)
       );
    }
 
