@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.2.0...v1.3.0) (2025-08-18)
+
+### Features
+
+* enable webview context handling and command proxying in driver ([#131](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/131)) ([628bf35](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/628bf35bb1c5efe8bcd18e2a70d9ebf5e65662fb))
+
 ## [1.2.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.1.4...v1.2.0) (2025-05-01)
 
 ### Features
