@@ -61,6 +61,8 @@ export function isFlutterDriverCommand(command: string) {
          'getAttribute',
          'elementDisplayed',
          'execute',
+         'getElementRect',
+         'getSize',
       ].indexOf(command) >= 0
    );
 }

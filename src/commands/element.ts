@@ -56,6 +56,14 @@ export async function getText(this: AppiumFlutterDriver, elementId: string) {
    return String(await driver.command(`/element/${elementId}/text`, 'GET', {}));
 }
 
+export async function getElementRect(
+   this: AppiumFlutterDriver,
+   elementId: string,
+) {
+   const driver = ELEMENT_CACHE.get(elementId);
+   return await driver.command(`/element/${elementId}/rect`, 'GET', {});
+}
+
 export async function elementEnabled(
    this: AppiumFlutterDriver,
    elementId: string,

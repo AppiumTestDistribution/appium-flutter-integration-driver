@@ -21,6 +21,7 @@ import {
    setValue,
    clear,
    ELEMENT_CACHE,
+   getElementRect,
 } from './commands/element';
 import {
    attachAppLaunchArguments,
@@ -65,6 +66,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    findElOrEls = findElOrEls;
    getText = getText;
    getAttribute = getAttribute;
+   getElementRect = getElementRect;
    elementDisplayed = elementDisplayed;
    elementEnabled = elementEnabled;
    setValue = setValue;
@@ -217,6 +219,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          isFlutterDriverCommand(command)
       ) {
          return await super.executeCommand(command, ...args);
+      } else {
+         this.log.info(
+            `Executing the command: ${command} with args: ${args} and flutterCommand ${isFlutterDriverCommand(command)}`,
+         );
       }
 
       this.handleContextSwitch(command, args);

@@ -46,7 +46,7 @@ jobs:
                  echo 'export UDID=$target_sim_id' >> $BASH_ENV
                  xcrun simctl boot $target_sim_id
                  xcrun simctl bootstatus $target_sim_id -b
-                 npm install -g appium
+                 npm install -g appium@2.19.0
                  npm ci
                  npm run build
                  appium driver run xcuitest build-wda
@@ -97,7 +97,7 @@ jobs:
                  echo 'export UDID=$target_sim_id' >> $BASH_ENV
                  xcrun simctl boot $target_sim_id
                  xcrun simctl bootstatus $target_sim_id -b
-                 npm install -g appium
+                 npm install -g appium@2.19.0
                  npm ci
                  npm run build
                  appium driver run xcuitest build-wda
