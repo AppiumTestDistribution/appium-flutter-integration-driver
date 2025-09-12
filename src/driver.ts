@@ -220,7 +220,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       ) {
          return await super.executeCommand(command, ...args);
       } else {
-         this.log.info(`Executing the command: ${command} with args: ${args} and flutterCommand ${isFlutterDriverCommand(command)}`);
+         this.log.info(
+            `Executing the command: ${command} with args: ${args} and flutterCommand ${isFlutterDriverCommand(command)}`,
+         );
       }
 
       this.handleContextSwitch(command, args);
