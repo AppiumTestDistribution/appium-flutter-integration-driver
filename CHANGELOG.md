@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.3.0...v1.3.1) (2025-09-12)
+
+### Bug Fixes
+
+* Add support to get elementRect ([#134](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/134)) ([4b1f451](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/4b1f451f2bc181850be30db0b6b4092a6ad2851f))
+
 ## [1.3.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.2.0...v1.3.0) (2025-08-18)
 
 ### Features
