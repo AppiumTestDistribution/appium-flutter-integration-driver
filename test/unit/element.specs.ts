@@ -11,6 +11,8 @@ import {
    elementEnabled,
    findElOrEls,
    getAttribute,
+   getRect,
+   getSize,
    getText,
    setValue,
 } from '../../src/commands/element';
@@ -179,6 +181,44 @@ describe('Element Interaction Functions', () => {
          expect(
             mockDriver.command.calledWith(
                `/element/${elementId}/text`,
+               'GET',
+               {},
+            ),
+         ).to.be.true;
+      });
+   });
+
+   describe('getRect', () => {
+      it('should get rect from an element correctly', async () => {
+         const elementId = 'elem1';
+         ELEMENT_CACHE.set(elementId, mockDriver);
+         mockDriver.command.resolves('{"x": 10, "y": 20, "width": 100, "height": 50}');
+
+         const result = await getRect.call(mockAppiumFlutterDriver, elementId);
+
+         expect(result).to.equal('{"x": 10, "y": 20, "width": 100, "height": 50}');
+         expect(
+            mockDriver.command.calledWith(
+               `/element/${elementId}/rect`,
+               'GET',
+               {},
+            ),
+         ).to.be.true;
+      });
+   });
+
+   describe('getSize', () => {
+      it('should get size from an element correctly', async () => {
+         const elementId = 'elem1';
+         ELEMENT_CACHE.set(elementId, mockDriver);
+         mockDriver.command.resolves('{"width": 100, "height": 50}');
+
+         const result = await getSize.call(mockAppiumFlutterDriver, elementId);
+
+         expect(result).to.equal('{"width": 100, "height": 50}');
+         expect(
+            mockDriver.command.calledWith(
+               `/element/${elementId}/size`,
                'GET',
                {},
             ),

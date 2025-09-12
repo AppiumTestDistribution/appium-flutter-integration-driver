@@ -67,6 +67,9 @@ describe('My Login application', () => {
          .flutterByValueKey$('double_tap_button')
          .flutterByText$('Double Tap');
       expect(await element.getText()).toEqual('Double Tap');
+      const size = await element.getSize();
+      expect(size.width).toBeGreaterThan(0);
+      expect(size.height).toBeGreaterThan(0);
       await browser.flutterDoubleClick({
          element: element,
       });
@@ -101,6 +104,19 @@ describe('My Login application', () => {
       expect(await message.getText()).toEqual('Hello world');
    });
 
+   it.only('Nested Scroll Test', async () => {
+      await performLogin();
+      await openScreen('Nested Scroll');
+      const parentElement = await browser.flutterScrollTillVisible({
+         finder: await browser.flutterByText('Parent Element 4'),
+         scrollDirection: 'down',
+      });
+      await browser.flutterScrollTillVisible({
+         finder: await parentElement.flutterByValueKey(''),
+         scrollView: parentElement,
+         scrollDirection: 'down',
+      });
+   });
    it('Scroll Test', async () => {
       await performLogin();
       await openScreen('Vertical Swiping');
