@@ -48,7 +48,7 @@ jobs:
              npm run build
          - name: Install Drivers
            run: |
-             npm install -g appium
+             npm install -g appium@2.19.0
              appium driver list
          - name: Checkout Test from Flutter Finder
            uses: actions/checkout@v2
@@ -125,7 +125,7 @@ jobs:
            npm run build
        - name: Install Drivers
          run: |
-           npm install -g appium
+           npm install -g appium@2.19.0
            appium driver list
        - name: Checkout Test from Flutter Finder
          uses: actions/checkout@v2
