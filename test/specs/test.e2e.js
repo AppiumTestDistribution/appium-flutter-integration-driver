@@ -104,18 +104,14 @@ describe('My Login application', () => {
       expect(await message.getText()).toEqual('Hello world');
    });
 
-   it.only('Nested Scroll Test', async () => {
+   it('Descendant Test', async () => {
       await performLogin();
       await openScreen('Nested Scroll');
-      const parentElement = await browser.flutterScrollTillVisible({
-         finder: await browser.flutterByText('Parent Element 4'),
-         scrollDirection: 'down',
+      const childElement = await browser.flutterByDescendant$({
+         of: await browser.flutterByValueKey('parent_card_1'),
+         matching: await browser.flutterByText('Child 2'),
       });
-      await browser.flutterScrollTillVisible({
-         finder: await parentElement.flutterByValueKey(''),
-         scrollView: parentElement,
-         scrollDirection: 'down',
-      });
+      expect(await childElement.getText()).toEqual('Child 2');
    });
    it('Scroll Test', async () => {
       await performLogin();

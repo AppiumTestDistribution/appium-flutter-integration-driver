@@ -41,7 +41,7 @@ jobs:
               sudo udevadm trigger --name-match=kvm
          - name: Linting
            run: |
-              npm install
+              npm install --no-package-lock
               npm run prettier-check
          - name: Build Driver
            run: |
@@ -118,7 +118,7 @@ jobs:
            sudo udevadm trigger --name-match=kvm
        - name: Linting
          run: |
-           npm install
+           npm install --no-package-lock
            npm run prettier-check
        - name: Build Driver
          run: |
