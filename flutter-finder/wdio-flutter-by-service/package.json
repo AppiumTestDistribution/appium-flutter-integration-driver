@@ -1,0 +1,45 @@
+{
+  "name": "wdio-flutter-by-service",
+  "version": "1.2.0",
+  "description": "",
+  "scripts": {
+    "build": "rimraf build && tsc -b",
+    "wdio-android": "wdio run ./android.conf.ts",
+    "wdio-ios": "wdio run ./ios.conf.ts"
+  },
+  "exports": {
+    ".": [
+      {
+        "types": "./build/index.d.ts",
+        "import": "./build/index.js"
+      }
+    ],
+    "./package.json": "./package.json"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "types": "./build/index.d.ts",
+  "license": "MIT License",
+  "dependencies": {
+    "@wdio/globals": "^8.38.0",
+    "@wdio/logger": "^8.38.0",
+    "@wdio/utils": "^8.38.0",
+    "lodash": "^4.17.21",
+    "webdriverio": "^9.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/webdriverio": "^4.13.3",
+    "@wdio/appium-service": "^8.38.0",
+    "@wdio/cli": "^8.38.0",
+    "@wdio/local-runner": "^8.38.0",
+    "@wdio/mocha-framework": "^8.38.0",
+    "@wdio/spec-reporter": "^8.38.0",
+    "@wdio/types": "^8.37.0",
+    "mocha": "^10.4.0",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,20 +1,22 @@
-// @ts-nocheck
+//@ts-nocheck
 import { config as baseConfig } from './wdio.conf.ts';
-import { join } from 'node:path';
 
 export const config: WebdriverIO.Config = {
    ...baseConfig,
    capabilities: [
       {
          // capabilities for local Appium web tests on an Android Emulator
-         platformName: 'Android',
+         platformName: 'iOS',
          'appium:automationName': 'FlutterIntegration',
          'appium:orientation': 'PORTRAIT',
-         'appium:app':
-            "/Users/saikrishna/Documents/git/appium-flutter-server/demo-app/build/app/outputs/apk/debug/app-debug.apk",
+         'appium:udid': process.env.UDID,
+         'appium:app': process.env.APP_PATH,
          'appium:newCommandTimeout': 240,
-         'appium:flutterServerLaunchTimeout': 10000,
-         'appium:flutterEnableMockCamera': true
+         'appium:usePreinstalledWDA': true,
+         'appium:showIOSLog': true,
+         'appium:wdaLocalPort': 8456,
+         'appium:flutterServerLaunchTimeout': 25000,
+         'appium:flutterEnableMockCamera': true,
       },
    ],
 };
