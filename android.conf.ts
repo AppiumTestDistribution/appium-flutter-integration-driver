@@ -10,8 +10,7 @@ export const config: WebdriverIO.Config = {
          platformName: 'Android',
          'appium:automationName': 'FlutterIntegration',
          'appium:orientation': 'PORTRAIT',
-         'appium:app':
-            "/Users/saikrishna/Documents/git/appium-flutter-server/demo-app/build/app/outputs/apk/debug/app-debug.apk",
+         'appium:app': process.env.APP_PATH,
          'appium:newCommandTimeout': 240,
          'appium:flutterServerLaunchTimeout': 10000,
          'appium:flutterEnableMockCamera': true

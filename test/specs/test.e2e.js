@@ -19,7 +19,7 @@ async function openScreen(screenTitle) {
    await screenListElement.click();
 }
 
-async function switchToWebview(timeout = 5000) {
+async function switchToWebview(timeout = 20000) {
    const webviewContext = await browser.waitUntil(
       async () => {
          const contexts = await browser.getContexts();
@@ -68,8 +68,8 @@ describe('My Login application', () => {
          .flutterByText$('Double Tap');
       expect(await element.getText()).toEqual('Double Tap');
       const size = await element.getSize();
-      expect(size.width).toBeGreaterThan(0);
-      expect(size.height).toBeGreaterThan(0);
+      expect(parseInt(size.width)).toBeGreaterThan(0);
+      expect(parseInt(size.height)).toBeGreaterThan(0);
       await browser.flutterDoubleClick({
          element: element,
       });
@@ -110,6 +110,20 @@ describe('My Login application', () => {
       const childElement = await browser.flutterByDescendant$({
          of: await browser.flutterByValueKey('parent_card_1'),
          matching: await browser.flutterByText('Child 2'),
+      });
+      expect(await childElement.getText()).toEqual('Child 2');
+   });
+
+   it.skip('Scroll until visible with Descendant', async () => { 
+      await performLogin();
+      await openScreen('Nested Scroll');
+      const childElement = await browser.flutterScrollTillVisible({
+         finder: await browser.flutterByDescendant({
+            of: await browser.flutterByValueKey('parent_card_4'),
+            matching: await browser.flutterByText('Child 2'),
+         }),
+         delta: 100,
+         scrollDirection: 'down',
       });
       expect(await childElement.getText()).toEqual('Child 2');
    });
