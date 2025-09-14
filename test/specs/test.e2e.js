@@ -114,7 +114,7 @@ describe('My Login application', () => {
       expect(await childElement.getText()).toEqual('Child 2');
    });
 
-   it.skip('Scroll until visible with Descendant', async () => { 
+   it.skip('Scroll until visible with Descendant', async () => {
       await performLogin();
       await openScreen('Nested Scroll');
       const childElement = await browser.flutterScrollTillVisible({
