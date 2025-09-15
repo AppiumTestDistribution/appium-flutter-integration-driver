@@ -47,6 +47,7 @@ jobs:
                  xcrun simctl boot $target_sim_id
                  xcrun simctl bootstatus $target_sim_id -b
                  npm install -g appium@2.19.0
+                 npm run build-flutter-by-service
                  npm install --no-package-lock
                  npm run build
                  appium driver list

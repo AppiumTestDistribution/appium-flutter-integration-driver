@@ -8,8 +8,8 @@
   "exports": {
     ".": [
       {
-        "types": "./build/src/index.d.ts",
-        "import": "./build/src/index.js"
+        "types": "./build/index.d.ts",
+        "import": "./build/index.js"
       }
     ],
     "./package.json": "./package.json"
@@ -17,7 +17,7 @@
   "type": "module",
   "keywords": [],
   "author": "",
-  "types": "./build/src/index.d.ts",
+  "types": "./build/index.d.ts",
   "license": "MIT License",
   "dependencies": {
     "@wdio/globals": "9.17.0",

@@ -41,6 +41,7 @@ jobs:
               sudo udevadm trigger --name-match=kvm
          - name: Linting
            run: |
+              npm run build-flutter-by-service
               npm install --no-package-lock
               npm run prettier-check
          - name: Build Driver
