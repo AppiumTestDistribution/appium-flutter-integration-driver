@@ -51,13 +51,13 @@ jobs:
                  npm install --no-package-lock
                  npm run build
                  appium driver list
-                 appium driver run xcuitest build-wda
-                 wda=$(ls -d /Users/distiller/Library/Developer/Xcode/DerivedData/WebDriverAgent*)
+                 appium driver run xcuitest download-wda-sim --outdir $CIRCLE_WORKING_DIRECTORY/wda
+                 wda=$(ls -d $CIRCLE_WORKING_DIRECTORY/wda)
                  echo $wda
                  echo 'export WDA_PATH=$wda' >> $BASH_ENV
                  echo ${WDA_PATH}
                  echo ${PROJECT_ENV_VAR}
-                 xcrun simctl install $target_sim_id $wda/Build/Products/Debug-iphonesimulator/WebDriverAgentRunner-Runner.app
+                 xcrun simctl install $target_sim_id $wda/WebDriverAgentRunner-Runner.app
                  xcrun simctl launch $target_sim_id "com.facebook.WebDriverAgentRunner.xctrunner"
                  mkdir appium-logs
                  UDID=$target_sim_id APP_PATH=$ios_app npm run wdio-ios
