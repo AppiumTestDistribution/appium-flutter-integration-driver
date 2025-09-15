@@ -27,7 +27,7 @@ jobs:
          - run:
               name: Node Version
               command: |
-                 nvm install v22.2.0 && nvm alias default 22.2.0
+                 nvm install v20.2.0 && nvm alias default 20.2.0
          - run:
               name: Install Appium and Run iOS Test
               command: |
@@ -39,7 +39,7 @@ jobs:
                  echo 'export APP_PATH=$CIRCLE_WORKING_DIRECTORY/ios.zip' >> $BASH_ENV
                  echo $pwd
                  echo ls
-                 nvm install v22.2.0 && nvm alias default 22.2.0
+                 nvm install v20.2.0 && nvm alias default 20.2.0
                  node -v
                  target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
                  echo $target_sim_id
