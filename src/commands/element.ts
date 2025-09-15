@@ -30,7 +30,9 @@ export async function findElOrEls(
          selector: ['-flutter descendant', '-flutter ancestor'].includes(
             strategy,
          )
-            ? JSON.parse(selector)
+            ? _.isString(selector)
+               ? JSON.parse(selector)
+               : selector
             : selector,
          context,
       };

@@ -31,6 +31,6 @@
     "coverage",
     "examples",
     "/*.js",
-    "test/**/*",
+    "test_remove/**/*",
   ]
 }

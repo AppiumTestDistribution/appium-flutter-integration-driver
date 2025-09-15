@@ -46,7 +46,7 @@
       "run-server": "appium server -ka 800 -pa /wd/hub --allow-insecure=adb_shell",
       "install-driver": "npm run build && appium driver install --source=local $(pwd)",
       "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
-      "wdio-android": "npm run build-flutter-by-service && wdio run ./android.conf.ts",
+      "wdio-android": "wdio run ./android.conf.ts",
       "wdio-ios": "npm run build-flutter-by-service && wdio run ./ios.conf.ts",
       "build-flutter-by-service": "cd ./flutter-finder/wdio-flutter-by-service && npm install --no-package-lock && npm run build"
    },
