@@ -13,6 +13,30 @@ async function performLogin(userName = 'admin', password = '1234') {
    await browser.flutterByValueKey$('LoginButton').click();
 }
 
+async function handleAppManagement() {
+   const currentContext = await browser.getContext();
+   if (currentContext !== 'NATIVE_APP') {
+      await browser.switchContext('NATIVE_APP');
+   }
+
+   const appID = browser.isIOS
+      ? 'com.example.appiumTestingApp'
+      : 'com.example.appium_testing_app';
+   if (await browser.isAppInstalled(appID)) {
+      await browser.removeApp(appID);
+   }
+   await browser.installApp(process.env.APP_PATH);
+   await browser.pause(2000);
+   if (await browser.isAppInstalled(appID)) {
+      console.log('App is installed');
+      await browser.execute('flutter: launchApp', {
+         appId: appID,
+         arguments: ['--dummy-arguments'],
+         environment: {},
+      });
+   }
+}
+
 function itForAndroidOnly(description, fn) {
    if (browser.isIOS) {
       it.skip(description, fn);
@@ -46,27 +70,7 @@ async function switchToWebview(timeout = 20000) {
 
 describe('My Login application', () => {
    afterEach(async () => {
-      const currentContext = await browser.getContext();
-      if (currentContext !== 'NATIVE_APP') {
-         await browser.switchContext('NATIVE_APP');
-      }
-
-      const appID = browser.isIOS
-         ? 'com.example.appiumTestingApp'
-         : 'com.example.appium_testing_app';
-      if (await browser.isAppInstalled(appID)) {
-         await browser.removeApp(appID);
-      }
-      await browser.installApp(process.env.APP_PATH);
-      await browser.pause(2000);
-      if (await browser.isAppInstalled(appID)) {
-         console.log('App is installed');
-         await browser.execute('flutter: launchApp', {
-            appId: appID,
-            arguments: ['--dummy-arguments'],
-            environment: {},
-         });
-      }
+      await handleAppManagement();
    });
 
    it('Create Session with Flutter Integration Driver', async () => {
