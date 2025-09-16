@@ -358,7 +358,7 @@ describe('My Login application', () => {
    );
 });
 
-describe.only('Image mocking', async () => {
+describe('Image mocking', async () => {
    afterEach(async () => {
       await handleAppManagement();
    });
