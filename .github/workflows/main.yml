@@ -62,6 +62,7 @@ jobs:
                  echo ${{ env }}
                  adb devices
                  appium driver list
+                  mkdir ${{ github.workspace }}/appium-logs
                  adb logcat > ${{ github.workspace }}/appium-logs/flutter.txt &
                  echo $android_app
                  APP_PATH=${{ env.APP_PATH }} npm run wdio-android
