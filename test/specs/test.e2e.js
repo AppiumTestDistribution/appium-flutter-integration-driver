@@ -1,4 +1,5 @@
 import { browser, expect } from '@wdio/globals';
+import path from "path";
 
 async function performLogin(userName = 'admin', password = '1234') {
    await browser.takeScreenshot();
@@ -10,6 +11,14 @@ async function performLogin(userName = 'admin', password = '1234') {
    await browser.flutterByValueKey$('password_text_field').clearValue();
    await browser.flutterByValueKey$('password').addValue(password);
    await browser.flutterByValueKey$('LoginButton').click();
+}
+
+function itForAndroidOnly(description, fn) {
+   if (browser.isIOS) {
+      it.skip(description, fn);
+   } else {
+      it(description, fn);
+   }
 }
 
 async function openScreen(screenTitle) {
@@ -279,8 +288,9 @@ describe('My Login application', () => {
          .getText();
       expect(dropped).toEqual('The box is dropped');
    });
-
-   it('should switch to webview context and validate the page title', async () => {
+   
+   //TODO: Wbview is not inspectable on iOS demo app, need to fix it.
+   itForAndroidOnly('should switch to webview context and validate the page title', async () => {
       await performLogin();
       await openScreen('Web View');
       await switchToWebview();
@@ -300,7 +310,7 @@ describe('My Login application', () => {
       );
    });
 
-   it('should execute native commands correctly while in Webview context', async () => {
+   itForAndroidOnly('should execute native commands correctly while in Webview context', async () => {
       await performLogin();
       await openScreen('Web View');
       await switchToWebview();
@@ -320,7 +330,7 @@ describe('My Login application', () => {
       expect(typeof pageSource).toBe('string');
    });
 
-   it('should switch back and forth between native and Webview contexts', async () => {
+   itForAndroidOnly('should switch back and forth between native and Webview contexts', async () => {
       await performLogin();
       await openScreen('Web View');
 
@@ -334,3 +344,28 @@ describe('My Login application', () => {
       expect(await browser.getContext()).toContain('WEBVIEW');
    });
 });
+
+describe('Image mocking', async() => {
+   afterEach(async () => {
+      await handleAppManagement();
+   });
+
+   it('Inject Image', async() => {
+      const firstImageToMock = path.resolve('test/qr.png');
+      const secondImageToMock = path.resolve('test/SecondImage.png');
+      await performLogin();
+      await openScreen('Image Picker');
+      const firstInjectedImage = await browser.flutterInjectImage(firstImageToMock);
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
+      await browser.flutterInjectImage(secondImageToMock);
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('SecondInjectedImage').isDisplayed()).toBe(true);
+      await browser.flutterActivateInjectedImage({ imageId: firstInjectedImage });
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
+   })
+})

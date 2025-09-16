@@ -13,7 +13,8 @@ export const config: WebdriverIO.Config = {
          'appium:app': process.env.APP_PATH,
          'appium:newCommandTimeout': 240,
          'appium:flutterServerLaunchTimeout': 10000,
-         'appium:flutterEnableMockCamera': true
+         'appium:flutterEnableMockCamera': true,
+         'appium:adbExecTimeout': 80000
       },
    ],
 };
