@@ -12,10 +12,9 @@ export const config: WebdriverIO.Config = {
          'appium:orientation': 'PORTRAIT',
          'appium:app': process.env.APP_PATH,
          'appium:newCommandTimeout': 240,
-         'appium:flutterServerLaunchTimeout': 10000,
+         'appium:flutterServerLaunchTimeout': 30000,
          'appium:flutterEnableMockCamera': true,
-         'appium:adbExecTimeout': 80000,
-         'appium:autoGrantPermissions': true
+         'appium:adbExecTimeout': 80000
       },
    ],
 };
