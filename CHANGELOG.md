@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.3.1...v1.4.0) (2025-09-16)
+
+### Features
+
+* Support descendant ([#140](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/140)) ([cd16886](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/cd16886f015e18e3570ab5fa729b7ab989725307)), closes [#126](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/126)
+
 ## [1.3.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.3.0...v1.3.1) (2025-09-12)
 
 ### Bug Fixes
