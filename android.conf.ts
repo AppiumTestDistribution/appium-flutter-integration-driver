@@ -14,7 +14,8 @@ export const config: WebdriverIO.Config = {
          'appium:newCommandTimeout': 240,
          'appium:flutterServerLaunchTimeout': 10000,
          'appium:flutterEnableMockCamera': true,
-         'appium:adbExecTimeout': 80000
+         'appium:adbExecTimeout': 80000,
+         'appium:autoGrantPermissions': true
       },
    ],
 };
