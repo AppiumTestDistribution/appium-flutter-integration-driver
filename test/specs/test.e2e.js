@@ -1,5 +1,5 @@
 import { browser, expect } from '@wdio/globals';
-import path from "path";
+import path from 'path';
 
 async function performLogin(userName = 'admin', password = '1234') {
    await browser.takeScreenshot();
@@ -288,84 +288,98 @@ describe('My Login application', () => {
          .getText();
       expect(dropped).toEqual('The box is dropped');
    });
-   
+
    //TODO: Wbview is not inspectable on iOS demo app, need to fix it.
-   itForAndroidOnly('should switch to webview context and validate the page title', async () => {
-      await performLogin();
-      await openScreen('Web View');
-      await switchToWebview();
+   itForAndroidOnly(
+      'should switch to webview context and validate the page title',
+      async () => {
+         await performLogin();
+         await openScreen('Web View');
+         await switchToWebview();
 
-      await browser.waitUntil(
-         async () => (await browser.getTitle()) === 'Hacker News',
-         {
-            timeout: 10000,
-            timeoutMsg: 'Expected Hacker News title not found',
-         },
-      );
+         await browser.waitUntil(
+            async () => (await browser.getTitle()) === 'Hacker News',
+            {
+               timeout: 10000,
+               timeoutMsg: 'Expected Hacker News title not found',
+            },
+         );
 
-      const title = await browser.getTitle();
-      expect(title).toEqual(
-         'Hacker News',
-         'Webview title did not match expected',
-      );
-   });
+         const title = await browser.getTitle();
+         expect(title).toEqual(
+            'Hacker News',
+            'Webview title did not match expected',
+         );
+      },
+   );
 
-   itForAndroidOnly('should execute native commands correctly while in Webview context', async () => {
-      await performLogin();
-      await openScreen('Web View');
-      await switchToWebview();
+   itForAndroidOnly(
+      'should execute native commands correctly while in Webview context',
+      async () => {
+         await performLogin();
+         await openScreen('Web View');
+         await switchToWebview();
 
-      // Verify no-proxy native commands still operate while in webview context
-      const currentContext = await browser.getContext();
-      expect(currentContext).toContain('WEBVIEW');
+         // Verify no-proxy native commands still operate while in webview context
+         const currentContext = await browser.getContext();
+         expect(currentContext).toContain('WEBVIEW');
 
-      const contexts = await browser.getContexts();
-      expect(Array.isArray(contexts)).toBe(true);
-      expect(contexts.length).toBeGreaterThan(0);
+         const contexts = await browser.getContexts();
+         expect(Array.isArray(contexts)).toBe(true);
+         expect(contexts.length).toBeGreaterThan(0);
 
-      const windowHandle = await browser.getWindowHandle();
-      expect(typeof windowHandle).toBe('string');
+         const windowHandle = await browser.getWindowHandle();
+         expect(typeof windowHandle).toBe('string');
 
-      const pageSource = await browser.getPageSource();
-      expect(typeof pageSource).toBe('string');
-   });
+         const pageSource = await browser.getPageSource();
+         expect(typeof pageSource).toBe('string');
+      },
+   );
 
-   itForAndroidOnly('should switch back and forth between native and Webview contexts', async () => {
-      await performLogin();
-      await openScreen('Web View');
+   itForAndroidOnly(
+      'should switch back and forth between native and Webview contexts',
+      async () => {
+         await performLogin();
+         await openScreen('Web View');
 
-      await switchToWebview();
-      expect(await browser.getContext()).toContain('WEBVIEW');
+         await switchToWebview();
+         expect(await browser.getContext()).toContain('WEBVIEW');
 
-      await browser.switchContext('NATIVE_APP');
-      expect(await browser.getContext()).toBe('NATIVE_APP');
+         await browser.switchContext('NATIVE_APP');
+         expect(await browser.getContext()).toBe('NATIVE_APP');
 
-      await switchToWebview();
-      expect(await browser.getContext()).toContain('WEBVIEW');
-   });
+         await switchToWebview();
+         expect(await browser.getContext()).toContain('WEBVIEW');
+      },
+   );
 });
 
-describe('Image mocking', async() => {
+describe('Image mocking', async () => {
    afterEach(async () => {
       await handleAppManagement();
    });
 
-   it('Inject Image', async() => {
+   it('Inject Image', async () => {
       const firstImageToMock = path.resolve('test/qr.png');
       const secondImageToMock = path.resolve('test/SecondImage.png');
       await performLogin();
       await openScreen('Image Picker');
-      const firstInjectedImage = await browser.flutterInjectImage(firstImageToMock);
+      const firstInjectedImage =
+         await browser.flutterInjectImage(firstImageToMock);
       await browser.flutterByValueKey$('capture_image').click();
       await browser.flutterByText$('PICK').click();
       expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
       await browser.flutterInjectImage(secondImageToMock);
       await browser.flutterByValueKey$('capture_image').click();
       await browser.flutterByText$('PICK').click();
-      expect(await browser.flutterByText$('SecondInjectedImage').isDisplayed()).toBe(true);
-      await browser.flutterActivateInjectedImage({ imageId: firstInjectedImage });
+      expect(
+         await browser.flutterByText$('SecondInjectedImage').isDisplayed(),
+      ).toBe(true);
+      await browser.flutterActivateInjectedImage({
+         imageId: firstInjectedImage,
+      });
       await browser.flutterByValueKey$('capture_image').click();
       await browser.flutterByText$('PICK').click();
       expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
-   })
-})
+   });
+});
