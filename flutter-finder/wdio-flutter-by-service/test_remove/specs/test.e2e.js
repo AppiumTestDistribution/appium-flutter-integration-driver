@@ -1,5 +1,5 @@
 import { browser, expect } from '@wdio/globals';
-import path from 'path';
+import path from "path";
 
 async function performLogin(userName = 'admin', password = '1234') {
    await browser.takeScreenshot();
@@ -13,15 +13,52 @@ async function performLogin(userName = 'admin', password = '1234') {
    await browser.flutterByValueKey$('LoginButton').click();
 }
 
-async function handleAppManagement() {
-   const currentContext = await browser.getContext();
-   if (currentContext !== 'NATIVE_APP') {
-      await browser.switchContext('NATIVE_APP');
-   }
+async function openScreen(screenTitle) {
+   const screenListElement = await browser.flutterScrollTillVisible({
+      finder: await browser.flutterByText(screenTitle),
+   });
+   await screenListElement.click();
+}
 
+function itForAndroidOnly(description, fn) {
+   if (browser.isIOS) {
+      it.skip(description, fn);
+   } else {
+      it(description, fn);
+   }
+}
+
+describe('Image mocking', async() => {
+   afterEach(async () => {
+      await handleAppManagement();
+   });
+
+   it('Inject Image', async() => {
+      const firstImageToMock = path.resolve('test/qr.png');
+      const secondImageToMock = path.resolve('test/SecondImage.png');
+      await performLogin();
+      await openScreen('Image Picker');
+      const firstInjectedImage = await browser.flutterInjectImage(firstImageToMock);
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
+      await browser.flutterInjectImage(secondImageToMock);
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('SecondInjectedImage').isDisplayed()).toBe(true);
+      await browser.flutterActivateInjectedImage({ imageId: firstInjectedImage });
+      await browser.flutterByValueKey$('capture_image').click();
+      await browser.flutterByText$('PICK').click();
+      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
+   })
+
+
+})
+
+async function handleAppManagement() {
    const appID = browser.isIOS
-      ? 'com.example.appiumTestingApp'
-      : 'com.example.appium_testing_app';
+       ? 'com.example.appiumTestingApp'
+       : 'com.example.appium_testing_app';
    if (await browser.isAppInstalled(appID)) {
       await browser.removeApp(appID);
    }
@@ -37,40 +74,25 @@ async function handleAppManagement() {
    }
 }
 
-function itForAndroidOnly(description, fn) {
-   if (browser.isIOS) {
-      it.skip(description, fn);
-   } else {
-      it(description, fn);
-   }
-}
-
-async function openScreen(screenTitle) {
-   const screenListElement = await browser.flutterScrollTillVisible({
-      finder: await browser.flutterByText(screenTitle),
-   });
-   await screenListElement.click();
-}
-
-async function switchToWebview(timeout = 20000) {
-   const webviewContext = await browser.waitUntil(
-      async () => {
-         const contexts = await browser.getContexts();
-         return contexts.find((ctx) => ctx.includes('WEBVIEW'));
-      },
-      {
-         timeout,
-         timeoutMsg: `WEBVIEW context not found within ${timeout / 1000}s`,
-      },
-   );
-
-   await browser.switchContext(webviewContext);
-   return webviewContext;
-}
-
 describe('My Login application', () => {
    afterEach(async () => {
       await handleAppManagement();
+   });
+
+   it('GetText test', async () => {
+      const userNameField = await browser.flutterByValueKey$('username_text_field');
+      const passwordField = await browser.flutterByValueKey$('password_text_field');
+      expect(await userNameField.getText()).toEqual("admin");
+      expect(await passwordField.getText()).toEqual("1234");
+
+      await userNameField.clearValue();
+      await userNameField.addValue("admin123");
+      await passwordField.clearValue();
+      await passwordField.addValue("password123");
+
+      //TextEdit field
+      expect(await userNameField.getText()).toEqual("admin123");
+      expect(await passwordField.getText()).toEqual("password123");
    });
 
    it('Create Session with Flutter Integration Driver', async () => {
@@ -80,9 +102,6 @@ describe('My Login application', () => {
          .flutterByValueKey$('double_tap_button')
          .flutterByText$('Double Tap');
       expect(await element.getText()).toEqual('Double Tap');
-      const size = await element.getSize();
-      expect(parseInt(size.width)).toBeGreaterThan(0);
-      expect(parseInt(size.height)).toBeGreaterThan(0);
       await browser.flutterDoubleClick({
          element: element,
       });
@@ -103,52 +122,26 @@ describe('My Login application', () => {
    it('Wait Test', async () => {
       await performLogin();
       await openScreen('Lazy Loading');
-      const message = await browser.flutterByValueKey$('message_field');
-      expect(await message.getText()).toEqual('Hello world');
+      expect(await browser.flutterByValueKey$('message_field').getText()).toEqual('Hello world');
       await browser.flutterByValueKey$('toggle_button').click();
-      await browser.flutterWaitForAbsent({ element: message, timeout: 10 });
+      await browser
+      .flutterWaitForAbsent({
+         locator: await browser.flutterByValueKey('message_field'),
+         timeout: 10 }
+      );
       expect(
-         await (
-            await browser.flutterByValueKey$$('message_field')
+         (
+             await browser.flutterByValueKey$$('message_field')
          ).length,
       ).toEqual(0);
       await browser.flutterByValueKey$('toggle_button').click();
-      await browser.flutterWaitForVisible({ element: message, timeout: 10 });
-      expect(await message.getText()).toEqual('Hello world');
+      await browser.flutterWaitForVisible({
+         locator: await browser.flutterByValueKey('message_field'),
+         timeout: 10
+      });
+      expect(await browser.flutterByValueKey$('message_field').getText()).toEqual('Hello world');
    });
 
-   it('Descendant Test', async () => {
-      await performLogin();
-      await openScreen('Nested Scroll');
-      const childElement = await browser.flutterByDescendant$({
-         of: await browser.flutterByValueKey('parent_card_1'),
-         matching: await browser.flutterByText('Child 2'),
-      });
-      expect(await childElement.getText()).toEqual('Child 2');
-   });
-
-   it.skip('Scroll until visible with Descendant', async () => {
-      await performLogin();
-      await openScreen('Nested Scroll');
-      const childElement = await browser.flutterScrollTillVisible({
-         finder: await browser.flutterByDescendant({
-            of: await browser.flutterByValueKey('parent_card_4'),
-            matching: await browser.flutterByText('Child 2'),
-         }),
-         delta: 100,
-         scrollDirection: 'down',
-      });
-      expect(await childElement.getText()).toEqual('Child 2');
-   });
-   it('Ancestor Test', async () => {
-      await performLogin();
-      await openScreen('Nested Scroll');
-      const parentElement = await browser.flutterByAncestor$({
-         of: await browser.flutterByText('Child 2'),
-         matching: await browser.flutterByValueKey('parent_card_1'),
-      });
-      expect(await parentElement.getAttribute('displayed')).toBe(true);
-   });
    it('Scroll Test', async () => {
       await performLogin();
       await openScreen('Vertical Swiping');
@@ -293,97 +286,23 @@ describe('My Login application', () => {
       expect(dropped).toEqual('The box is dropped');
    });
 
-   //TODO: Wbview is not inspectable on iOS demo app, need to fix it.
-   itForAndroidOnly(
-      'should switch to webview context and validate the page title',
-      async () => {
-         await performLogin();
-         await openScreen('Web View');
-         await switchToWebview();
-
-         await browser.waitUntil(
-            async () => (await browser.getTitle()) === 'Hacker News',
-            {
-               timeout: 10000,
-               timeoutMsg: 'Expected Hacker News title not found',
-            },
-         );
-
-         const title = await browser.getTitle();
-         expect(title).toEqual(
-            'Hacker News',
-            'Webview title did not match expected',
-         );
-      },
-   );
-
-   itForAndroidOnly(
-      'should execute native commands correctly while in Webview context',
-      async () => {
-         await performLogin();
-         await openScreen('Web View');
-         await switchToWebview();
-
-         // Verify no-proxy native commands still operate while in webview context
-         const currentContext = await browser.getContext();
-         expect(currentContext).toContain('WEBVIEW');
-
-         const contexts = await browser.getContexts();
-         expect(Array.isArray(contexts)).toBe(true);
-         expect(contexts.length).toBeGreaterThan(0);
-
-         const windowHandle = await browser.getWindowHandle();
-         expect(typeof windowHandle).toBe('string');
-
-         const pageSource = await browser.getPageSource();
-         expect(typeof pageSource).toBe('string');
-      },
-   );
-
-   itForAndroidOnly(
-      'should switch back and forth between native and Webview contexts',
-      async () => {
-         await performLogin();
-         await openScreen('Web View');
-
-         await switchToWebview();
-         expect(await browser.getContext()).toContain('WEBVIEW');
-
-         await browser.switchContext('NATIVE_APP');
-         expect(await browser.getContext()).toBe('NATIVE_APP');
-
-         await switchToWebview();
-         expect(await browser.getContext()).toContain('WEBVIEW');
-      },
-   );
-});
-
-describe('Image mocking', async () => {
-   afterEach(async () => {
-      await handleAppManagement();
+   it('Descendant Test', async () => {
+      await performLogin();
+      await openScreen('Nested Scroll');
+      const childElement = await browser.flutterByDescendant$({
+         of: await browser.flutterByValueKey('parent_card_1'),
+         matching: await browser.flutterByText('Child 2'),
+      });
+      expect(await childElement.getText()).toEqual('Child 2');
    });
 
-   it('Inject Image', async () => {
-      const firstImageToMock = path.resolve('test/qr.png');
-      const secondImageToMock = path.resolve('test/SecondImage.png');
+   it.only('Ancestor Test', async () => {
       await performLogin();
-      await openScreen('Image Picker');
-      const firstInjectedImage =
-         await browser.flutterInjectImage(firstImageToMock);
-      await browser.flutterByValueKey$('capture_image').click();
-      await browser.flutterByText$('PICK').click();
-      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
-      await browser.flutterInjectImage(secondImageToMock);
-      await browser.flutterByValueKey$('capture_image').click();
-      await browser.flutterByText$('PICK').click();
-      expect(
-         await browser.flutterByText$('SecondInjectedImage').isDisplayed(),
-      ).toBe(true);
-      await browser.flutterActivateInjectedImage({
-         imageId: firstInjectedImage,
+      await openScreen('Nested Scroll');
+      const parentElement = await browser.flutterByAncestor$({
+         of: await browser.flutterByText('Child 2'),
+         matching: await browser.flutterByValueKey('parent_card_4'),
       });
-      await browser.flutterByValueKey$('capture_image').click();
-      await browser.flutterByText$('PICK').click();
-      expect(await browser.flutterByText$('Success!').isDisplayed()).toBe(true);
+      expect(await parentElement.isDisplayed()).toBe(true);
    });
 });

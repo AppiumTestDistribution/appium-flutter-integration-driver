@@ -118,15 +118,20 @@ export const config: Options.Testrunner = {
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
   services: [
-    ['flutter-by', {}],
+    [`${join(
+        process.cwd(),
+        'build',
+        'index.js',
+    )}`, {}],
     [
       'appium',
       {
+        command : 'appium',
         args: {
           basePath: '/wd/hub',
           port: 4723,
           log: join(process.cwd(), 'appium-logs', 'logs.txt'),
-          allowInsecure: 'chromedriver_autodownload,adb_shell',
+          allowInsecure: 'adb_shell'
         },
       },
     ],
@@ -142,7 +147,7 @@ export const config: Options.Testrunner = {
 
   //
   // The number of times to retry the entire specfile when it fails as a whole
-  specFileRetries: 0,
+  // specFileRetries: 1,
   //
   // Delay in seconds between the spec file retry attempts
   // specFileRetriesDelay: 0,

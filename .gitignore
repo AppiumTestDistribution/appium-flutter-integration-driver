@@ -11,7 +11,12 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-flutter-finder
+flutter-finder/wdio-flutter-by-service/node_modules
+flutter-finder/wdio-flutter-by-service/package-lock.json
+flutter-finder/wdio-flutter-by-service/build
+flutter-finder/wdio-flutter-by-service/test
+flutter-finder/wdio-flutter-by-service/appium-logs
+package-lock.json
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

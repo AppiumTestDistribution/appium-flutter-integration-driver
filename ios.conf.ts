@@ -16,6 +16,7 @@ export const config: WebdriverIO.Config = {
          'appium:showIOSLog': true,
          'appium:wdaLocalPort': 8456,
          'appium:flutterServerLaunchTimeout': 25000,
+         'appium:flutterEnableMockCamera': true
       },
    ],
 };

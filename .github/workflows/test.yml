@@ -11,7 +11,7 @@ jobs:
          - uses: actions/setup-node@v4
            with:
               node-version: 20
-         - run: npm install
+         - run: npm install --no-package-lock
            name: Install dependencies
          - run: npm run build
            name: Build
