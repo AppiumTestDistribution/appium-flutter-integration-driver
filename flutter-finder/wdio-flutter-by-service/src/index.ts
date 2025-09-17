@@ -141,7 +141,8 @@ declare global {
     // @ts-ignore
     type Locator = {
       using: string;
-      value: string;
+      value?: string;
+      selector?: any;
     };
 
     // @ts-ignore
