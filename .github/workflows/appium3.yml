@@ -1,7 +1,7 @@
 on:
   pull_request:
 
-name: Appium Flutter Integration Driver with Appium 2.x
+name: Appium Flutter Integration Driver with Appium 3
 jobs:
    Android_E2E_WDIO:
       runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
              npm run build
          - name: Install Drivers
            run: |
-             npm install -g appium@2.19.0
+             npm install -g appium
              appium driver list
          - name: run tests
            uses: reactivecircus/android-emulator-runner@v2
