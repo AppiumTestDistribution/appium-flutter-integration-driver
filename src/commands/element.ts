@@ -1,7 +1,11 @@
 import _ from 'lodash';
-import { getProxyDriver } from '../utils';
+import { getProxyDriver, FLUTTER_LOCATORS } from '../utils';
 import { JWProxy } from 'appium/driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { XCUITestDriver } from 'appium-xcuitest-driver';
+// @ts-ignore
+import { Mac2Driver } from 'appium-mac2-driver';
 import { W3C_ELEMENT_KEY } from 'appium/driver';
 import type { AppiumFlutterDriver } from '../driver';
 
@@ -15,28 +19,33 @@ export async function findElOrEls(
 ): Promise<any> {
    const driver = await getProxyDriver.bind(this)(strategy);
    let elementBody;
-   if (
-      !(driver instanceof JWProxy) &&
-      !(this.proxydriver instanceof AndroidUiautomator2Driver)
+   function constructFindElementPayload(
+      strategy: string,
+      selector: string,
+      proxyDriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
    ) {
-      elementBody = {
-         using: strategy,
-         value: selector,
-         context, //this needs be validated
-      };
-   } else {
-      elementBody = {
-         strategy,
-         selector: ['-flutter descendant', '-flutter ancestor'].includes(
-            strategy,
-         )
-            ? _.isString(selector)
-               ? JSON.parse(selector)
-               : selector
-            : selector,
-         context,
-      };
+      const isFlutterLocator =
+         strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
+
+      const parsedSelector =
+         ['-flutter descendant', '-flutter ancestor'].includes(strategy) &&
+         _.isString(selector)
+            ? JSON.parse(selector)
+            : selector; // Special case
+
+       // If user is looking for Native IOS/Mac locator
+      if (!isFlutterLocator && (proxyDriver instanceof XCUITestDriver || proxyDriver instanceof Mac2Driver)) {
+         return { using: strategy, value: parsedSelector, context };
+      } else {
+         return { strategy, selector: parsedSelector, context };
+      }
    }
+
+   elementBody = constructFindElementPayload(
+      strategy,
+      selector,
+      this.proxydriver,
+   );
    if (mult) {
       const response = await driver.command('/elements', 'POST', elementBody);
       response.forEach((element: any) => {

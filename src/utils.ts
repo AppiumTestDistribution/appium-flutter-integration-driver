@@ -1,4 +1,8 @@
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { XCUITestDriver } from 'appium-xcuitest-driver';
+// @ts-ignore
+import { Mac2Driver } from 'appium-mac2-driver';
 import { findAPortNotInUse } from 'portscanner';
 import { waitForCondition } from 'asyncbox';
 import { JWProxy } from '@appium/base-driver';
@@ -23,19 +27,36 @@ export const FLUTTER_LOCATORS = [
    'text',
    'type',
    'text containing',
+   'descendant',
+   'ancestor',
 ];
 export async function getProxyDriver(
    this: AppiumFlutterDriver,
    strategy: string,
 ): Promise<JWProxy | undefined> {
    if (strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy)) {
+      this.log.debug(
+         `getProxyDriver: using flutter driver, strategy: ${strategy}`,
+      );
       return this.proxy;
    } else if (this.proxydriver instanceof AndroidUiautomator2Driver) {
+      this.log.debug(
+         'getProxyDriver: using AndroidUiautomator2Driver driver for Android',
+      );
       // @ts-ignore Proxy instance is OK
       return this.proxydriver.uiautomator2.jwproxy;
-   } else {
+   } else if (this.proxydriver instanceof XCUITestDriver) {
+      this.log.debug('getProxyDriver: using XCUITestDriver driver for iOS');
       // @ts-ignore Proxy instance is OK
       return this.proxydriver.wda.jwproxy;
+   } else if (this.proxydriver instanceof Mac2Driver) {
+      this.log.debug('getProxyDriver: using Mac2Driver driver for mac');
+      // @ts-ignore Proxy instance is OK
+      return this.proxydriver.wda.proxy;
+   } else {
+      throw new Error(
+         `proxydriver is unknown type (${typeof this.proxydriver})`,
+      );
    }
 }
 
