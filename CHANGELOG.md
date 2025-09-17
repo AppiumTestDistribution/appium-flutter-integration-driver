@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.4.0...v1.4.1) (2025-09-17)
+
+### Bug Fixes
+
+* Added support for descendant within scroll ([#141](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/141)) ([fbae4c3](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/fbae4c3bcfbda27f86fe476a83a91d76292b4853))
+
 ## [1.4.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.3.1...v1.4.0) (2025-09-16)
 
 ### Features
