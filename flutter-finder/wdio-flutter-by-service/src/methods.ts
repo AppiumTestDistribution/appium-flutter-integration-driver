@@ -52,7 +52,7 @@ export async function flutterLongPress(
 export async function flutterScrollTillVisible(
   this: WebdriverIO.Browser,
   options: {
-    finder: WebdriverIO.Element;
+    finder: WebdriverIO.Element | Flutter.Locator;
     scrollView?: WebdriverIO.Element;
     scrollDirection?: 'up' | 'right' | 'down' | 'left';
     delta?: number;
@@ -61,8 +61,23 @@ export async function flutterScrollTillVisible(
     dragDuration?: number;
   },
 ): Promise<WebdriverIO.Element | null> {
+  // Convert the finder to the proper format for the server
+  let finderForServer;
+  if (options.finder && typeof options.finder === 'object' && 'using' in options.finder) {
+    // It's a locator object (like from flutterByDescendant)
+    finderForServer = options.finder;
+  } else {
+    // It's an element, extract the locator
+    finderForServer = options.finder;
+  }
+  
+  const serverOptions = {
+    ...options,
+    finder: finderForServer,
+  };
+  
   const response = await browser.executeScript('flutter: scrollTillVisible', [
-    options,
+    serverOptions,
   ]);
   return await w3cElementToWdioElement(this, response);
 }

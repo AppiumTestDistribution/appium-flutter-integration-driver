@@ -121,10 +121,19 @@ export function registerLocators(locatorConfig: Array<LocatorConfig>) {
     registerCustomMethod(
       `${methodName}`,
       (value: any) => {
-        return {
-          using: config.stategy,
-          value: typeof value !== 'string' ? JSON.stringify(value) : value,
-        };
+        // For complex finders (descendant, ancestor), use 'selector' property
+        // For simple finders, use 'value' property
+        if (config.name === 'flutterByDescendant' || config.name === 'flutterByAncestor') {
+          return {
+            using: config.stategy,
+            selector: typeof value !== 'string' ? value : JSON.parse(value),
+          };
+        } else {
+          return {
+            using: config.stategy,
+            value: typeof value !== 'string' ? JSON.stringify(value) : value,
+          };
+        }
       },
       {
         attachToBrowser: true,
