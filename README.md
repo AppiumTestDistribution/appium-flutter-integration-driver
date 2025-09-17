@@ -165,6 +165,12 @@ For more details, refer to the documentation for each driver:
 ## Acknowledgements 💚
 
 <p align="center">
+   <a href= "https://www.lambdatest.com"><img src="./logos/lt.png" alt="LambdaTest" width="60%" height="auto"></a>
+</p>
+
+We would also like to thank LambdaTest for their support in integrating the Appium Flutter Driver with their Real Device Cloud. For more information on running Appium Flutter Integration tests on LambdaTest, please refer to their [documentation](https://www.lambdatest.com/support/docs/appium-flutter-integration/).
+
+<p align="center">
    <a href= "https://saucelabs.com"><img src="./logos/sauce-labs.png" alt="Sauce Labs" width="60%" height="auto"></a>
 </p>
 
