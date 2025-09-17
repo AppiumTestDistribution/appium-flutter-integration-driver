@@ -10,6 +10,8 @@ type FlutterDriverConstraints = typeof desiredCapConstraints;
 // @ts-ignore
 import { XCUITestDriver } from 'appium-xcuitest-driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { Mac2Driver } from 'appium-mac2-driver';
 import { createSession as createSessionMixin } from './session';
 import {
    findElOrEls,
@@ -55,7 +57,7 @@ const WEBVIEW_NO_PROXY = [
 
 export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
    // @ts-ignore
-   public proxydriver: XCUITestDriver | AndroidUiautomator2Driver;
+   public proxydriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver;
    public flutterPort: number | null | undefined;
    private internalCaps: DriverCaps<FlutterDriverConstraints> | undefined;
    public proxy: JWProxy | undefined;
@@ -220,6 +222,9 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          this.currentContext === this.NATIVE_CONTEXT_NAME &&
          isFlutterDriverCommand(command)
       ) {
+         this.log.debug(
+            `executeCommand: command ${command} is flutter command using flutter driver`,
+         );
          return await super.executeCommand(command, ...args);
       } else {
          this.log.info(

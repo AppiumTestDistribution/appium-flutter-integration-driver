@@ -2,6 +2,10 @@
 import sinon from 'sinon';
 import * as utils from '../../src/utils';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { XCUITestDriver } from 'appium-xcuitest-driver';
+// @ts-ignore
+import { Mac2Driver } from 'appium-mac2-driver';
 import { W3C_ELEMENT_KEY } from 'appium/driver';
 import {
    ELEMENT_CACHE,
@@ -133,6 +137,45 @@ describe('Element Interaction Functions', () => {
             mockDriver.command.calledWith('/element', 'POST', {
                strategy: 'strategy',
                selector: 'selector',
+               context: 'context',
+            }),
+         ).to.be.true;
+      });
+
+      it('should use different element body for XCUITestDriver', async () => {
+         mockAppiumFlutterDriver.proxydriver = new XCUITestDriver();
+
+         await findElOrEls.call(
+            mockAppiumFlutterDriver,
+            'strategy',
+            'selector',
+            false,
+            'context',
+         );
+
+         expect(
+            mockDriver.command.calledWith('/element', 'POST', {
+               strategy: 'strategy',
+               selector: 'selector',
+               context: 'context',
+            }),
+         ).to.be.true;
+      });
+
+      it('should use different element body for Mac2Driver', async () => {
+         mockAppiumFlutterDriver.proxydriver = new Mac2Driver();
+
+         await findElOrEls.call(
+            mockAppiumFlutterDriver,
+            'strategy',
+            'selector',
+            false,
+            'context',
+         );
+         expect(
+            mockDriver.command.calledWith('/element', 'POST', {
+               using: 'strategy',
+               value: 'selector',
                context: 'context',
             }),
          ).to.be.true;
