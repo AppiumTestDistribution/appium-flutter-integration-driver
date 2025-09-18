@@ -45,44 +45,44 @@ jobs:
         echo "Target sim id: $target_sim_id"
         echo "udid=$target_sim_id" >> $GITHUB_ENV
 
-    - name: Install Appium and deps
-      run: |
+    - run: |
         npm install -g appium
         npm install --no-package-lock
         npm run build-flutter-by-service
         npm run build
-
-    - name: Build WDA with XCUITest driver
-      run: |
+      name: Install Appium and deps
+      
+    - run: |
         appium driver list
         appium driver doctor xcuitest
         appium driver run xcuitest download-wda-sim  --platform=ios --outdir=$(dirname "$PREBUILT_WDA_PATH")
         echo "WDA path: $PREBUILT_WDA_PATH"
         echo "WDA_PATH=$PREBUILT_WDA_PATH" >> $GITHUB_ENV
-
-    - name: Install and launch WDA on Simulator
-      run: |
+      name: Build WDA with XCUITest driver
+      
+    - run: |
         echo "UDID: $udid"
         echo "WDA path: $PREBUILT_WDA_PATH"
+        xcrun simctl list devices available
         xcrun simctl install $udid $PREBUILT_WDA_PATH
         xcrun simctl launch $udid "com.facebook.WebDriverAgentRunner.xctrunner"
+      name: Install and launch WDA on Simulator
+      
 
-    - name: Download sample iOS app
-      run: |
+    - run: |
         release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
         asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
         ios_app=$(echo "$asset_urls" | tail -n 1)
         echo "$ios_app"
         curl -LO "$ios_app"
         echo "APP_PATH=$(pwd)/ios.zip" >> $GITHUB_ENV
-
-    - name: Run WDIO iOS
-      env:
-        UDID: ${{ env.udid }}
-        APP_PATH: ${{ env.APP_PATH }}
-      run: |
+      name: Download sample iOS app
+      
+    - run: |
         mkdir -p appium-logs
-        UDID=$UDID APP_PATH=$APP_PATH npm run wdio-ios | tee appium-logs/logs.txt
+        UDID=$udid APP_PATH=$APP_PATH npm run wdio-ios | tee appium-logs/logs.txt
+      name: Run WDIO iOS
+      
 
     - name: Upload logs
       if: ${{ always() }}
