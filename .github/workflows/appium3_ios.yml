@@ -1,0 +1,91 @@
+name: iOS WDIO Tests
+
+on:
+    pull_request:
+
+env:
+  CI: true
+  SHOW_XCODE_LOG: true
+  PREBUILT_WDA_PATH: ${{ github.workspace }}/wda/WebDriverAgentRunner-Runner.app
+
+jobs:
+  wdio_ios:
+    runs-on: macos-14
+    name: WDIO iOS (Xcode 15.4)
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Node.js 22.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.x'
+
+    - name: Select Xcode 15.4
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+
+    - name: List Installed Simulators
+      run: xcrun simctl list devices available
+
+    - name: Start iOS Simulator UI
+      run: open -Fn "$(xcode-select --print-path)/Applications/Simulator.app"
+
+    - name: Boot simulator
+      id: boot_sim
+      uses: futureware-tech/simulator-action@v4
+      with:
+        model: 'iPhone 14'
+        os_version: '17.5'
+        shutdown_after_job: false
+        wait_for_boot: true
+
+    - name: Capture UDID
+      id: udid
+      run: |
+        target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14 (17.5)" | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -n 1)
+        echo "udid=$target_sim_id" >> $GITHUB_OUTPUT
+
+    - name: Install Appium and deps
+      run: |
+        npm install -g appium
+        npm ci
+        npm run build-flutter-by-service
+        npm run build
+
+    - name: Build WDA with XCUITest driver
+      run: |
+        appium driver list
+        appium driver doctor xcuitest
+        appium driver run xcuitest download-wda-sim  --platform=ios --outdir=$(dirname "$PREBUILT_WDA_PATH")
+        echo "WDA path: $PREBUILT_WDA_PATH"
+        echo "WDA_PATH=$PREBUILT_WDA_PATH" >> $GITHUB_ENV
+
+    - name: Install and launch WDA on Simulator
+      run: |
+        xcrun simctl install "${{ steps.udid.outputs.udid }}" "$PREBUILT_WDA_PATH/WebDriverAgentRunner-Runner.app"
+        xcrun simctl launch "${{ steps.udid.outputs.udid }}" "com.facebook.WebDriverAgentRunner.xctrunner"
+
+    - name: Download sample iOS app
+      run: |
+        release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
+        asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
+        ios_app=$(echo "$asset_urls" | tail -n 1)
+        echo "$ios_app"
+        curl -LO "$ios_app"
+        echo "APP_PATH=$(pwd)/ios.zip" >> $GITHUB_ENV
+
+    - name: Run WDIO iOS
+      env:
+        UDID: ${{ steps.udid.outputs.udid }}
+        APP_PATH: ${{ env.APP_PATH }}
+      run: |
+        mkdir -p appium-logs
+        UDID=$UDID APP_PATH=$APP_PATH npm run wdio-ios | tee appium-logs/logs.txt
+
+    - name: Upload logs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: appium-logs
+        path: appium-logs

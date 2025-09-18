@@ -1,5 +1,7 @@
 on:
-  pull_request:
+  workflow_dispatch:
+  push:
+     branches: [ main ]
 
 name: Appium Flutter Integration Driver with Appium 3
 jobs:
