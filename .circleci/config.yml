@@ -46,7 +46,7 @@ jobs:
                  echo 'export UDID=$target_sim_id' >> $BASH_ENV
                  xcrun simctl boot $target_sim_id
                  xcrun simctl bootstatus $target_sim_id -b
-                 npm install -g appium@2.19.0
+                 npm install -g appium
                  npm run build-flutter-by-service
                  npm install --no-package-lock
                  npm run build
