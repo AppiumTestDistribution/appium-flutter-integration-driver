@@ -10,8 +10,8 @@ env:
 
 jobs:
   wdio_ios:
-    runs-on: macos-14
-    name: WDIO iOS (Xcode 15.4)
+    runs-on: macos-26
+    name: WDIO iOS (Xcode 16.4)
     steps:
     - uses: actions/checkout@v4
 
