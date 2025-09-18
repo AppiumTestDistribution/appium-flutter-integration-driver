@@ -32,7 +32,7 @@ jobs:
       run: open -Fn "$(xcode-select --print-path)/Applications/Simulator.app"
 
     - name: Boot simulator
-      id: boot_sim
+      id: prepareSimulator
       uses: futureware-tech/simulator-action@v4
       with:
         model: 'iPhone 14'
@@ -40,11 +40,9 @@ jobs:
         shutdown_after_job: false
         wait_for_boot: true
 
-    - name: Capture UDID
-      id: udid
-      run: |
+    - run: |
         target_sim_id=$(xcrun simctl list devices available | grep "iPhone 14 (17.5)" | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -n 1)
-        echo "udid=$target_sim_id" >> $GITHUB_OUTPUT
+        echo "udid=$target_sim_id" >> $GITHUB_ENV
 
     - name: Install Appium and deps
       run: |
@@ -63,8 +61,8 @@ jobs:
 
     - name: Install and launch WDA on Simulator
       run: |
-        xcrun simctl install "${{ steps.udid.outputs.udid }}" "$PREBUILT_WDA_PATH/WebDriverAgentRunner-Runner.app"
-        xcrun simctl launch "${{ steps.udid.outputs.udid }}" "com.facebook.WebDriverAgentRunner.xctrunner"
+        xcrun simctl install ${{ env.udid }} "$PREBUILT_WDA_PATH/WebDriverAgentRunner-Runner.app"
+        xcrun simctl launch ${{ env.udid }} "com.facebook.WebDriverAgentRunner.xctrunner"
 
     - name: Download sample iOS app
       run: |
@@ -77,7 +75,7 @@ jobs:
 
     - name: Run WDIO iOS
       env:
-        UDID: ${{ steps.udid.outputs.udid }}
+        UDID: ${{ env.udid }}
         APP_PATH: ${{ env.APP_PATH }}
       run: |
         mkdir -p appium-logs
