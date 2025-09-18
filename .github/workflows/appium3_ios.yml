@@ -41,7 +41,7 @@ jobs:
         wait_for_boot: true
 
     - run: |
-        target_sim_id=$(xcrun simctl list devices available | grep "iPhone 16" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
+        target_sim_id=$(xcrun simctl list devices available | grep -A 10 "iOS 18.5" | grep "iPhone 16" | cut -d "(" -f2 | cut -d ")" -f1 | head -n 1)
         echo "Target sim id: $target_sim_id"
         echo "udid=$target_sim_id" >> $GITHUB_ENV
 
