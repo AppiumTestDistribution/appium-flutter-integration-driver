@@ -47,7 +47,7 @@ jobs:
     - name: Install Appium and deps
       run: |
         npm install -g appium
-        npm ci
+        npm install --no-package-lock
         npm run build-flutter-by-service
         npm run build
 
@@ -61,7 +61,9 @@ jobs:
 
     - name: Install and launch WDA on Simulator
       run: |
-        xcrun simctl install ${{ env.udid }} "$PREBUILT_WDA_PATH/WebDriverAgentRunner-Runner.app"
+        echo "UDID: ${{ env.udid }}"
+        echo "WDA path: $PREBUILT_WDA_PATH"
+        xcrun simctl install ${{ env.udid }} "$PREBUILT_WDA_PATH"
         xcrun simctl launch ${{ env.udid }} "com.facebook.WebDriverAgentRunner.xctrunner"
 
     - name: Download sample iOS app
