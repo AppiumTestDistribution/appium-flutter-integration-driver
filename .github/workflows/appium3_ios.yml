@@ -42,6 +42,7 @@ jobs:
 
     - run: |
         target_sim_id=$(xcrun simctl list devices available | grep "iPhone 16 (18.5)" | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -n 1)
+        echo "Target sim id: $target_sim_id"
         echo "udid=$target_sim_id" >> $GITHUB_ENV
 
     - name: Install Appium and deps
@@ -61,10 +62,10 @@ jobs:
 
     - name: Install and launch WDA on Simulator
       run: |
-        echo "UDID: ${{ env.udid }}"
+        echo "UDID: $udid"
         echo "WDA path: $PREBUILT_WDA_PATH"
-        xcrun simctl install ${{ env.udid }} "$PREBUILT_WDA_PATH"
-        xcrun simctl launch ${{ env.udid }} "com.facebook.WebDriverAgentRunner.xctrunner"
+        xcrun simctl install $udid $PREBUILT_WDA_PATH
+        xcrun simctl launch $udid "com.facebook.WebDriverAgentRunner.xctrunner"
 
     - name: Download sample iOS app
       run: |
