@@ -465,7 +465,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          // @ts-ignore
          await this.proxydriver.adb.removePortForward(this.flutterPort);
       }
-      await this.proxydriver?.deleteSession(this.sessionId);
+      await this.proxydriver?.deleteSession();
       await super.deleteSession();
    }
 
