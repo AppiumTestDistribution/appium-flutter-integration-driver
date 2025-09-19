@@ -26,12 +26,9 @@ jobs:
 
          - name: 'List files'
            run: |
-              release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
-              asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
-              android_app=$(echo "$asset_urls" | head -n 1)
+              version=$(grep 'appium_flutter_server:' README.md | awk '{print $2}')
+              android_app="https://github.com/AppiumTestDistribution/appium-flutter-server/releases/download/$version/app-debug.apk"
               echo "$android_app"
-              ios_app=$(echo "$asset_urls" | tail -n 1)
-              echo "$ios_app"
               curl -LO $android_app
               ls ${{ github.workspace }}
               echo "APP_PATH=${{ github.workspace }}/app-debug.apk" >> $GITHUB_ENV

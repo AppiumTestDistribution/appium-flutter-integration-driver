@@ -31,8 +31,8 @@ jobs:
       run: brew install jq
 
     - run: |
-        curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest
-        ios_app=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest | jq -r '.assets[] | select(.name=="ios.zip") | .browser_download_url')
+        version=$(grep 'appium_flutter_server:' README.md | awk '{print $2}')
+        ios_app="https://github.com/AppiumTestDistribution/appium-flutter-server/releases/download/$version/ios.zip"
         echo "Downloading from: $ios_app"
         curl -LO "$ios_app"
         echo "APP_PATH=$(pwd)/ios.zip" >> $GITHUB_ENV
