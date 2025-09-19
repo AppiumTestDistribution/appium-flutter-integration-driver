@@ -1,4 +1,4 @@
-name: iOS WDIO Tests
+name: iOS WDIO Tests with Appium 3
 
 on:
     pull_request:

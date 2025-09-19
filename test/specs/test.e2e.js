@@ -140,7 +140,7 @@ describe('My Login application', () => {
       });
       expect(await childElement.getText()).toEqual('Child 2');
    });
-   it.only('Ancestor Test', async () => {
+   it('Ancestor Test', async () => {
       await performLogin();
       await openScreen('Nested Scroll');
       const parentElement = await browser.flutterByAncestor$({

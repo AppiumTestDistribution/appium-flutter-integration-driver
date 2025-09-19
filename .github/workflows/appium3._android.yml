@@ -1,9 +1,11 @@
-on:
-  workflow_dispatch:
-  push:
-     branches: [ main ]
-
 name: Appium Flutter Integration Driver with Appium 3
+
+on:
+    pull_request:
+
+env:
+  CI: true
+
 jobs:
    Android_E2E_WDIO:
       runs-on: ubuntu-latest
