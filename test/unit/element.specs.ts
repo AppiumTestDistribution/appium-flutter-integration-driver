@@ -156,7 +156,7 @@ describe('Element Interaction Functions', () => {
          expect(
             mockDriver.command.calledWith('/element', 'POST', {
                strategy: 'strategy',
-               selector: 'selector',
+               value: 'selector',
                context: 'context',
             }),
          ).to.be.true;
