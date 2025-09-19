@@ -1,11 +1,7 @@
-name: Appium Flutter Integration Driver with Appium 3
-
 on:
-    pull_request:
+  pull_request:
 
-env:
-  CI: true
-
+name: Appium Flutter Integration Driver
 jobs:
    Android_E2E_WDIO:
       runs-on: ubuntu-latest
@@ -26,15 +22,18 @@ jobs:
 
          - name: 'List files'
            run: |
-              version=$(grep 'appium_flutter_server:' README.md | awk '{print $2}')
-              android_app="https://github.com/AppiumTestDistribution/appium-flutter-server/releases/download/$version/app-debug.apk"
+              release_info=$(curl -s https://api.github.com/repos/AppiumTestDistribution/appium-flutter-server/releases/latest)
+              asset_urls=$(echo "$release_info" | grep "browser_download_url" | cut -d '"' -f 4)
+              android_app=$(echo "$asset_urls" | head -n 1)
               echo "$android_app"
+              ios_app=$(echo "$asset_urls" | tail -n 1)
+              echo "$ios_app"
               curl -LO $android_app
               ls ${{ github.workspace }}
               echo "APP_PATH=${{ github.workspace }}/app-debug.apk" >> $GITHUB_ENV
          - uses: actions/setup-node@v4
            with:
-              node-version: 22
+              node-version: 20
          - name: Enable KVM group perms
            run: |
               echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -50,7 +49,7 @@ jobs:
              npm run build
          - name: Install Drivers
            run: |
-             npm install -g appium
+             npm install -g appium@2.19.0
              appium driver list
          - name: run tests
            uses: reactivecircus/android-emulator-runner@v2

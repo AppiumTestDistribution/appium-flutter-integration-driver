@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.5.0...v1.5.1) (2025-09-19)
+
+### Reverts
+
+* Revert "feat: Appium 3 support ([#142](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/142))" ([#145](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/145)) ([fbb22db](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/fbb22dbb5a7ca17f2813b22e64517c4a406e42e6))
+
 ## [1.5.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.4.1...v1.5.0) (2025-09-19)
 
 ### Features
