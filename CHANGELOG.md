@@ -1,3 +1,15 @@
+## [2.0.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.5.1...v2.0.0) (2025-09-19)
+
+### ⚠ BREAKING CHANGES
+
+* - Following changes are added
+- Updated all dependencies to point to appium3
+- This version will work only with appium 3 and above
+
+### Features
+
+* support for appium3 ([#146](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/146)) ([c2fcab9](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/c2fcab9ee83c5d463de75bf089b75b9530d04bfc))
+
 ## [1.5.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.5.0...v1.5.1) (2025-09-19)
 
 ### Reverts
