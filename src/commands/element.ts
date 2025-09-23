@@ -65,9 +65,38 @@ export async function findElOrEls(
 
 export async function click(this: AppiumFlutterDriver, element: string) {
    const driver = ELEMENT_CACHE.get(element);
-   return await driver.command(`/element/${element}/click`, 'POST', {
-      element,
-   });
+   
+   if (this.proxydriver instanceof Mac2Driver) {
+      this.log.debug('Mac2Driver detected, using non-blocking click');
+      
+      try {
+         // Working around Mac2Driver issues which is blocking click request when clicking on Flutter elements opens native dialog
+         // For Flutter elements, we just verify the element is in our cache
+         if (!ELEMENT_CACHE.has(element)) {
+            throw new Error('Element not found in cache');
+         }
+
+         // Element exists, send click command
+         driver.command(`/element/${element}/click`, 'POST', {
+            element,
+         }).catch((err: Error) => {
+            // Log error but don't block
+            this.log.debug(`Click command sent (non-blocking). Any error: ${err.message}`);
+         });
+         
+         // Return success since element check passed
+         return true;
+      } catch (err) {
+         // Element check failed - this is a legitimate error we should report
+         this.log.error('Element validation failed before click:', err);
+         throw new Error(`Element validation failed: ${err.message}`);
+      }
+   } else {
+      // For other drivers, proceed with normal click behavior
+      return await driver.command(`/element/${element}/click`, 'POST', {
+         element,
+      });
+   }
 }
 
 export async function getText(this: AppiumFlutterDriver, elementId: string) {
