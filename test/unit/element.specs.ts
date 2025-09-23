@@ -70,6 +70,7 @@ describe('Element Interaction Functions', () => {
 
          expect(result).to.deep.equal(element);
          expect(ELEMENT_CACHE.get('elem1')).to.equal(mockDriver);
+         // Since proxydriver is not Mac2Driver, XCUITestDriver, or AndroidUiautomator2Driver
          expect(
             mockDriver.command.calledWith('/element', 'POST', {
                strategy: 'strategy',

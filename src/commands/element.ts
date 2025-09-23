@@ -27,11 +27,22 @@ export async function findElOrEls(
       const isFlutterLocator =
          strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
 
-      const parsedSelector =
-         ['-flutter descendant', '-flutter ancestor'].includes(strategy) &&
-         _.isString(selector)
-            ? JSON.parse(selector)
-            : selector; // Special case
+      let parsedSelector;
+      if (['-flutter descendant', '-flutter ancestor'].includes(strategy)) {
+         // Handle descendant/ancestor special case
+         parsedSelector = _.isString(selector) ? JSON.parse(selector) : selector;
+         
+         // For Mac2Driver and XCUITestDriver, format selector differently
+         if (proxyDriver instanceof XCUITestDriver || proxyDriver instanceof Mac2Driver) {
+            return { 
+               using: strategy,
+               value: JSON.stringify(parsedSelector),
+               context
+            };
+         }
+      } else {
+         parsedSelector = selector;
+      }
 
       // If user is looking for Native IOS/Mac locator
       if (
