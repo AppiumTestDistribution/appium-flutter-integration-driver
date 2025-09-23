@@ -33,11 +33,12 @@ export async function findElOrEls(
             ? JSON.parse(selector)
             : selector; // Special case
 
-       // If user is looking for Native IOS/Mac locator
-      if (!isFlutterLocator && (proxyDriver instanceof XCUITestDriver || proxyDriver instanceof Mac2Driver)) {
-         return { using: strategy, value: parsedSelector, context };
-      } else {
+      // Use strategy/selector format for Flutter locators and Android driver
+      if (isFlutterLocator || proxyDriver instanceof AndroidUiautomator2Driver || proxyDriver instanceof XCUITestDriver) {
          return { strategy, selector: parsedSelector, context };
+      } else {
+         // Use using/value format for all other cases
+         return { using: strategy, value: parsedSelector, context };
       }
    }
 
