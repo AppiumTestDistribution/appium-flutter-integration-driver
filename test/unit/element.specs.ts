@@ -72,8 +72,8 @@ describe('Element Interaction Functions', () => {
          expect(ELEMENT_CACHE.get('elem1')).to.equal(mockDriver);
          expect(
             mockDriver.command.calledWith('/element', 'POST', {
-               using: 'strategy',
-               value: 'selector',
+               strategy: 'strategy',
+               selector: 'selector',
                context: 'context',
             }),
          ).to.be.true;
@@ -100,8 +100,8 @@ describe('Element Interaction Functions', () => {
          expect(ELEMENT_CACHE.get('elem2')).to.equal(mockDriver);
          expect(
             mockDriver.command.calledWith('/elements', 'POST', {
-               using: 'strategy',
-               value: 'selector',
+               strategy: 'strategy',
+               selector: 'selector',
                context: 'context',
             }),
          ).to.be.true;
@@ -155,8 +155,8 @@ describe('Element Interaction Functions', () => {
 
          expect(
             mockDriver.command.calledWith('/element', 'POST', {
-               strategy: 'strategy',
-               selector: 'selector',
+               using: 'strategy',
+               value: 'selector',
                context: 'context',
             }),
          ).to.be.true;
@@ -203,8 +203,8 @@ describe('Element Interaction Functions', () => {
          expect(ELEMENT_CACHE.get('elem1')).to.equal(mockDriver);
          expect(
             mockDriver.command.calledWith('/element', 'POST', {
-               using: 'strategy',
-               value: 'selector',
+               strategy: 'strategy',
+               selector: 'selector',
                context: 'context',
             }),
          ).to.be.true;
