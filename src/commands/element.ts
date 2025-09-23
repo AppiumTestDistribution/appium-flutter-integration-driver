@@ -30,14 +30,19 @@ export async function findElOrEls(
       let parsedSelector;
       if (['-flutter descendant', '-flutter ancestor'].includes(strategy)) {
          // Handle descendant/ancestor special case
-         parsedSelector = _.isString(selector) ? JSON.parse(selector) : selector;
-         
+         parsedSelector = _.isString(selector)
+            ? JSON.parse(selector)
+            : selector;
+
          // For Mac2Driver and XCUITestDriver, format selector differently
-         if (proxyDriver instanceof XCUITestDriver || proxyDriver instanceof Mac2Driver) {
-            return { 
+         if (
+            proxyDriver instanceof XCUITestDriver ||
+            proxyDriver instanceof Mac2Driver
+         ) {
+            return {
                using: strategy,
                value: JSON.stringify(parsedSelector),
-               context
+               context,
             };
          }
       } else {
@@ -76,10 +81,10 @@ export async function findElOrEls(
 
 export async function click(this: AppiumFlutterDriver, element: string) {
    const driver = ELEMENT_CACHE.get(element);
-   
+
    if (this.proxydriver instanceof Mac2Driver) {
       this.log.debug('Mac2Driver detected, using non-blocking click');
-      
+
       try {
          // Working around Mac2Driver issues which is blocking click request when clicking on Flutter elements opens native dialog
          // For Flutter elements, we just verify the element is in our cache
@@ -88,13 +93,17 @@ export async function click(this: AppiumFlutterDriver, element: string) {
          }
 
          // Element exists, send click command
-         driver.command(`/element/${element}/click`, 'POST', {
-            element,
-         }).catch((err: Error) => {
-            // Log error but don't block
-            this.log.debug(`Click command sent (non-blocking). Any error: ${err.message}`);
-         });
-         
+         driver
+            .command(`/element/${element}/click`, 'POST', {
+               element,
+            })
+            .catch((err: Error) => {
+               // Log error but don't block
+               this.log.debug(
+                  `Click command sent (non-blocking). Any error: ${err.message}`,
+               );
+            });
+
          // Return success since element check passed
          return true;
       } catch (err) {
