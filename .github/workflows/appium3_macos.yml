@@ -51,5 +51,5 @@ jobs:
         appium driver list
       name: Install Appium and deps
     - run: |
-        APP_PATH=$APP_PATH npm run wdio-macos
+        APP_PATH=$APP_PATH npm run wdio-mac
       name: Run WDIO macOS
