@@ -96,6 +96,11 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
       flutter build ipa --release integration_test/appium_test.dart
     ```
 
+7. Build the MacOS app:
+    ```bash
+    flutter build macos --release integration_test/appium_test.dart
+    ```
+
 Bingo! You are ready to run your tests using Appium Flutter Integration Driver.
 
 Check if your Flutter app is running on the device or emulator.

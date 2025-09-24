@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { PLATFORM } from './platform';
 import { startAndroidSession } from './android';
 import { startIOSSession } from './iOS';
+import { startMacOsSession } from './macOS';
 import type { DefaultCreateSessionResult } from '@appium/types';
 
 export async function createSession(
@@ -23,6 +24,13 @@ export async function createSession(
             break;
          case PLATFORM.ANDROID:
             this.proxydriver = await startAndroidSession.bind(this)(...args);
+            this.proxydriver.relaxedSecurityEnabled =
+               this.relaxedSecurityEnabled;
+            this.proxydriver.denyInsecure = this.denyInsecure;
+            this.proxydriver.allowInsecure = this.allowInsecure;
+            break;
+         case PLATFORM.MAC:
+            this.proxydriver = await startMacOsSession.bind(this)(...args);
             this.proxydriver.relaxedSecurityEnabled =
                this.relaxedSecurityEnabled;
             this.proxydriver.denyInsecure = this.denyInsecure;

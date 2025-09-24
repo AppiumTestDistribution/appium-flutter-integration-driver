@@ -1,7 +1,11 @@
 import _ from 'lodash';
-import { getProxyDriver } from '../utils';
+import { getProxyDriver, FLUTTER_LOCATORS } from '../utils';
 import { JWProxy } from 'appium/driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+// @ts-ignore
+import { XCUITestDriver } from 'appium-xcuitest-driver';
+// @ts-ignore
+import { Mac2Driver } from 'appium-mac2-driver';
 import { W3C_ELEMENT_KEY } from 'appium/driver';
 import type { AppiumFlutterDriver } from '../driver';
 
@@ -15,28 +19,53 @@ export async function findElOrEls(
 ): Promise<any> {
    const driver = await getProxyDriver.bind(this)(strategy);
    let elementBody;
-   if (
-      !(driver instanceof JWProxy) &&
-      !(this.proxydriver instanceof AndroidUiautomator2Driver)
+   function constructFindElementPayload(
+      strategy: string,
+      selector: string,
+      proxyDriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
    ) {
-      elementBody = {
-         using: strategy,
-         value: selector,
-         context, //this needs be validated
-      };
-   } else {
-      elementBody = {
-         strategy,
-         selector: ['-flutter descendant', '-flutter ancestor'].includes(
-            strategy,
-         )
-            ? _.isString(selector)
-               ? JSON.parse(selector)
-               : selector
-            : selector,
-         context,
-      };
+      const isFlutterLocator =
+         strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
+
+      let parsedSelector;
+      if (['-flutter descendant', '-flutter ancestor'].includes(strategy)) {
+         // Handle descendant/ancestor special case
+         parsedSelector = _.isString(selector)
+            ? JSON.parse(selector)
+            : selector;
+
+         // For Mac2Driver and XCUITestDriver, format selector differently
+         if (
+            proxyDriver instanceof XCUITestDriver ||
+            proxyDriver instanceof Mac2Driver
+         ) {
+            return {
+               using: strategy,
+               value: JSON.stringify(parsedSelector),
+               context,
+            };
+         }
+      } else {
+         parsedSelector = selector;
+      }
+
+      // If user is looking for Native IOS/Mac locator
+      if (
+         !isFlutterLocator &&
+         (proxyDriver instanceof XCUITestDriver ||
+            proxyDriver instanceof Mac2Driver)
+      ) {
+         return { using: strategy, value: parsedSelector, context };
+      } else {
+         return { strategy, selector: parsedSelector, context };
+      }
    }
+
+   elementBody = constructFindElementPayload(
+      strategy,
+      selector,
+      this.proxydriver,
+   );
    if (mult) {
       const response = await driver.command('/elements', 'POST', elementBody);
       response.forEach((element: any) => {
@@ -52,9 +81,42 @@ export async function findElOrEls(
 
 export async function click(this: AppiumFlutterDriver, element: string) {
    const driver = ELEMENT_CACHE.get(element);
-   return await driver.command(`/element/${element}/click`, 'POST', {
-      element,
-   });
+
+   if (this.proxydriver instanceof Mac2Driver) {
+      this.log.debug('Mac2Driver detected, using non-blocking click');
+
+      try {
+         // Working around Mac2Driver issues which is blocking click request when clicking on Flutter elements opens native dialog
+         // For Flutter elements, we just verify the element is in our cache
+         if (!ELEMENT_CACHE.has(element)) {
+            throw new Error('Element not found in cache');
+         }
+
+         // Element exists, send click command
+         driver
+            .command(`/element/${element}/click`, 'POST', {
+               element,
+            })
+            .catch((err: Error) => {
+               // Log error but don't block
+               this.log.debug(
+                  `Click command sent (non-blocking). Any error: ${err.message}`,
+               );
+            });
+
+         // Return success since element check passed
+         return true;
+      } catch (err) {
+         // Element check failed - this is a legitimate error we should report
+         this.log.error('Element validation failed before click:', err);
+         throw new Error(`Element validation failed: ${err.message}`);
+      }
+   } else {
+      // For other drivers, proceed with normal click behavior
+      return await driver.command(`/element/${element}/click`, 'POST', {
+         element,
+      });
+   }
 }
 
 export async function getText(this: AppiumFlutterDriver, elementId: string) {
