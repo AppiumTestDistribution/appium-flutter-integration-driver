@@ -1,0 +1,51 @@
+name: macOS WDIO Tests with Appium 3
+
+on:
+    pull_request:
+
+env:
+  CI: true
+  SHOW_XCODE_LOG: true
+
+jobs:
+  wdio_ios:
+    runs-on: macos-26
+    name: WDIO iOS (Xcode 16.4)
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Node.js 22.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.x'
+
+    - name: Select Xcode 16.4
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '16.4'
+
+    - name: List Installed Simulators
+      run: xcrun simctl list devices available
+    - name: Install jq
+      run: brew install jq
+
+    - run: |
+        version=$(grep 'appium_flutter_server:' README.md | awk '{print $2}')
+        ios_app="https://github.com/AppiumTestDistribution/appium-flutter-server/releases/download/$version/macos.zip"
+        echo "Downloading from: $ios_app"
+        curl -LO "$ios_app"
+        unzip -o macos.zip
+        ls -l
+        echo "APP_PATH=$(pwd)/appium_testing_app.app" >> $GITHUB_ENV
+        echo $APP_PATH
+      name: Download sample iOS app
+      
+    - name: Boot simulator
+      run: open -Fn $APP_PATH
+
+    - run: |
+        npm install -g appium
+        npm install --no-package-lock
+        npm run build-flutter-by-service
+        npm run build
+      name: Install Appium and deps
