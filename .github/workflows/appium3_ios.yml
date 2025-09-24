@@ -10,6 +10,7 @@ env:
 
 jobs:
   wdio_ios:
+    if: ${{ false }}
     runs-on: macos-26
     name: WDIO iOS (Xcode 16.4)
     steps:

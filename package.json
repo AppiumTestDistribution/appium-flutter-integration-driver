@@ -49,6 +49,7 @@
       "reinstall-driver": "(appium driver uninstall flutter-integration || exit 0) && npm run install-driver",
       "wdio-android": "wdio run ./android.conf.ts",
       "wdio-ios": "wdio run ./ios.conf.ts",
+      "wdio-mac": "wdio run ./mac.conf.ts",
       "build-flutter-by-service": "cd ./flutter-finder/wdio-flutter-by-service && npm install --no-package-lock && npm run build"
    },
    "devDependencies": {
@@ -73,6 +74,7 @@
       "@wdio/spec-reporter": "^9.19.2",
       "@wdio/types": "9.19.2",
       "@wdio/utils": "^9.19.2",
+      "appium-mac2-driver": "^3.0.0",
       "chai": "^5.1.1",
       "chai-as-promised": "^8.0.0",
       "conventional-changelog-conventionalcommits": "^8.0.0",
@@ -99,7 +101,6 @@
       "appium-ios-device": "^3.0.0",
       "appium-uiautomator2-driver": "^5.0.0",
       "appium-xcuitest-driver": "^10.0.0",
-      "appium-mac2-driver": "^3.0.0",
       "async-retry": "^1.3.3",
       "asyncbox": "^3.0.0",
       "bluebird": "^3.7.2",
