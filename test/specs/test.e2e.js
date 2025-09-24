@@ -73,7 +73,7 @@ describe('My Login application', () => {
       await handleAppManagement();
    });
 
-   it('Create Session with Flutter Integration Driver', async () => {
+   it.only('Create Session with Flutter Integration Driver', async () => {
       await performLogin();
       await openScreen('Double Tap');
       const element = await browser

@@ -9,7 +9,7 @@ export const config: WebdriverIO.Config = {
          platformName: 'mac',
          'appium:automationName': 'FlutterIntegration',
          'appium:orientation': 'PORTRAIT',
-         'appium:app': "/Users/saikrishna/Documents/git/appium-flutter-server/demo-app/build/macos/Build/Products/Debug/appium_testing_app.app",
+         'appium:app': process.env.APP_PATH,
          'appium:bundleId': "com.example.appiumTestingApp",
          'appium:newCommandTimeout': 240,
          'appium:flutterServerLaunchTimeout': 25000,

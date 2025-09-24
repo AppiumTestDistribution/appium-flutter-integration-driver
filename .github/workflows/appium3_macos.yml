@@ -48,4 +48,8 @@ jobs:
         npm install --no-package-lock
         npm run build-flutter-by-service
         npm run build
+        appium driver list
       name: Install Appium and deps
+    - run: |
+        APP_PATH=$APP_PATH npm run wdio-macos
+      name: Run WDIO macOS
