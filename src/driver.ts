@@ -430,7 +430,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          `/session/:sessionId/appium/gestures/scroll_till_visible`,
          'POST',
          {
-            finder: constructFindElementPayload(finder.using, finder.value),
+            finder: constructFindElementPayload(
+               finder.using || finder.strategy,
+               finder.value || finder.selector,
+            ),
             scrollView,
             delta,
             maxScrolls,
