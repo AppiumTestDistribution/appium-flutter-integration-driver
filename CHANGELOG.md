@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v2.0.0...v2.0.1) (2025-10-09)
+
+### Bug Fixes
+
+* locator parsing ([#151](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/151)) ([acc617c](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/acc617c281b08019f7aeb20ce3d1d2ef2cf22482))
+
 ## [2.0.0](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v1.5.1...v2.0.0) (2025-09-19)
 
 ### ⚠ BREAKING CHANGES
