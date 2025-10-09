@@ -24,6 +24,7 @@ import {
    clear,
    ELEMENT_CACHE,
    getElementRect,
+   constructFindElementPayload,
 } from './commands/element';
 import {
    attachAppLaunchArguments,
@@ -362,7 +363,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          'POST',
          {
             element,
-            locator,
+            locator: constructFindElementPayload(
+               locator?.using,
+               locator?.value,
+            ),
             timeout,
          },
       );
@@ -378,7 +382,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          'POST',
          {
             element,
-            locator,
+            locator: constructFindElementPayload(
+               locator?.using,
+               locator?.value,
+            ),
             timeout,
          },
       );
@@ -391,7 +398,10 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          {
             origin,
             offset,
-            locator,
+            locator: constructFindElementPayload(
+               locator?.using,
+               locator?.value,
+            ),
          },
       );
    }
@@ -420,7 +430,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          `/session/:sessionId/appium/gestures/scroll_till_visible`,
          'POST',
          {
-            finder,
+            finder: constructFindElementPayload(finder.using, finder.value),
             scrollView,
             delta,
             maxScrolls,
