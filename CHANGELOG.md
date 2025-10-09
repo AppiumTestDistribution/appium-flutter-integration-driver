@@ -1,3 +1,9 @@
+## [2.0.2](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v2.0.1...v2.0.2) (2025-10-09)
+
+### Bug Fixes
+
+* safe parse element locators when used in flutter commands ([#152](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/issues/152)) ([bae30b8](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/bae30b820c0639552f3c834a69ab8728d28b3857))
+
 ## [2.0.1](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v2.0.0...v2.0.1) (2025-10-09)
 
 ### Bug Fixes
