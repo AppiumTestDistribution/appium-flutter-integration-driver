@@ -10,6 +10,36 @@ import { W3C_ELEMENT_KEY } from 'appium/driver';
 import type { AppiumFlutterDriver } from '../driver';
 
 export const ELEMENT_CACHE = new Map();
+
+function constructFindElementPayload(
+   strategy: string,
+   selector: string,
+   context: string,
+   proxyDriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
+) {
+   const isFlutterLocator =
+      strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
+
+   let parsedSelector = selector;
+   if (
+      ['-flutter descendant', '-flutter ancestor'].includes(strategy) &&
+      _.isString(selector)
+   ) {
+      parsedSelector = JSON.parse(selector);
+   }
+
+   // If user is looking for Native IOS/Mac locator
+   if (
+      !isFlutterLocator &&
+      (proxyDriver instanceof XCUITestDriver ||
+         proxyDriver instanceof Mac2Driver)
+   ) {
+      return { using: strategy, value: parsedSelector, context };
+   } else {
+      return { strategy, selector: parsedSelector, context };
+   }
+}
+
 export async function findElOrEls(
    this: AppiumFlutterDriver,
    strategy: string,
@@ -19,51 +49,11 @@ export async function findElOrEls(
 ): Promise<any> {
    const driver = await getProxyDriver.bind(this)(strategy);
    let elementBody;
-   function constructFindElementPayload(
-      strategy: string,
-      selector: string,
-      proxyDriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
-   ) {
-      const isFlutterLocator =
-         strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
-
-      let parsedSelector;
-      if (['-flutter descendant', '-flutter ancestor'].includes(strategy)) {
-         // Handle descendant/ancestor special case
-         parsedSelector = _.isString(selector)
-            ? JSON.parse(selector)
-            : selector;
-
-         // For Mac2Driver and XCUITestDriver, format selector differently
-         if (
-            proxyDriver instanceof XCUITestDriver ||
-            proxyDriver instanceof Mac2Driver
-         ) {
-            return {
-               using: strategy,
-               value: JSON.stringify(parsedSelector),
-               context,
-            };
-         }
-      } else {
-         parsedSelector = selector;
-      }
-
-      // If user is looking for Native IOS/Mac locator
-      if (
-         !isFlutterLocator &&
-         (proxyDriver instanceof XCUITestDriver ||
-            proxyDriver instanceof Mac2Driver)
-      ) {
-         return { using: strategy, value: parsedSelector, context };
-      } else {
-         return { strategy, selector: parsedSelector, context };
-      }
-   }
 
    elementBody = constructFindElementPayload(
       strategy,
       selector,
+      context,
       this.proxydriver,
    );
    if (mult) {
