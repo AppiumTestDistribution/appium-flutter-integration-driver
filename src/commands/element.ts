@@ -11,12 +11,15 @@ import type { AppiumFlutterDriver } from '../driver';
 
 export const ELEMENT_CACHE = new Map();
 
-function constructFindElementPayload(
+export function constructFindElementPayload(
    strategy: string,
    selector: string,
-   context: string,
-   proxyDriver: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
+   context?: any,
+   proxyDriver?: XCUITestDriver | AndroidUiautomator2Driver | Mac2Driver,
 ) {
+   if (!strategy || !selector) {
+      return undefined;
+   }
    const isFlutterLocator =
       strategy.startsWith('-flutter') || FLUTTER_LOCATORS.includes(strategy);
 
@@ -31,6 +34,7 @@ function constructFindElementPayload(
    // If user is looking for Native IOS/Mac locator
    if (
       !isFlutterLocator &&
+      proxyDriver &&
       (proxyDriver instanceof XCUITestDriver ||
          proxyDriver instanceof Mac2Driver)
    ) {
