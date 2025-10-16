@@ -279,7 +279,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
       this.internalCaps = caps;
       /**
        * To support parallel execution in iOS simulators
-       * flutterServerPort need to be passed as lauch argument using appium:processArguments
+       * flutterServerPort need to be passed as launch argument using appium:processArguments
        * Refer: https://appium.github.io/appium-xcuitest-driver/latest/reference/capabilities/
        */
       attachAppLaunchArguments.bind(this)(caps, ...args);

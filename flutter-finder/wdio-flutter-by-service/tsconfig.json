@@ -20,7 +20,7 @@
     "lib": ["es2023", "dom", "es2021"],
     "types": ["node"]
   },
-  "incude": ["/src/**/*.ts"],
+  "include": ["/src/**/*.ts"],
   "exclude": [
     "node_modules",
     "**/node_modules/*",

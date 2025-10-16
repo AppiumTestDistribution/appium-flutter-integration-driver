@@ -72,7 +72,7 @@ Get the latest version from `https://pub.dev/packages/appium_flutter_server/inst
    void main() {
      initializeTest(
        callback: (WidgetTester tester) async {
-          // Perform any prerequisite steps or intialise any dependencies required by the app
+          // Perform any prerequisite steps or initialize any dependencies required by the app
           // and make sure to pump the app widget using below statement.
           await tester.pumpWidget(const app.MyApp());
        },
