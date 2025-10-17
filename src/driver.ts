@@ -1,31 +1,36 @@
-import { desiredCapConstraints } from './desiredCaps';
-import { JWProxy, BaseDriver } from '@appium/base-driver';
+import { BaseDriver, JWProxy } from '@appium/base-driver';
 import type {
    DefaultCreateSessionResult,
+   DriverCaps,
    DriverData,
    W3CDriverCaps,
-   DriverCaps,
 } from '@appium/types';
+import { desiredCapConstraints } from './desiredCaps';
 type FlutterDriverConstraints = typeof desiredCapConstraints;
 // @ts-ignore
-import { XCUITestDriver } from 'appium-xcuitest-driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+import { XCUITestDriver } from 'appium-xcuitest-driver';
 // @ts-ignore
 import { Mac2Driver } from 'appium-mac2-driver';
-import { createSession as createSessionMixin } from './session';
+import { logger, util } from 'appium/support';
+import _ from 'lodash';
+import { androidPortForward, androidRemovePortForward } from './android';
 import {
-   findElOrEls,
-   click,
-   getText,
-   elementDisplayed,
-   getAttribute,
-   elementEnabled,
-   setValue,
    clear,
+   click,
    ELEMENT_CACHE,
+   elementDisplayed,
+   elementEnabled,
+   findElOrEls,
+   getAttribute,
    getElementRect,
+   getText,
+   setValue,
    constructFindElementPayload,
 } from './commands/element';
+import { iosPortForward, iosRemovePortForward } from './iOS';
+import { createSession as createSessionMixin } from './session';
+import type { PortForwardCallback, PortReleaseCallback } from './types';
 import {
    attachAppLaunchArguments,
    fetchFlutterServerPort,
@@ -34,11 +39,6 @@ import {
    isFlutterDriverCommand,
    waitForFlutterServerToBeActive,
 } from './utils';
-import { logger, util } from 'appium/support';
-import { androidPortForward, androidRemovePortForward } from './android';
-import { iosPortForward, iosRemovePortForward } from './iOS';
-import type { PortForwardCallback, PortReleaseCallback } from './types';
-import _ from 'lodash';
 
 import type { RouteMatcher } from '@appium/types';
 
@@ -289,14 +289,16 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          caps,
          ...JSON.parse(JSON.stringify(args)),
       );
+      console.info(`proxydriver: ${JSON.stringify(this.proxydriver)}`);
       const packageName =
          this.proxydriver instanceof AndroidUiautomator2Driver
             ? this.proxydriver.opts.appPackage!
             : this.proxydriver.opts.bundleId!;
 
       const isIosSimulator =
-         this.proxydriver instanceof XCUITestDriver &&
-         !this.proxydriver.isRealDevice();
+         (this.proxydriver instanceof XCUITestDriver &&
+            !this.proxydriver.isRealDevice()) ||
+         this.proxydriver instanceof Mac2Driver;
 
       const portcallbacks: {
          portForwardCallback?: PortForwardCallback;

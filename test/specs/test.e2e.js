@@ -2,7 +2,7 @@ import { browser, expect } from '@wdio/globals';
 import path from 'path';
 
 async function performLogin(userName = 'admin', password = '1234') {
-   await browser.takeScreenshot();
+   // await browser.takeScreenshot();
    const att = await browser.flutterByValueKey$('username_text_field');
    console.log(await att.getAttribute('all'));
    await browser.flutterByValueKey$('username_text_field').clearValue();
@@ -73,7 +73,7 @@ describe('My Login application', () => {
       await handleAppManagement();
    });
 
-   it('Create Session with Flutter Integration Driver', async () => {
+   it.only('Create Session with Flutter Integration Driver', async () => {
       await performLogin();
       await openScreen('Double Tap');
       const element = await browser

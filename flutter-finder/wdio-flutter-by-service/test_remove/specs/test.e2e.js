@@ -2,7 +2,7 @@ import { browser, expect } from '@wdio/globals';
 import path from "path";
 
 async function performLogin(userName = 'admin', password = '1234') {
-   await browser.takeScreenshot();
+   // await browser.takeScreenshot();
    const att = await browser.flutterByValueKey$('username_text_field');
    console.log(await att.getAttribute('all'));
    await browser.flutterByValueKey$('username_text_field').clearValue();

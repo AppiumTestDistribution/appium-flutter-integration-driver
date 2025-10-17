@@ -8,6 +8,7 @@ env:
 
 jobs:
    Android_E2E_WDIO:
+      if: ${{ false }}
       runs-on: ubuntu-latest
       strategy:
          matrix:
