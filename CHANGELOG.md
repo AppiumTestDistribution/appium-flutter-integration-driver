@@ -1,3 +1,9 @@
+## [2.0.3](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v2.0.2...v2.0.3) (2025-10-17)
+
+### Miscellaneous Chores
+
+* fix typos ([b0f302b](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/commit/b0f302bf2ad8f35370847d64d626883dc1b9183c))
+
 ## [2.0.2](https://github.com/AppiumTestDistribution/appium-flutter-integration-driver/compare/v2.0.1...v2.0.2) (2025-10-09)
 
 ### Bug Fixes
