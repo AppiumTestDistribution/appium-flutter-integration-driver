@@ -1,9 +1,7 @@
 import { LocatorConfig } from './types.js';
 import { command } from 'webdriver';
 import { browser } from '@wdio/globals';
-import path from 'path';
 import { createRequire } from 'module';
-import { pathToFileURL } from 'url';
 import fs from 'fs';
 
 const require = createRequire(import.meta.url);

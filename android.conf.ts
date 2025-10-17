@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { config as baseConfig } from './wdio.conf.ts';
-import { join } from 'node:path';
 
 export const config: WebdriverIO.Config = {
    ...baseConfig,

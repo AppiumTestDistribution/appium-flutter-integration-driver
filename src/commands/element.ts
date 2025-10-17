@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import { getProxyDriver, FLUTTER_LOCATORS } from '../utils';
-import { JWProxy } from 'appium/driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 // @ts-ignore
 import { XCUITestDriver } from 'appium-xcuitest-driver';

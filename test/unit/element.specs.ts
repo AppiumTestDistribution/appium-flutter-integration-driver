@@ -10,9 +10,6 @@ import { W3C_ELEMENT_KEY } from 'appium/driver';
 import {
    ELEMENT_CACHE,
    clear,
-   click,
-   elementDisplayed,
-   elementEnabled,
    findElOrEls,
    getAttribute,
    getElementRect,

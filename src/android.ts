@@ -1,5 +1,4 @@
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
-import type { InitialOpts } from '@appium/types';
 import type { AppiumFlutterDriver } from './driver';
 import type ADB from 'appium-adb';
 
