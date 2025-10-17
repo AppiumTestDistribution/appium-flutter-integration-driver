@@ -161,13 +161,13 @@ export async function fetchFlutterServerPort(
             `Checking if flutter server is running on port ${systemPort || devicePort} for simulator with id ${udid}`,
          );
          await waitForFlutterServer.bind(this)(
-            (systemPort || devicePort)!,
+            (systemPort || devicePort),
             packageName,
          );
          this.log.info(
             `Flutter server is successfully running on port ${systemPort || devicePort}`,
          );
-         return (systemPort || devicePort)!;
+         return (systemPort || devicePort);
       } catch (e) {
          return null;
       }
