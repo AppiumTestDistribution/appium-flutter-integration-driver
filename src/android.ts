@@ -19,7 +19,7 @@ export async function androidPortForward(
    systemPort: number,
    devicePort: number,
 ) {
-   await adb.forwardPort(systemPort!, devicePort);
+   await adb.forwardPort(systemPort, devicePort);
 }
 
 export async function androidRemovePortForward(adb: ADB, systemPort: number) {
