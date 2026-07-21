@@ -10,7 +10,7 @@ export async function startMacOsSession(
 ): Promise<Mac2Driver> {
    this.log.info(`Starting an MacOs proxy session`);
    const macOsDriver = new Mac2Driver({} as InitialOpts);
-   await macOsDriver.createSession(...args);
+   await (macOsDriver.createSession as any)(...args);
    return macOsDriver;
 }
 
