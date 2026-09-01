@@ -3,6 +3,7 @@ import { JWProxy, BaseDriver } from '@appium/base-driver';
 import type {
    DefaultCreateSessionResult,
    DriverData,
+   HTTPMethod,
    W3CDriverCaps,
    DriverCaps,
 } from '@appium/types';
@@ -473,6 +474,15 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
 
    public canProxy(): boolean {
       return this.proxyWebViewActive;
+   }
+
+   public async proxyCommand<TReq = any, TRes = unknown>(
+      url: string,
+      method: HTTPMethod,
+      body?: TReq,
+   ): Promise<TRes> {
+      // @ts-ignore proxyCommand is assigned on the proxied driver when its session starts
+      return await this.proxydriver.proxyCommand(url, method, body);
    }
 
    async deleteSession() {
