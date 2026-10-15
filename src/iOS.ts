@@ -1,15 +1,16 @@
-import type { AppiumFlutterDriver } from './driver';
+import type { AppiumFlutterDriver } from './driver.js';
 // @ts-ignore
 import { XCUITestDriver } from 'appium-xcuitest-driver';
-import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
-import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import { DEVICE_CONNECTIONS_FACTORY } from './iProxy.js';
 
 export async function startIOSSession(
    this: AppiumFlutterDriver,
    ...args: any[]
 ): Promise<XCUITestDriver> {
    this.log.info(`Starting an IOS proxy session`);
-   const iosdriver = new XCUITestDriver({} as XCUITestDriverOpts);
+   const iosdriver = new XCUITestDriver(
+      {} as ConstructorParameters<typeof XCUITestDriver>[0],
+   );
    await iosdriver.createSession.apply(iosdriver, args);
    return iosdriver;
 }

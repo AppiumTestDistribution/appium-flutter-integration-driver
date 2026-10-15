@@ -1,8 +1,8 @@
-import type { AppiumFlutterDriver } from './driver';
+import type { AppiumFlutterDriver } from './driver.js';
 // @ts-ignore
 import { Mac2Driver } from 'appium-mac2-driver';
 import type { InitialOpts } from '@appium/types';
-import { DEVICE_CONNECTIONS_FACTORY } from './iProxy';
+import { DEVICE_CONNECTIONS_FACTORY } from './iProxy.js';
 
 export async function startMacOsSession(
    this: AppiumFlutterDriver,
@@ -10,7 +10,7 @@ export async function startMacOsSession(
 ): Promise<Mac2Driver> {
    this.log.info(`Starting an MacOs proxy session`);
    const macOsDriver = new Mac2Driver({} as InitialOpts);
-   await macOsDriver.createSession(...args);
+   await macOsDriver.createSession.apply(macOsDriver, args as any);
    return macOsDriver;
 }
 

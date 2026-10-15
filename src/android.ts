@@ -1,7 +1,7 @@
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import type { InitialOpts } from '@appium/types';
-import type { AppiumFlutterDriver } from './driver';
-import type ADB from 'appium-adb';
+import type { AppiumFlutterDriver } from './driver.js';
+import type { ADB } from 'appium-adb';
 
 export async function startAndroidSession(
    this: AppiumFlutterDriver,

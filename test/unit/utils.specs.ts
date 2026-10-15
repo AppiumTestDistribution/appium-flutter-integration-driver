@@ -1,7 +1,7 @@
 // @ts-nocheck
-import * as utils from '../../src/utils';
-import { AppiumFlutterDriver } from '../../src/driver';
-import { JWProxy } from 'appium/driver';
+import * as utils from '../../src/utils.js';
+import { AppiumFlutterDriver } from '../../src/driver.js';
+import { JWProxy } from 'appium/driver.js';
 import sinon from 'sinon';
 
 describe('attachAppLaunchArguments', function () {

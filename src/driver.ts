@@ -1,4 +1,4 @@
-import { desiredCapConstraints } from './desiredCaps';
+import { desiredCapConstraints } from './desiredCaps.js';
 import { JWProxy, BaseDriver } from '@appium/base-driver';
 import type {
    DefaultCreateSessionResult,
@@ -12,7 +12,7 @@ import { XCUITestDriver } from 'appium-xcuitest-driver';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 // @ts-ignore
 import { Mac2Driver } from 'appium-mac2-driver';
-import { createSession as createSessionMixin } from './session';
+import { createSession as createSessionMixin } from './session.js';
 import {
    findElOrEls,
    click,
@@ -25,7 +25,7 @@ import {
    ELEMENT_CACHE,
    getElementRect,
    constructFindElementPayload,
-} from './commands/element';
+} from './commands/element.js';
 import {
    attachAppLaunchArguments,
    fetchFlutterServerPort,
@@ -33,11 +33,11 @@ import {
    getFreePort,
    isFlutterDriverCommand,
    waitForFlutterServerToBeActive,
-} from './utils';
-import { logger, util } from 'appium/support';
-import { androidPortForward, androidRemovePortForward } from './android';
-import { iosPortForward, iosRemovePortForward } from './iOS';
-import type { PortForwardCallback, PortReleaseCallback } from './types';
+} from './utils.js';
+import { logger, util } from 'appium/support.js';
+import { androidPortForward, androidRemovePortForward } from './android.js';
+import { iosPortForward, iosRemovePortForward } from './iOS.js';
+import type { PortForwardCallback, PortReleaseCallback } from './types.js';
 import _ from 'lodash';
 
 import type { RouteMatcher } from '@appium/types';
@@ -483,7 +483,7 @@ export class AppiumFlutterDriver extends BaseDriver<FlutterDriverConstraints> {
          // @ts-ignore
          await this.proxydriver.adb.removePortForward(this.flutterPort);
       }
-      await this.proxydriver?.deleteSession(this.sessionId);
+      await this.proxydriver?.deleteSession(this.sessionId ?? undefined);
       await super.deleteSession();
    }
 

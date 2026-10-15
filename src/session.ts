@@ -1,9 +1,9 @@
-import type { AppiumFlutterDriver } from './driver';
+import type { AppiumFlutterDriver } from './driver.js';
 import _ from 'lodash';
-import { PLATFORM } from './platform';
-import { startAndroidSession } from './android';
-import { startIOSSession } from './iOS';
-import { startMacOsSession } from './macOS';
+import { PLATFORM } from './platform.js';
+import { startAndroidSession } from './android.js';
+import { startIOSSession } from './iOS.js';
+import { startMacOsSession } from './macOS.js';
 import type { DefaultCreateSessionResult } from '@appium/types';
 
 export async function createSession(
