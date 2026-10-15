@@ -1,29 +1,30 @@
 // @ts-nocheck
 import sinon from 'sinon';
-import * as utils from '../../src/utils';
+import esmock from 'esmock';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 // @ts-ignore
 import { XCUITestDriver } from 'appium-xcuitest-driver';
 // @ts-ignore
 import { Mac2Driver } from 'appium-mac2-driver';
-import { W3C_ELEMENT_KEY } from 'appium/driver';
-import {
-   ELEMENT_CACHE,
-   clear,
-   click,
-   elementDisplayed,
-   elementEnabled,
-   findElOrEls,
-   getAttribute,
-   getElementRect,
-   getText,
-   setValue,
-} from '../../src/commands/element';
+import { W3C_ELEMENT_KEY } from 'appium/driver.js';
 
 describe('Element Interaction Functions', () => {
    let sandbox, chai, expect;
    let mockDriver;
    let mockAppiumFlutterDriver;
+   // Loaded via esmock so that the `getProxyDriver` dependency can be mocked
+   // (native ES module named exports cannot be stubbed directly by sinon).
+   let ELEMENT_CACHE,
+      clear,
+      click,
+      elementDisplayed,
+      elementEnabled,
+      findElOrEls,
+      getAttribute,
+      getElementRect,
+      getText,
+      setValue;
+   let getProxyDriverStub;
 
    before(async function () {
       chai = await import('chai');
@@ -35,7 +36,7 @@ describe('Element Interaction Functions', () => {
       expect = chai.expect;
    });
 
-   beforeEach(() => {
+   beforeEach(async () => {
       sandbox = sinon.createSandbox();
       mockDriver = {
          command: sandbox.stub().resolves({}) as any,
@@ -43,7 +44,34 @@ describe('Element Interaction Functions', () => {
       mockAppiumFlutterDriver = {
          proxydriver: {},
       };
-      sandbox.stub(utils, 'getProxyDriver').resolves(mockDriver);
+      getProxyDriverStub = sandbox.stub().resolves(mockDriver);
+
+      const elementModule = await esmock('../../src/commands/element.js', {
+         '../../src/utils.js': {
+            getProxyDriver: getProxyDriverStub,
+            FLUTTER_LOCATORS: [
+               'key',
+               'semantics label',
+               'text',
+               'type',
+               'text containing',
+               'descendant',
+               'ancestor',
+            ],
+         },
+      });
+      ({
+         ELEMENT_CACHE,
+         clear,
+         click,
+         elementDisplayed,
+         elementEnabled,
+         findElOrEls,
+         getAttribute,
+         getElementRect,
+         getText,
+         setValue,
+      } = elementModule);
    });
 
    afterEach(() => {

@@ -1,6 +1,9 @@
 // @ts-ignore
 import { command } from 'webdriver';
 import path from 'path';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 export async function registerCommands() {
    const utils = await import(

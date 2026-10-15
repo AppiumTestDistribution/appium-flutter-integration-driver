@@ -1,13 +1,13 @@
 import _ from 'lodash';
-import { getProxyDriver, FLUTTER_LOCATORS } from '../utils';
-import { JWProxy } from 'appium/driver';
+import { getProxyDriver, FLUTTER_LOCATORS } from '../utils.js';
+import { JWProxy } from 'appium/driver.js';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 // @ts-ignore
 import { XCUITestDriver } from 'appium-xcuitest-driver';
 // @ts-ignore
 import { Mac2Driver } from 'appium-mac2-driver';
-import { W3C_ELEMENT_KEY } from 'appium/driver';
-import type { AppiumFlutterDriver } from '../driver';
+import { W3C_ELEMENT_KEY } from 'appium/driver.js';
+import type { AppiumFlutterDriver } from '../driver.js';
 
 export const ELEMENT_CACHE = new Map();
 
