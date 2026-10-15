@@ -43,7 +43,7 @@ jobs:
          - name: Linting
            run: |
               npm run build-flutter-by-service
-              npm install --no-package-lock
+              npm install --no-package-lock --force
               npm run prettier-check
          - name: Build Driver
            run: |
