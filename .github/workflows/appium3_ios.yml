@@ -57,7 +57,7 @@ jobs:
 
     - run: |
         npm install -g appium
-        npm install --no-package-lock
+        npm install --no-package-lock --force
         npm run build-flutter-by-service
         npm run build
       name: Install Appium and deps

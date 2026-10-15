@@ -11,7 +11,7 @@ jobs:
          - uses: actions/setup-node@v4
            with:
               node-version: 22
-         - run: npm install --no-package-lock
+         - run: npm install --no-package-lock --force
            name: Install dependencies
          - run: npm run build
            name: Build
